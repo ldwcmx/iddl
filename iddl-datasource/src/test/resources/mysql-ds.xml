@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources>
+    <local-tx-datasource>
+        <jndi-name>icommunity_db</jndi-name>
+        <connection-url>jdbc:mysql://127.0.0.1:3306/icommunity?useUnicode=true&amp;characterEncoding=utf-8</connection-url>
+        <connection-property name="SetBigStringTryClob">true</connection-property>
+        <connection-property name="defaultRowPrefetch">50</connection-property>
+        <driver-class>com.mysql.jdbc.Driver</driver-class>
+
+        <min-pool-size>2</min-pool-size>
+        <max-pool-size>10</max-pool-size>
+        <prepared-statement-cache-size>100</prepared-statement-cache-size>
+        <metadata>
+            <type-mapping>mysql</type-mapping>
+        </metadata>
+
+        <user-name>icommunity</user-name>
+        <password>thinkmall</password>
+    </local-tx-datasource>
+    
+	<local-tx-datasource>
+        <jndi-name>xprocess_db</jndi-name>
+        <connection-url>jdbc:mysql://127.0.0.1:3306/xprocess?useUnicode=true&amp;characterEncoding=utf-8</connection-url>
+        <driver-class>com.mysql.jdbc.Driver</driver-class>
+
+        <min-pool-size>2</min-pool-size>
+        <max-pool-size>10</max-pool-size>
+        <prepared-statement-cache-size>100</prepared-statement-cache-size>
+		<metadata>
+            <type-mapping>mysql</type-mapping>
+        </metadata>
+        <security-domain>EncryptXProcessPassword</security-domain>
+	</local-tx-datasource>
+</datasources>
