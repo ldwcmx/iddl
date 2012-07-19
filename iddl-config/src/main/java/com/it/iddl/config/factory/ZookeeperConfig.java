@@ -8,14 +8,14 @@ package com.it.iddl.config.factory;
 import java.util.Properties;
 
 /**
- * ZookeeperÅäÖÃ
+ * Zookeeperé…ç½®
  * @author sihai
  *
  */
 public class ZookeeperConfig {
 	
 	/**
-	 * ´Óproperties¼ÓÔØ
+	 * ä»propertiesåŠ è½½
 	 * @param properties
 	 * @return
 	 */

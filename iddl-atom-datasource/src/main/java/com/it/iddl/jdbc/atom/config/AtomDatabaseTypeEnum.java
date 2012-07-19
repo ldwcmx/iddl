@@ -8,7 +8,7 @@ package com.it.iddl.jdbc.atom.config;
 import com.it.iddl.jdbc.atom.common.AtomConstants;
 
 /**
- * Êı¾İ¿âÀàĞÍÃ¶¾ÙÀàĞÍ
+ * æ•°æ®åº“ç±»å‹æšä¸¾ç±»å‹
  * 
  * @author sihai
  *

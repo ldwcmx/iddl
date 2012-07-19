@@ -10,7 +10,7 @@ import com.it.iddl.config.listener.ConfigListener;
 
 /**
  * <p>
- * ÅäÖÃ¹ÜÀíÆ÷
+ * é…ç½®ç®¡ç†å™¨
  * </p>
  * @author sihai
  *
@@ -18,27 +18,27 @@ import com.it.iddl.config.listener.ConfigListener;
 public interface ConfigManager {
 	
 	/**
-	 * ³õÊ¼»¯
+	 * åˆå§‹åŒ–
 	 * @param config
 	 * @throws ConfigException
 	 */
 	void init(Object config) throws ConfigException;
 	
 	/**
-	 * Í£Ö¹
+	 * åœæ­¢
 	 * @throws ConfigException
 	 */
 	void stop() throws ConfigException;
 	
 	/**
-	 * ²éÑ¯ÅäÖÃÏîµÄÖµ
+	 * æŸ¥è¯¢é…ç½®é¡¹çš„å€¼
 	 * @param configId
 	 * @return
 	 */
 	String getConfigValue(String configId);
 	
 	/**
-	 * ²éÑ¯ÅäÖÃÏîµÄÖµ, ²¢ÉèÖÃ¼àÌıÆ÷
+	 * æŸ¥è¯¢é…ç½®é¡¹çš„å€¼, å¹¶è®¾ç½®ç›‘å¬å™¨
 	 * @param configId
 	 * @param listener
 	 * @return
@@ -46,25 +46,25 @@ public interface ConfigManager {
 	String getConfigValue(String configId, ConfigListener listener);
 	
 	/**
-	 * ×¢²áÅäÖÃÏî¼àÌıÆ÷
+	 * æ³¨å†Œé…ç½®é¡¹ç›‘å¬å™¨
 	 * @param listener
 	 */
 	void register(ConfigListener listener);
 	
 	/**
-	 * ×¢ÏúÅäÖÃÏî¼àÌıÆ÷
+	 * æ³¨é”€é…ç½®é¡¹ç›‘å¬å™¨
 	 * @param listene
 	 */
 	void unregister(ConfigListener listener);
 	
 	/**
-	 * ×¢ÏúÅäÖÃÏî¼àÌıÆ÷
+	 * æ³¨é”€é…ç½®é¡¹ç›‘å¬å™¨
 	 * @param configId
 	 */
 	void unregister(String configId);
 	
 	/**
-	 * ¹¹½¨ÅäÖÃÏîid
+	 * æ„å»ºé…ç½®é¡¹id
 	 * @param appName
 	 * @param dbKey
 	 * @return

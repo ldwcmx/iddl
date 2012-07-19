@@ -11,7 +11,7 @@ import com.it.iddl.config.exception.ConfigException;
 import com.it.iddl.config.factory.ZookeeperConfig;
 
 /**
- * 基于zookeeper的配置管理器
+ * 鍩轰簬zookeeper鐨勯厤缃鐞嗗櫒
  * @author sihai
  *
  */

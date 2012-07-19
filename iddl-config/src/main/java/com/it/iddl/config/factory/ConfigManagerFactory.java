@@ -10,14 +10,14 @@ import com.it.iddl.config.ZookeeperConfigManager;
 import com.it.iddl.config.exception.ConfigException;
 
 /**
- * ÅäÖÃ¹ÜÀíÆ÷¹¤³§
+ * é…ç½®ç®¡ç†å™¨å·¥å‚
  * @author sihai
  *
  */
 public abstract class ConfigManagerFactory {
 
 	/**
-	 * ´´½¨»ùÓÚZookeeperÅäÖÃ¹ÜÀíÆ÷
+	 * åˆ›å»ºåŸºäºZookeeperé…ç½®ç®¡ç†å™¨
 	 * @param config
 	 * @return
 	 * @throws ConfigException

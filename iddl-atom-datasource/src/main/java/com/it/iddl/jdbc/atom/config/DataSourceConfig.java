@@ -12,46 +12,46 @@ import com.iacrqq.util.StringUtil;
 import com.it.iddl.jdbc.atom.common.AtomConstants;
 
 /**
- * Êı¾İÔ´ÅäÖÃĞÅÏ¢
+ * æ•°æ®æºé…ç½®ä¿¡æ¯
  * @author sihai
  *
  */
 public class DataSourceConfig {
 	
-	private String ip;			// Êı¾İ¿âIP
-	private String port;		// Êı¾İ¿âPort
-	private String dbName;		// Êı¾İ¿âÃû
+	private String ip;			// æ•°æ®åº“IP
+	private String port;		// æ•°æ®åº“Port
+	private String dbName;		// æ•°æ®åº“å
 
-	private String userName;	// ÓÃ»§Ãû
-	private String password;	// ÃÜÂë
+	private String userName;	// ç”¨æˆ·å
+	private String password;	// å¯†ç 
 
-	private String driverClassName;	// Çı¶¯ÀàÃû
-	private String sorterClassName;	// ÅÅĞò
+	private String driverClassName;	// é©±åŠ¨ç±»å
+	private String sorterClassName;	// æ’åº
 
 	private int preparedStatementCacheSize;
 
-	private int minPoolSize;	// Á¬½Ó³Ø×îĞ¡ÊıÄ¿
-	private int maxPoolSize;	// Á¬½Ó³Ø×î´óÊıÄ¿
+	private int minPoolSize;	// è¿æ¥æ± æœ€å°æ•°ç›®
+	private int maxPoolSize;	// è¿æ¥æ± æœ€å¤§æ•°ç›®
 
 	private int blockingTimeout;	//
 	private long idleTimeout;		// 
 
 	private String oracleConType = AtomConstants.DEFAULT_ORACLE_CON_TYPE;
 
-	private AtomDatabaseTypeEnum dbTypeEnum;		// Êı¾İ¿âÀàĞÍ
-	private AtomDatabaseStatusEnum dbStautsEnum;	// Êı¾İ¿â×´Ì¬
+	private AtomDatabaseTypeEnum dbTypeEnum;		// æ•°æ®åº“ç±»å‹
+	private AtomDatabaseStatusEnum dbStautsEnum;	// æ•°æ®åº“çŠ¶æ€
 
 	private Map<String, String> connectionProperties = new HashMap<String, String>();
 	
-	private int writeRestrictTimes;		// Ğ´´ÎÊıÏŞÖÆ
-	private int readRestrictTimes;		// ¶Á´ÎÊıÏŞÖÆ
+	private int writeRestrictTimes;		// å†™æ¬¡æ•°é™åˆ¶
+	private int readRestrictTimes;		// è¯»æ¬¡æ•°é™åˆ¶
 
-	private int timeSliceInMillis;		// Í³¼ÆÊ±¼äÆ¬ 
+	private int timeSliceInMillis;		// ç»Ÿè®¡æ—¶é—´ç‰‡ 
 
-	private int threadCountRestrict;	// Ïß³Ì¼¼ÊõcountÏŞÖÆ
+	private int threadCountRestrict;	// çº¿ç¨‹æŠ€æœ¯counté™åˆ¶
 	
-	private int maxConcurrentReadRestrict;	// ÔÊĞí²¢·¢¶ÁµÄ×î´ó¸öÊı£¬0Îª²»ÏŞÖÆ
-	private int maxConcurrentWriteRestrict; // ÔÊĞí²¢·¢Ğ´µÄ×î´ó¸öÊı£¬0Îª²»ÏŞÖÆ
+	private int maxConcurrentReadRestrict;	// å…è®¸å¹¶å‘è¯»çš„æœ€å¤§ä¸ªæ•°ï¼Œ0ä¸ºä¸é™åˆ¶
+	private int maxConcurrentWriteRestrict; // å…è®¸å¹¶å‘å†™çš„æœ€å¤§ä¸ªæ•°ï¼Œ0ä¸ºä¸é™åˆ¶
 	
 	private volatile boolean isSingleInGroup;
 

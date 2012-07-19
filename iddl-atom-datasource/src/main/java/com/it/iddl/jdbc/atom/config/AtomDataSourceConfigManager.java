@@ -20,20 +20,20 @@ import com.it.iddl.jdbc.atom.exception.AtomException;
 public interface AtomDataSourceConfigManager {
 	
 	/**
-	 * ³õÊ¼»¯
+	 * åˆå§‹åŒ–
 	 * @param config
 	 * @throws AtomException
 	 */
 	void init(Properties config) throws AtomException;
 	
 	/**
-	 * Í£Ö¹
+	 * åœæ­¢
 	 * @throws AtomException
 	 */
 	void stop() throws AtomException;
 	
 	/**
-	 * »ñÈ¡Êı¾İÔ´ÅäÖÃÏîÖµ
+	 * è·å–æ•°æ®æºé…ç½®é¡¹å€¼
 	 * @param appName
 	 * @param dbKey
 	 * @return
@@ -41,7 +41,7 @@ public interface AtomDataSourceConfigManager {
 	DataSourceConfig getConfig(String appName, String dbKey);
 	
 	/**
-	 * »ñÈ¡Êı¾İÔ´ÅäÖÃÏîÖµ²¢×¢²áÊı¾İÔ´ÅäÖÃÏî¼àÌıÆ÷
+	 * è·å–æ•°æ®æºé…ç½®é¡¹å€¼å¹¶æ³¨å†Œæ•°æ®æºé…ç½®é¡¹ç›‘å¬å™¨
 	 * @param appName
 	 * @param dbKey
 	 * @param listener
@@ -50,13 +50,13 @@ public interface AtomDataSourceConfigManager {
 	DataSourceConfig getConfig(String appName, String dbKey, DataSourceConfigListener listener);
 	
 	/**
-	 * ×¢²áÊı¾İÔ´ÅäÖÃÏî¼àÌıÆ÷
+	 * æ³¨å†Œæ•°æ®æºé…ç½®é¡¹ç›‘å¬å™¨
 	 * @param listener
 	 */
 	void register(DataSourceConfigListener listener);
 	
 	/**
-	 * ×¢ÏúÊı¾İÔ´ÅäÖÃÏî¼àÌıÆ÷
+	 * æ³¨é”€æ•°æ®æºé…ç½®é¡¹ç›‘å¬å™¨
 	 */
 	void unregister();
 }

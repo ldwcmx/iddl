@@ -14,33 +14,33 @@ import javax.sql.DataSource;
 import com.it.iddl.jdbc.atom.exception.AtomException;
 
 /**
- * ³éÏóµÄÔ­×ÓÊı¾İÔ´, ¶ÔÓ¦Ò»¸öÊı¾İ¿âµÄÊı¾İÔ´
+ * æŠ½è±¡çš„åŸå­æ•°æ®æº, å¯¹åº”ä¸€ä¸ªæ•°æ®åº“çš„æ•°æ®æº
  * @author sihai
  *
  */
 public abstract class AbstractAtomDataSource implements DataSource {
 	
 	/**
-	 * »ñÈ¡×ÓÀàµÄµ×²ãDataSource
+	 * è·å–å­ç±»çš„åº•å±‚DataSource
 	 * @return
 	 * @throws SQLException
 	 */
 	protected abstract DataSource getDataSource() throws SQLException;
 
 	/**
-	 * ³õÊ¼»¯
+	 * åˆå§‹åŒ–
 	 * @throws Exception
 	 */
 	public abstract void init() throws AtomException;
 
 	/**
-	 * Ë¢ĞÂÊı¾İÔ´
+	 * åˆ·æ–°æ•°æ®æº
 	 * @throws AtomException
 	 */
 	public abstract void flush() throws AtomException;
 
 	/**
-	 * Ïú»ÙÊı¾İÔ´
+	 * é”€æ¯æ•°æ®æº
 	 * @throws Exception
 	 */
 	public abstract void destroy() throws AtomException;

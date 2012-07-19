@@ -5,7 +5,7 @@ import com.it.iddl.jdbc.atom.config.DataSourceConfig;
 public interface DataSourceConfigListener {
 
 	/**
-	 * Í¨ÖªÊı¾İÔ´ÅäÖÃĞÅÏ¢±ä¸ü
+	 * é€šçŸ¥æ•°æ®æºé…ç½®ä¿¡æ¯å˜æ›´
 	 * @param newConfig
 	 */
 	void changed(DataSourceConfig newConfig);

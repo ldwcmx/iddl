@@ -20,8 +20,8 @@ import com.it.iddl.jdbc.atom.exception.AtomException;
 
 /**
  * <p>
- * Ö§³Ö¶¯Ì¬ÅäÖÃµÄÔ­×ÓÊı¾İÔ´, ¶ÔÓ¦Ò»¸öÊı¾İ¿âµÄÊı¾İÔ´,
- * Ö§³ÖÅäÖÃÖĞĞÄ¶¯Ì¬ÍÆËÍÅäÖÃĞÅÏ¢, ÅäÖÃĞÅÏ¢±ä¸üºó, Êı¾İÔ´×Ô¶¯ÎŞ·ìÖØĞÂÅäÖÃ
+ * æ”¯æŒåŠ¨æ€é…ç½®çš„åŸå­æ•°æ®æº, å¯¹åº”ä¸€ä¸ªæ•°æ®åº“çš„æ•°æ®æº,
+ * æ”¯æŒé…ç½®ä¸­å¿ƒåŠ¨æ€æ¨é€é…ç½®ä¿¡æ¯, é…ç½®ä¿¡æ¯å˜æ›´å, æ•°æ®æºè‡ªåŠ¨æ— ç¼é‡æ–°é…ç½®
  * </p>
  * @author sihai
  *
@@ -29,35 +29,35 @@ import com.it.iddl.jdbc.atom.exception.AtomException;
 public class DynamicAtomDataSource extends AbstractAtomDataSource {
 
 private static Log logger = LogFactory.getLog(DynamicConfigSupporter.class);
-	
-	private String appName;						// ÏµÍ³·ÖÅäµÄÓ¦ÓÃÃû³Æ
-	private String dbKey;						// ÏµÍ³·ÖÅäµÄÊı¾İ¿âkey
-	
-	private volatile DataSourceConfig config;	// ÔËĞĞÊ±ÅäÖÃ
-	private DataSourceConfig localConfig;		// ÓÅÏÈµÄ±¾µØÅäÖÃ
-	
+
+	private String appName;						// ç³»ç»Ÿåˆ†é…çš„åº”ç”¨åç§°
+	private String dbKey;						// ç³»ç»Ÿåˆ†é…çš„æ•°æ®åº“key
+
+	private volatile DataSourceConfig config;	// è¿è¡Œæ—¶é…ç½®
+	private DataSourceConfig localConfig;		// ä¼˜å…ˆçš„æœ¬åœ°é…ç½®
+
 	private AtomDataSourceConfigManager configManager;
-	
+
 	public void init() throws AtomException {
-		
-		// Ä¬ÈÏÊ¹ÓÃzookeeper
+
+		// é»˜è®¤ä½¿ç”¨zookeeper
 		configManager = new ZookeeperAtomDataSourceConfigManager();
 		configManager.init(null);
-		
+
 		DataSourceConfig config = configManager.getConfig(appName, dbKey);
 		// 
 		build(config);
-		
+
 		configManager.register(new DataSourceConfigListener() {
 			@Override
 			public void changed(DataSourceConfig newConfig) {
-				// Ë¢ĞÂÊı¾İÔ´
+				// åˆ·æ–°æ•°æ®æº
 				reflush(newConfig);
 			}
 		});
 	}
-	
-	
+
+
 	@Override
 	public void destroy() throws AtomException {
 		// TODO Auto-generated method stub
@@ -66,7 +66,7 @@ private static Log logger = LogFactory.getLog(DynamicConfigSupporter.class);
 	@Override
 	public void flush()  {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -74,23 +74,23 @@ private static Log logger = LogFactory.getLog(DynamicConfigSupporter.class);
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	/**
-	 * ½¨Á¢Êı¾İÔ´
+	 * å»ºç«‹æ•°æ®æº
 	 * @param config
 	 */
 	private void build(DataSourceConfig config) {
-		
+
 	}
-	
+
 	/**
-	 * Ë¢ĞÂÊı¾İÔ´
+	 * åˆ·æ–°æ•°æ®æº
 	 * @param newConfig
 	 */
 	private void reflush(DataSourceConfig newConfig) {
-		
+
 	}
-	
+
 	public String getAppName() {
 		return appName;
 	}

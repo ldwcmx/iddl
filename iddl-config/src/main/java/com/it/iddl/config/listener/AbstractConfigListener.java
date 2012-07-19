@@ -6,13 +6,13 @@
 package com.it.iddl.config.listener;
 
 /**
- * ³éÏóµÄÅäÖÃ¼àÌıÆ÷
+ * æŠ½è±¡çš„é…ç½®é¡¹ç›‘å¬å™¨
  * @author sihai
  *
  */
 public abstract class AbstractConfigListener implements ConfigListener {
 
-	protected String configId;	// ÅäÖÃÏîid
+	protected String configId;	// é…ç½®é¡¹id
 	
 	@Override
 	public String getConfigId() {

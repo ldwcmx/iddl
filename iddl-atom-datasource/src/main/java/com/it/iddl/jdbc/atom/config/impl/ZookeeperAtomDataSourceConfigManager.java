@@ -53,7 +53,7 @@ public class ZookeeperAtomDataSourceConfigManager implements AtomDataSourceConfi
 	@Override
 	public DataSourceConfig getConfig(String appName, String dbKey, DataSourceConfigListener listener) {
 		String configId = configManager.makeConfigId(appName, dbKey);
-		// ע��ײ��Listener
+		// ×¢²áµ×²ãµÄListener
 		register(listener);
 		String value = configManager.getConfigValue(configId, new AbstractConfigListener() {
 			@Override

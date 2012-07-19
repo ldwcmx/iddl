@@ -12,7 +12,7 @@ import com.iacrqq.util.StringUtil;
 import com.it.iddl.config.listener.ConfigListener;
 
 /**
- * ³éÏóµÄÅäÖÃ¹ÜÀíÆ÷
+ * æŠ½è±¡çš„é…ç½®ç®¡ç†å™¨
  * @author sihai
  *
  */
@@ -22,20 +22,20 @@ public abstract class AbstractConfigManager implements ConfigManager {
 	private Object _listenerMap_lock_ = new Object();
 	
 	/**
-	 * ²éÑ¯ÅäÖÃÖĞĞÄµÄÅäÖÃÏîµÄÖµ 
+	 * æŸ¥è¯¢é…ç½®ä¸­å¿ƒçš„é…ç½®é¡¹çš„å€¼ 
 	 * @param configId
 	 * @return
 	 */
 	protected abstract String getValue(String configId);
 	
 	/**
-	 * Í¨Öªµ×²ã¼àÌıÅäÖÃÏî
+	 * é€šçŸ¥åº•å±‚ç›‘å¬é…ç½®é¡¹
 	 * @param configId
 	 */
 	protected abstract void monitor(String configId);
 	
 	/**
-	 * Í¨Öªµ×²ã½â³ı¼àÌıÅäÖÃÏî
+	 * é€šçŸ¥åº•å±‚è§£é™¤ç›‘å¬é…ç½®é¡¹
 	 * @param configId
 	 */
 	protected abstract void unmonitor(String configId);
@@ -89,7 +89,7 @@ public abstract class AbstractConfigManager implements ConfigManager {
 	}
 	
 	/**
-	 * ×ÓÀàÔÚÅäÖÃÏî±ä¸üÊÇµ÷ÓÃ±¾·½·¨
+	 * å­ç±»åœ¨é…ç½®é¡¹å˜æ›´æ˜¯è°ƒç”¨æœ¬æ–¹æ³•
 	 * @param configId
 	 * @param newValue
 	 */

@@ -7,7 +7,7 @@ package com.it.iddl.config.listener;
 
 /**
  * <p>
- * ÅäÖÃ¼àÌıÆ÷
+ * é…ç½®ç›‘å¬å™¨
  * </p>
  * @author sihai
  *
@@ -15,20 +15,20 @@ package com.it.iddl.config.listener;
 public interface ConfigListener {
 	
 	/**
-	 * »ñÈ¡¼àÌıµÄÅäÖÃÏîid
+	 * è·å–ç›‘å¬çš„é…ç½®é¡¹id
 	 * @return
 	 */
 	String getConfigId();
 	
 	/**
-	 * ÉèÖÃÅäÖÃÏîid
+	 * è®¾ç½®é…ç½®é¡¹id
 	 * @param configId
 	 */
 	void setConfigId(String configId);
 	
 	/**
-	 * Êı¾İ±ä¸üÍ¨Öª
-	 * @param newValue	ĞÂµÄÖµ
+	 * æ•°æ®å˜æ›´é€šçŸ¥
+	 * @param newValue	æ–°çš„å€¼
 	 */
 	void changed(String newValue);
 }
