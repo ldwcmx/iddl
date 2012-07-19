@@ -115,7 +115,7 @@
 	  </dependencies>
 	  
 	  <build>
-		<finalName>icommunity-biz</finalName>
+		<finalName>iddl-common</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

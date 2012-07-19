@@ -9,6 +9,8 @@
 	<url>http://www.ihome.com</url>
 
 	<modules>
+		<module>iddl-config</module>
+		<module>iddl-datasource</module>
 		<module>iddl-atom-datasource</module>
 		<module>iddl-group-datasource</module>
 		<module>iddl-client</module>
@@ -61,6 +63,16 @@
 				<artifactId>hamcrest-all</artifactId>
 				<version>1.1</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>iddl-config</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>iddl-datasource</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
