@@ -271,6 +271,11 @@
 				<artifactId>lucene-analyzers</artifactId>
 				<version>${lucene-analyzers.version}</version>
 			</dependency>
+			<dependency>
+            	<groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>3.4.3</version>
+           </dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>

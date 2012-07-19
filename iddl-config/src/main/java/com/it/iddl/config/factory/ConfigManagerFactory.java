@@ -7,6 +7,7 @@ package com.it.iddl.config.factory;
 
 import com.it.iddl.config.ConfigManager;
 import com.it.iddl.config.ZookeeperConfigManager;
+import com.it.iddl.config.ZookeeperConfigManager.ZookeeperConfig;
 import com.it.iddl.config.exception.ConfigException;
 
 /**

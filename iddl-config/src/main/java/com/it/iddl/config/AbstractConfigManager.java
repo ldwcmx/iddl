@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.iacrqq.util.StringUtil;
+import com.it.iddl.config.exception.ConfigException;
 import com.it.iddl.config.listener.ConfigListener;
 
 /**
@@ -25,23 +26,26 @@ public abstract class AbstractConfigManager implements ConfigManager {
 	 * 查询配置中心的配置项的值 
 	 * @param configId
 	 * @return
+	 * @throws ConfigException
 	 */
-	protected abstract String getValue(String configId);
+	protected abstract String getValue(String configId) throws ConfigException;
 	
 	/**
 	 * 通知底层监听配置项
 	 * @param configId
+	 * @throws ConfigException
 	 */
-	protected abstract void monitor(String configId);
+	protected abstract void monitor(String configId) throws ConfigException;
 	
 	/**
 	 * 通知底层解除监听配置项
 	 * @param configId
+	 * @throws ConfigException
 	 */
 	protected abstract void unmonitor(String configId);
 	
 	@Override
-	public String getConfigValue(String configId, ConfigListener listener) {
+	public String getConfigValue(String configId, ConfigListener listener) throws ConfigException {
 		if(StringUtil.isBlank(configId) || null == listener) {
 			throw new IllegalArgumentException("Parameter configId must not be blank and listener must not be null.");
 		}
@@ -51,12 +55,12 @@ public abstract class AbstractConfigManager implements ConfigManager {
 	}
 
 	@Override
-	public String getConfigValue(String configId) {
+	public String getConfigValue(String configId) throws ConfigException {
 		return getValue(configId);
 	}
 	
 	@Override
-	public void register(ConfigListener listener) {
+	public void register(ConfigListener listener) throws ConfigException {
 		if(null == listener || StringUtil.isBlank(listener.getConfigId())) {
 			throw new IllegalArgumentException("Parameter listener must not be null and listener.getConfigId() must not be blank.");
 		}
@@ -67,7 +71,7 @@ public abstract class AbstractConfigManager implements ConfigManager {
 	}
 	
 	@Override
-	public void unregister(ConfigListener listener) {
+	public void unregister(ConfigListener listener) throws ConfigException {
 		if(null == listener || StringUtil.isBlank(listener.getConfigId())) {
 			throw new IllegalArgumentException("Parameter listener must not be null and listener.getConfigId() must not be blank.");
 		}
@@ -78,7 +82,7 @@ public abstract class AbstractConfigManager implements ConfigManager {
 	}
 
 	@Override
-	public void unregister(String configId) {
+	public void unregister(String configId) throws ConfigException {
 		if(StringUtil.isBlank(configId)) {
 			throw new IllegalArgumentException("Parameter configId must not be blank.");
 		}

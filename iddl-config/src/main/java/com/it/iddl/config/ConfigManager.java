@@ -17,6 +17,15 @@ import com.it.iddl.config.listener.ConfigListener;
  */
 public interface ConfigManager {
 	
+	int DEFAULT_TIMEOUT = 5000;
+	
+	String CONFIG_MANAGER_SERVER_HOST = "configServerHost";
+	String CONFIG_MANAGER_SERVER_PORT = "configServerPort";
+	String CONFIG_MANAGER_CACHE_DIRECTORY = "configServerCacheDirectory";
+	
+	String DEFAULT_CONFIG_MANAGER_ZOOKEEPER_HOST = "192.168.10.100";
+	int DEFAULT_CONFIG_MANAGER_ZOOKEEPER_PORT = 2181;
+	
 	/**
 	 * 初始化
 	 * @param config
@@ -34,34 +43,39 @@ public interface ConfigManager {
 	 * 查询配置项的值
 	 * @param configId
 	 * @return
+	 * @throws ConfigException
 	 */
-	String getConfigValue(String configId);
+	String getConfigValue(String configId) throws ConfigException;
 	
 	/**
 	 * 查询配置项的值, 并设置监听器
 	 * @param configId
 	 * @param listener
 	 * @return
+	 * @throws ConfigException
 	 */
-	String getConfigValue(String configId, ConfigListener listener);
+	String getConfigValue(String configId, ConfigListener listener)  throws ConfigException;
 	
 	/**
 	 * 注册配置项监听器
 	 * @param listener
+	 * @throws ConfigException
 	 */
-	void register(ConfigListener listener);
+	void register(ConfigListener listener)  throws ConfigException;
 	
 	/**
 	 * 注销配置项监听器
-	 * @param listene
+	 * @param listener
+	 * @throws ConfigException
 	 */
-	void unregister(ConfigListener listener);
+	void unregister(ConfigListener listener) throws ConfigException;
 	
 	/**
 	 * 注销配置项监听器
 	 * @param configId
+	 * @throws ConfigException
 	 */
-	void unregister(String configId);
+	void unregister(String configId)  throws ConfigException;
 	
 	/**
 	 * 构建配置项id
