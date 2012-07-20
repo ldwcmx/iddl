@@ -1,0 +1,228 @@
+/**
+ * iddl
+ * 
+ * Intelligent Distributed Data Layer
+ */
+package com.it.iddl.atom;
+
+import java.sql.SQLException;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.sql.DataSource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.iacrqq.util.StringUtil;
+import com.it.iddl.atom.config.AtomDataSourceConfigManager;
+import com.it.iddl.atom.config.AtomDatabaseStatusEnum;
+import com.it.iddl.atom.config.DataSourceConfig;
+import com.it.iddl.atom.config.impl.ZookeeperAtomDataSourceConfigManager;
+import com.it.iddl.atom.config.listener.DataSourceConfigListener;
+import com.it.iddl.atom.exception.AtomException;
+import com.it.iddl.atom.jdbc.AtomDataSourceWrapper;
+import com.it.iddl.idatasource.IDataSourceFactory;
+import com.it.iddl.idatasource.LocalTxDataSourceConfig;
+import com.it.iddl.idatasource.resource.adapter.jdbc.local.LocalTxDataSource;
+
+/**
+ * <p>
+ * 支持动态配置的原子数据源, 对应一个数据库的数据源,
+ * 支持配置中心动态推送配置信息, 配置信息变更后, 数据源自动无缝重新配置
+ * </p>
+ * @author sihai
+ *
+ */
+public class DynamicAtomDataSource extends AbstractAtomDataSource {
+
+	private static Log logger = LogFactory.getLog(DynamicConfigSupporter.class);
+
+	private String appName;						// 系统分配的应用名称
+	private String dbKey;						// 系统分配的数据库key
+
+	private volatile DataSourceConfig config;	// 运行时配置
+	private DataSourceConfig localConfig;		// 优先的本地配置
+
+	private AtomDataSourceConfigManager configManager;
+	
+	private volatile LocalTxDataSource localTxDataSource;	// 底层数据源
+	private ReentrantLock _ds_lock_;						// 数据源操作锁
+	
+	private volatile AtomDataSourceWrapper wrapDataSource = null;
+	
+	public void init() throws AtomException {
+
+		// 默认使用zookeeper
+		configManager = new ZookeeperAtomDataSourceConfigManager();
+		configManager.init(null);
+		
+		_ds_lock_ = new  ReentrantLock();
+		DataSourceConfig config = configManager.getConfig(appName, dbKey);
+		// 
+		reflush(config);
+
+		configManager.register(new DataSourceConfigListener() {
+			@Override
+			public void changed(DataSourceConfig newConfig) {
+				// 刷新数据源
+				reflush(newConfig);
+			}
+		});
+	}
+
+
+	@Override
+	public void destroy() throws AtomException {
+		if(null != localTxDataSource) {
+			try {
+				localTxDataSource.destroy();
+			} catch (Exception e) {
+				throw new AtomException(e);
+			}
+		}
+		if(null != configManager) {
+			configManager.stop();
+		}
+	}
+
+	@Override
+	public void flush() throws AtomException {
+		try {
+			localTxDataSource.flush();
+		} catch (Exception e) {
+			throw new AtomException(e);
+		}
+	}
+
+	@Override
+	protected DataSource getDataSource() throws SQLException {
+		if(null == wrapDataSource) {
+			try {
+				String errorMsg = null;
+				_ds_lock_.lock();
+				if(null != wrapDataSource) {
+					return wrapDataSource;
+				}
+				
+				if (null == localTxDataSource) {
+					errorMsg = "DynamicAtomDataSource maybe not inited";
+					logger.error(errorMsg);
+					throw new SQLException(errorMsg);
+				}
+				
+				DataSource ds = localTxDataSource.getDatasource();
+				if(null == ds) {
+					errorMsg = "DynamicAtomDataSource maybe not inited";
+					logger.error(errorMsg);
+					throw new SQLException(errorMsg);
+				}
+				
+				AtomDatabaseStatusEnum status = config.getDbStautsEnum();
+				if(null == status || status == AtomDatabaseStatusEnum.NA_STATUS) {
+					errorMsg = "DynamicAtomDataSource database status unknown";
+					logger.error(errorMsg);
+					throw new SQLException(errorMsg);
+				}
+				
+				AtomDataSourceWrapper newds = new AtomDataSourceWrapper(localTxDataSource.getDatasource(), config);
+				wrapDataSource = newds;
+				return wrapDataSource;
+			} finally {
+				_ds_lock_.unlock();
+			}
+		} else {
+			return wrapDataSource;
+		}
+	}
+
+	/**
+	 * 刷新数据源
+	 * @param newConfig
+	 */
+	private void reflush(DataSourceConfig newConfig) {
+		// 本地配置优先
+		overByLocal(newConfig);
+		
+		try {
+			_ds_lock_.lock();
+			if(config.getDbStautsEnum() == AtomDatabaseStatusEnum.NA_STATUS && newConfig.getDbStautsEnum() != AtomDatabaseStatusEnum.NA_STATUS) {
+				// 创建数据源
+				localTxDataSource = IDataSourceFactory.createLocalTxDataSource(dataSourceConfig2LocalTxDataSourceConfig(newConfig));
+				logger.warn("Init datasource");
+			} else if(config.getDbStautsEnum() != AtomDatabaseStatusEnum.NA_STATUS && newConfig.getDbStautsEnum() == AtomDatabaseStatusEnum.NA_STATUS) {
+				// 销毁数据源
+				destroy();
+				logger.warn("Destroy datasource");
+			} else {
+				// 刷新
+				if(isNeedFlush(config, newConfig)) {
+					LocalTxDataSourceConfig c = dataSourceConfig2LocalTxDataSourceConfig(newConfig);
+					localTxDataSource.setConnectionURL(c.getConnectionURL());
+					localTxDataSource.setDriverClass(c.getDriverClass());
+					localTxDataSource.setExceptionSorterClassName(c.getExceptionSorterClassName());
+					flush();
+				}
+			}
+			
+			config = newConfig;
+		} catch (Exception e) {
+			logger.error(e);
+		} finally {
+			_ds_lock_.unlock();
+		}
+		
+	}
+	
+	/**
+	 * 优先使用本地配置
+	 * @param config
+	 */
+	private void overByLocal(DataSourceConfig config) {
+		if(null == config || null == localConfig) {
+			return;
+		}
+		if(StringUtil.isNotBlank(localConfig.getDriverClassName())) {
+			config.setDriverClassName(localConfig.getDriverClassName());
+		}
+		if(StringUtil.isNotBlank(localConfig.getSorterClassName())) {
+			config.setSorterClassName(localConfig.getSorterClassName());
+		}
+		if(StringUtil.isNotBlank(localConfig.getPassword())) {
+			config.setPassword(localConfig.getPassword());
+		}
+		if(null != localConfig.getConnectionProperties()
+				&& !localConfig.getConnectionProperties().isEmpty()) {
+			config.setConnectionProperties(localConfig.getConnectionProperties());
+		}
+	}
+	
+	/**
+	 * 
+	 * @param dsConfig
+	 * @return
+	 */
+	private LocalTxDataSourceConfig dataSourceConfig2LocalTxDataSourceConfig(DataSourceConfig dsConfig) {
+		LocalTxDataSourceConfig config = new LocalTxDataSourceConfig();
+		return config;
+	}
+	
+	private boolean isNeedFlush(DataSourceConfig oldConfig, DataSourceConfig newConfig)  {
+		return false;
+	}
+
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public String getDbKey() {
+		return dbKey;
+	}
+
+	public void setDbKey(String dbKey) {
+		this.dbKey = dbKey;
+	} 
+}
