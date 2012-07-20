@@ -18,6 +18,7 @@
 		<module>iddl-util</module>
 		<module>iddl-rule</module>
 		<module>iddl-parser</module>
+		<module>iddl-console</module>
 	</modules>
   
 	<properties>

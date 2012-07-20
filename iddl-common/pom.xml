@@ -35,6 +35,10 @@
 			<artifactId>util</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.it.iddl</groupId>
+			<artifactId>iddl-util</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 		</dependency>

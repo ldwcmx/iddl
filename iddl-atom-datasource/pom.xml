@@ -32,6 +32,18 @@
 		</dependency>
 		<dependency>
 			<groupId>com.it.iddl</groupId>
+			<artifactId>iddl-datasource</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.it.iddl</groupId>
+			<artifactId>iddl-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.it.iddl</groupId>
+			<artifactId>iddl-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.it.iddl</groupId>
 			<artifactId>iddl-config</artifactId>
 		</dependency>
 		<dependency>
