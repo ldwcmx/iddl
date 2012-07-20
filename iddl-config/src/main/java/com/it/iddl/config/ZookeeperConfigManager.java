@@ -391,8 +391,8 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 	 */
 	public static class ZookeeperConfig {
 		
-		private String    zookeeperHost = DEFAULT_CONFIG_MANAGER_ZOOKEEPER_HOST;
-		private int		  zookeeperPort = DEFAULT_CONFIG_MANAGER_ZOOKEEPER_PORT;
+		private String    zookeeperHost = DEFAULT_CONFIG_SERVER_ZOOKEEPER_HOST;
+		private int		  zookeeperPort = DEFAULT_CONFIG_SERVER_ZOOKEEPER_PORT;
 		private String    cacheDirecory = DEFAULT_CACHE_DIRECTORY;
 		
 		public String getZookeeperHost() {
@@ -427,11 +427,11 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 		public static ZookeeperConfig fromProperties(Properties properties) {
 			ZookeeperConfig config = new ZookeeperConfig();
 			
-			if(properties.contains(CONFIG_MANAGER_SERVER_HOST)) {
-				config.zookeeperHost = (String)properties.get(CONFIG_MANAGER_SERVER_HOST);
+			if(properties.contains(CONFIG_SERVER_SERVER_HOST)) {
+				config.zookeeperHost = (String)properties.get(CONFIG_SERVER_SERVER_HOST);
 			}
-			if(properties.contains(CONFIG_MANAGER_SERVER_PORT)) {
-				config.zookeeperPort = Integer.valueOf((String)properties.get(CONFIG_MANAGER_SERVER_PORT));
+			if(properties.contains(CONFIG_SERVER_SERVER_PORT)) {
+				config.zookeeperPort = Integer.valueOf((String)properties.get(CONFIG_SERVER_SERVER_PORT));
 			}
 			if(properties.contains(CONFIG_MANAGER_CACHE_DIRECTORY)) {
 				config.cacheDirecory = (String)properties.get(CONFIG_MANAGER_CACHE_DIRECTORY);

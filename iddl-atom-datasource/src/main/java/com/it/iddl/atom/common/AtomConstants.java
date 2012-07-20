@@ -35,8 +35,7 @@ public class AtomConstants {
 
 	public final static String DB_STATUS_NA = "NA";
 
-	public static Map<String, String> DEFAULT_ORACLE_CONNECTION_PROPERTIES = new HashMap<String, String>(
-			2);
+	public static Map<String, String> DEFAULT_ORACLE_CONNECTION_PROPERTIES = new HashMap<String, String>(2);
 	static {
 		AtomConstants.DEFAULT_ORACLE_CONNECTION_PROPERTIES.put(
 				"SetBigStringTryClob", "true");
@@ -52,16 +51,14 @@ public class AtomConstants {
 	}
 
 	public final static String DEFAULT_ORACLE_DRIVER_CLASS = "oracle.jdbc.driver.OracleDriver";
-
 	public final static String DEFAULT_MYSQL_DRIVER_CLASS = "com.mysql.jdbc.Driver";
+	public final static String DEFAULT_POSTGRESQL_DRIVER_CLASS = "com.mysql.jdbc.Driver";
 
 	public final static String DEFAULT_ORACLE_SORTER_CLASS = "com.taobao.datasource.resource.adapter.jdbc.vendor.OracleExceptionSorter";
-
 	public final static String DEFAULT_MYSQL_SORTER_CLASS = "com.taobao.datasource.resource.adapter.jdbc.vendor.MySQLExceptionSorter";
-
+	public final static String DEFAULT_POSTGRESQL_SORTER_CLASS = "com.taobao.datasource.resource.adapter.jdbc.vendor.MySQLExceptionSorter";
 
 	public final static String MYSQL_INTEGRATION_SORTER_CLASS = "com.mysql.jdbc.integration.jboss.ExtendedMysqlExceptionSorter";
-
 	public final static String DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS = "com.mysql.jdbc.integration.jboss.MysqlValidConnectionChecker";
 
 	/**

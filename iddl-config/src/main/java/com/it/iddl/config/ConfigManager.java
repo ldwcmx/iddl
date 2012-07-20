@@ -19,12 +19,13 @@ public interface ConfigManager {
 	
 	int DEFAULT_TIMEOUT = 5000;
 	
-	String CONFIG_MANAGER_SERVER_HOST = "configServerHost";
-	String CONFIG_MANAGER_SERVER_PORT = "configServerPort";
-	String CONFIG_MANAGER_CACHE_DIRECTORY = "configServerCacheDirectory";
+	String CONFIG_SERVER_TYPE = "configServerType";
+	String CONFIG_SERVER_SERVER_HOST = "configServerHost";
+	String CONFIG_SERVER_SERVER_PORT = "configServerPort";
+	String CONFIG_MANAGER_CACHE_DIRECTORY = "configManagerCacheDirectory";
 	
-	String DEFAULT_CONFIG_MANAGER_ZOOKEEPER_HOST = "192.168.10.100";
-	int DEFAULT_CONFIG_MANAGER_ZOOKEEPER_PORT = 2181;
+	String DEFAULT_CONFIG_SERVER_ZOOKEEPER_HOST = "192.168.10.100";
+	int DEFAULT_CONFIG_SERVER_ZOOKEEPER_PORT = 2181;
 	
 	/**
 	 * 初始化

@@ -16,8 +16,8 @@ import com.it.iddl.atom.common.AtomConstants;
 public enum AtomDatabaseTypeEnum {
 
 	ORACLE(AtomConstants.DEFAULT_ORACLE_DRIVER_CLASS, AtomConstants.DEFAULT_ORACLE_SORTER_CLASS),
-
-	MYSQL(AtomConstants.DEFAULT_MYSQL_DRIVER_CLASS, AtomConstants.DEFAULT_MYSQL_SORTER_CLASS);
+	MYSQL(AtomConstants.DEFAULT_MYSQL_DRIVER_CLASS, AtomConstants.DEFAULT_MYSQL_SORTER_CLASS),
+	POSTGRESQL(AtomConstants.DEFAULT_POSTGRESQL_DRIVER_CLASS, AtomConstants.DEFAULT_POSTGRESQL_SORTER_CLASS);
 
 	private String driverClassName;
 	private String sorterClassName;

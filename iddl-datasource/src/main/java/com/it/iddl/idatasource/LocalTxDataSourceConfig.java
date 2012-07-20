@@ -11,7 +11,7 @@ public class LocalTxDataSourceConfig  implements Cloneable{
 
 	private String jndiName;
     private String connectionURL;
-    private String driverClass;
+    private String driverClassName;
     private String transactionIsolation="-1";
     private Map<String, String> connectionProperties = new HashMap<String, String>();
     private String userName;
@@ -67,8 +67,8 @@ public class LocalTxDataSourceConfig  implements Cloneable{
         this.connectionURL = connectionURL;
     }
 
-    public void setDriverClass(String driverClass) {
-        this.driverClass = driverClass;
+    public void setDriverClassName(String driverClassName) {
+        this.driverClassName = driverClassName;
     }
 
     public void setExceptionSorterClassName(String exceptionSorterClassName) {
@@ -155,8 +155,8 @@ public class LocalTxDataSourceConfig  implements Cloneable{
         return connectionURL;
     }
 
-    public String getDriverClass() {
-        return driverClass;
+    public String getDriverClassName() {
+        return driverClassName;
     }
 
     public String getTransactionIsolation() {
@@ -273,7 +273,7 @@ public class LocalTxDataSourceConfig  implements Cloneable{
         result = prime * result + ((checkValidConnectionSQL == null) ? 0 : checkValidConnectionSQL.hashCode());
         result = prime * result + ((connectionProperties == null) ? 0 : connectionProperties.hashCode());
         result = prime * result + ((connectionURL == null) ? 0 : connectionURL.hashCode());
-        result = prime * result + ((driverClass == null) ? 0 : driverClass.hashCode());
+        result = prime * result + ((driverClassName == null) ? 0 : driverClassName.hashCode());
         result = prime * result + ((exceptionSorterClassName == null) ? 0 : exceptionSorterClassName.hashCode());
         result = prime * result + (int) (idleTimeoutMinutes ^ (idleTimeoutMinutes >>> 32));
         result = prime * result + ((jndiName == null) ? 0 : jndiName.hashCode());
@@ -328,10 +328,10 @@ public class LocalTxDataSourceConfig  implements Cloneable{
                 return false;
         } else if (!connectionURL.equals(other.connectionURL))
             return false;
-        if (driverClass == null) {
-            if (other.driverClass != null)
+        if (driverClassName == null) {
+            if (other.driverClassName != null)
                 return false;
-        } else if (!driverClass.equals(other.driverClass))
+        } else if (!driverClassName.equals(other.driverClassName))
             return false;
         if (exceptionSorterClassName == null) {
             if (other.exceptionSorterClassName != null)
@@ -434,7 +434,7 @@ public class LocalTxDataSourceConfig  implements Cloneable{
         sb.append("LocalTxDataSourceDO(").append(super.toString()).append(TAB)
         .append("jndiName = ").append(this.jndiName).append(TAB)
         .append("connectionURL = ").append(this.connectionURL).append(TAB)
-        .append("driverClass = " ).append(this.driverClass).append(TAB)
+        .append("driverClassName = " ).append(this.driverClassName).append(TAB)
         .append("userName = " ).append(this.userName).append(TAB)
         .append("encPassword = ").append(this.encPassword).append(TAB)
         .append("maxPoolSize = ").append(this.maxPoolSize).append(TAB)

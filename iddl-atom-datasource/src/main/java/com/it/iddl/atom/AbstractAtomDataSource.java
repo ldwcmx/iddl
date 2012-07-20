@@ -20,6 +20,9 @@ import com.it.iddl.atom.exception.AtomException;
  */
 public abstract class AbstractAtomDataSource implements DataSource {
 	
+	protected String appName;					// 系统分配的应用名称
+	protected String dbKey;						// 系统分配的数据库key
+	
 	/**
 	 * 获取子类的底层DataSource
 	 * @return
@@ -89,4 +92,20 @@ public abstract class AbstractAtomDataSource implements DataSource {
 			throw new SQLException("not a wrapper for "+ iface);
 		}
 	}
+	
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public String getDbKey() {
+		return dbKey;
+	}
+
+	public void setDbKey(String dbKey) {
+		this.dbKey = dbKey;
+	} 
 }

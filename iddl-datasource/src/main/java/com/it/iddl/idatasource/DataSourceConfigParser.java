@@ -111,7 +111,7 @@ public class DataSourceConfigParser {
         LocalTxDataSourceConfig ds = new LocalTxDataSourceConfig();
         ds.setJndiName(localTxDatasource.elementTextTrim(JNDI_NAME));
         ds.setConnectionURL(localTxDatasource.elementTextTrim(CONNECTION_URL));
-        ds.setDriverClass(localTxDatasource.elementTextTrim(DRIVER_CLASS));
+        ds.setDriverClassName(localTxDatasource.elementTextTrim(DRIVER_CLASS));
         String transactionIsolation = localTxDatasource.elementTextTrim(TRANSACTION_ISOLATION);
         ds.setTransactionIsolation(transactionIsolation != null ? transactionIsolation : DEFAULT_TRANSACTION_ISOLATION);
         ds.setUserName(localTxDatasource.elementTextTrim(USER_NAME));

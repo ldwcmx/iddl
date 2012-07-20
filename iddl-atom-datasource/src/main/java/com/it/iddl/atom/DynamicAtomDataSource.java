@@ -6,6 +6,7 @@
 package com.it.iddl.atom;
 
 import java.sql.SQLException;
+import java.util.Properties;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.sql.DataSource;
@@ -14,13 +15,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.iacrqq.util.StringUtil;
+import com.it.iddl.atom.common.AtomCononectionURLTool;
+import com.it.iddl.atom.common.AtomConstants;
 import com.it.iddl.atom.config.AtomDataSourceConfigManager;
 import com.it.iddl.atom.config.AtomDatabaseStatusEnum;
+import com.it.iddl.atom.config.AtomDatabaseTypeEnum;
 import com.it.iddl.atom.config.DataSourceConfig;
-import com.it.iddl.atom.config.impl.ZookeeperAtomDataSourceConfigManager;
+import com.it.iddl.atom.config.impl.DefaultAtomDataSourceConfigManager;
 import com.it.iddl.atom.config.listener.DataSourceConfigListener;
 import com.it.iddl.atom.exception.AtomException;
 import com.it.iddl.atom.jdbc.AtomDataSourceWrapper;
+import com.it.iddl.config.ConfigManager;
+import com.it.iddl.config.ConfigServerType;
 import com.it.iddl.idatasource.IDataSourceFactory;
 import com.it.iddl.idatasource.LocalTxDataSourceConfig;
 import com.it.iddl.idatasource.resource.adapter.jdbc.local.LocalTxDataSource;
@@ -36,14 +42,15 @@ import com.it.iddl.idatasource.resource.adapter.jdbc.local.LocalTxDataSource;
 public class DynamicAtomDataSource extends AbstractAtomDataSource {
 
 	private static Log logger = LogFactory.getLog(DynamicConfigSupporter.class);
-
-	private String appName;						// 系统分配的应用名称
-	private String dbKey;						// 系统分配的数据库key
-
+	
+	private ConfigServerType configServerType = ConfigServerType.CONFIG_SERVER_ZOOKEEPER;
+	private String configServerHost;
+	private int    configServerPort;
+	
 	private volatile DataSourceConfig config;	// 运行时配置
 	private DataSourceConfig localConfig;		// 优先的本地配置
 
-	private AtomDataSourceConfigManager configManager;
+	private AtomDataSourceConfigManager configManager;		// 
 	
 	private volatile LocalTxDataSource localTxDataSource;	// 底层数据源
 	private ReentrantLock _ds_lock_;						// 数据源操作锁
@@ -53,8 +60,8 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 	public void init() throws AtomException {
 
 		// 默认使用zookeeper
-		configManager = new ZookeeperAtomDataSourceConfigManager();
-		configManager.init(null);
+		configManager = new DefaultAtomDataSourceConfigManager();
+		configManager.init(toProperties());
 		
 		_ds_lock_ = new  ReentrantLock();
 		DataSourceConfig config = configManager.getConfig(appName, dbKey);
@@ -158,7 +165,7 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 				if(isNeedFlush(config, newConfig)) {
 					LocalTxDataSourceConfig c = dataSourceConfig2LocalTxDataSourceConfig(newConfig);
 					localTxDataSource.setConnectionURL(c.getConnectionURL());
-					localTxDataSource.setDriverClass(c.getDriverClass());
+					localTxDataSource.setDriverClass(c.getDriverClassName());
 					localTxDataSource.setExceptionSorterClassName(c.getExceptionSorterClassName());
 					flush();
 				}
@@ -203,26 +210,92 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 	 */
 	private LocalTxDataSourceConfig dataSourceConfig2LocalTxDataSourceConfig(DataSourceConfig dsConfig) {
 		LocalTxDataSourceConfig config = new LocalTxDataSourceConfig();
+		config.setUserName(dsConfig.getUserName());
+		config.setPassword(dsConfig.getPassword());
+		config.setDriverClassName(dsConfig.getDriverClassName());
+		config.setExceptionSorterClassName(dsConfig.getSorterClassName());
+		if(dsConfig.getDbTypeEnum() == AtomDatabaseTypeEnum.MYSQL) {
+			String connectionURL = AtomCononectionURLTool.getMySqlConURL(dsConfig.getIp(), dsConfig.getPort(), dsConfig.getDbName(), dsConfig.getConnectionProperties());
+			config.setConnectionURL(connectionURL);
+			// 如果可以找到mysql driver中的Valid就使用，否则不设置valid
+			try {
+				Class validClass = Class.forName(AtomConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
+				if (null != validClass) {
+					config.setValidConnectionCheckerClassName(AtomConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
+				} else {
+					logger.warn("MYSQL Driver is Not Suport " + AtomConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
+				}
+			} catch (ClassNotFoundException e) {
+				logger.warn("MYSQL Driver is Not Suport " + AtomConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
+			} catch (NoClassDefFoundError e) {
+				logger.warn("MYSQL Driver is Not Suport " + AtomConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
+			}
+			
+			//如果可以找到mysqlDriver中的integrationSorter就使用否则使用默认的
+			try {
+				Class integrationSorterCalss = Class.forName(AtomConstants.MYSQL_INTEGRATION_SORTER_CLASS);
+				if (null != integrationSorterCalss) {
+					config.setExceptionSorterClassName(AtomConstants.MYSQL_INTEGRATION_SORTER_CLASS);
+				} else {
+					config.setExceptionSorterClassName(AtomConstants.DEFAULT_MYSQL_SORTER_CLASS);
+					logger.warn("MYSQL Driver is Not Suport " + AtomConstants.MYSQL_INTEGRATION_SORTER_CLASS
+							+ " use default sorter " + AtomConstants.DEFAULT_MYSQL_SORTER_CLASS);
+				}
+			} catch (ClassNotFoundException e) {
+				logger.warn("MYSQL Driver is Not Suport " + AtomConstants.MYSQL_INTEGRATION_SORTER_CLASS
+						+ " use default sorter " + AtomConstants.DEFAULT_MYSQL_SORTER_CLASS);
+			} catch (NoClassDefFoundError e){
+				logger.warn("MYSQL Driver is Not Suport " + AtomConstants.MYSQL_INTEGRATION_SORTER_CLASS
+						+ " use default sorter " + AtomConstants.DEFAULT_MYSQL_SORTER_CLASS);
+			}
+		} else if(dsConfig.getDbTypeEnum() == AtomDatabaseTypeEnum.ORACLE) {
+			String connectionURL = AtomCononectionURLTool.getOracleConnectionURL(dsConfig.getIp(), dsConfig.getPort(), dsConfig.getDbName(), dsConfig.getOracleConType());
+			config.setConnectionURL(connectionURL);
+			//如果是oracle没有设置ConnectionProperties则给以个默认的
+			if (!dsConfig.getConnectionProperties().isEmpty()) {
+				config.setConnectionProperties(dsConfig.getConnectionProperties());
+			} else {
+				config.setConnectionProperties(AtomConstants.DEFAULT_ORACLE_CONNECTION_PROPERTIES);
+			}
+		}
+		
+		config.setMinPoolSize(dsConfig.getMinPoolSize());
+		config.setMaxPoolSize(dsConfig.getMaxPoolSize());
+		config.setPreparedStatementCacheSize(dsConfig.getPreparedStatementCacheSize());
+		if (dsConfig.getIdleTimeout() > 0) {
+			config.setIdleTimeoutMinutes(dsConfig.getIdleTimeout());
+		}
+		if (dsConfig.getBlockingTimeout() > 0) {
+			config.setBlockingTimeoutMillis(dsConfig.getBlockingTimeout());
+		}
 		return config;
 	}
 	
 	private boolean isNeedFlush(DataSourceConfig oldConfig, DataSourceConfig newConfig)  {
 		return false;
 	}
-
-	public String getAppName() {
-		return appName;
+	
+	private Properties toProperties() {
+		Properties properties = new Properties();
+		properties.put(ConfigManager.CONFIG_SERVER_TYPE, configServerType.value());
+		if(StringUtil.isNotBlank(configServerHost)) {
+			properties.put(ConfigManager.CONFIG_SERVER_SERVER_HOST, configServerHost);
+		}
+		if(configServerPort != 0) {
+			properties.put(ConfigManager.CONFIG_SERVER_SERVER_PORT, configServerPort);
+		}
+		return properties;
+	}
+	
+	public void setConfigServerType(String type) {
+		this.configServerType = ConfigServerType.toEnum(type);
 	}
 
-	public void setAppName(String appName) {
-		this.appName = appName;
+	public void setConfigServerHost(String configServerHost) {
+		this.configServerHost = configServerHost;
 	}
 
-	public String getDbKey() {
-		return dbKey;
+	public void setConfigServerPort(int configServerPort) {
+		this.configServerPort = configServerPort;
 	}
-
-	public void setDbKey(String dbKey) {
-		this.dbKey = dbKey;
-	} 
 }

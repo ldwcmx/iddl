@@ -17,6 +17,8 @@ import javax.management.monitor.Monitor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.it.iddl.atom.common.SQLType;
+import com.it.iddl.atom.common.StringUtils;
 import com.it.iddl.atom.config.AtomDatabaseStatusEnum;
 
 /**

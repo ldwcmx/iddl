@@ -27,6 +27,8 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import com.it.iddl.atom.common.SQLType;
+
 
 /**
  * AtomPreparedStatementWrapper

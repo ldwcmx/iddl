@@ -32,13 +32,13 @@ public class IDataSourceFactory {
 			throw new IllegalArgumentException("dataSource config is Empty!");
 		}
 		LocalTxDataSource localTxDataSource = new LocalTxDataSource();
-		//ÉèÖÃÁ¬½Ó»º´æ¹ÜÀíÆ÷£¬Èç¹û¸ø¶¨ÁËÊ¹ÓÃ¸ø¶¨µÄ£¬Èç¹ûÃ»Ö¸¶¨ÔòÄ¬ÈÏ¸øÒ»¸ö
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¸ï¿½Ä£ï¿½ï¿½ï¿½ï¿½Ã»Ö¸ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½Ï¸ï¿½Ò»ï¿½ï¿½
 		if(null != cachedConnectionManager){
 			localTxDataSource.setCachedConnectionManager(cachedConnectionManager);
 		}else{
 			localTxDataSource.setCachedConnectionManager(defaultCachedConnectionManager);
 		}
-		//ÉèÖÃÊÂÎï¹ÜÀíÆ÷£¬Èç¹û¸ø¶¨µÄÊ¹ÓÃ¸ø¶¨µÄ£¬Èç¹ûÃ»ÓÐÔòÄ¬ÈÏ¸øÒ»¸ö
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¸ï¿½Ä£ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½Ï¸ï¿½Ò»ï¿½ï¿½
 		if(null != transactionManager){
 			localTxDataSource.setTransactionManager(transactionManager);
 		}else{
@@ -52,7 +52,7 @@ public class IDataSourceFactory {
 		localTxDataSource.setCheckValidConnectionSQL(config.getCheckValidConnectionSQL());
 		localTxDataSource.setConnectionProperties(config.getConnectionProperties());
 		localTxDataSource.setConnectionURL(config.getConnectionURL());
-		localTxDataSource.setDriverClass(config.getDriverClass());
+		localTxDataSource.setDriverClass(config.getDriverClassName());
 		localTxDataSource.setExceptionSorterClassName(config.getExceptionSorterClassName());
 		localTxDataSource.setIdleTimeoutMinutes(config.getIdleTimeoutMinutes());
 		localTxDataSource.setMaxSize(config.getMaxPoolSize());
@@ -71,7 +71,7 @@ public class IDataSourceFactory {
 		localTxDataSource.setUserName(config.getUserName());
 		localTxDataSource.setValidateOnMatch(config.isValidateOnMatch());
 		localTxDataSource.setValidConnectionCheckerClassName(config.getValidConnectionCheckerClassName());
-		//ÉèÖÃ°²È«Óò
+		//ï¿½ï¿½ï¿½Ã°ï¿½È«ï¿½ï¿½
 		String securityDomainName = config.getSecurityDomain();
 		if (StringUtils.isNotBlank(securityDomainName)) {
 			SecureIdentityLoginModule securityDomain = loginConfigFinder.get(securityDomainName);
@@ -80,7 +80,7 @@ public class IDataSourceFactory {
 			}
 		}
 		localTxDataSource.setCriteria(config.getCriteria());
-		//³õÊ¼»¯Êý¾ÝÔ´
+		//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ô´
 		localTxDataSource.init();
 		return localTxDataSource;
 	}
