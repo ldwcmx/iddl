@@ -168,13 +168,11 @@ public class CachedConnectionManager {
 
     public void init() throws Exception {
         TransactionSynchronizer.setTransactionManager(tm);
-        // TODO: 找出以下方法的替代方案
         // ServerVMClientUserTransaction.getSingleton().registerTxStartedListener(this);
         // EnterpriseContext.setUserTransactionStartedListener(this);
     }
 
     public void destroy() throws Exception {
-        // TODO: 找出以下方法的替代方案
         // ServerVMClientUserTransaction.getSingleton().unregisterTxStartedListener(this);
         // EnterpriseContext.setUserTransactionStartedListener(null);
     }
@@ -323,7 +321,6 @@ public class CachedConnectionManager {
       throw new IllegalStateException("Trying to return an unknown connection2! " + c);
    }
 
-   // FIXME: UserTransaction开始时需要调用这个方法
    //called by UserTransaction after starting a transaction
    public void userTransactionStarted()
            throws SystemException

@@ -526,4 +526,16 @@ public class WrappedStatement implements Statement, StatementAccess {
 			throw checkException(t);
 		}
 	}
+	
+	@Override
+	public void closeOnCompletion() throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isCloseOnCompletion() throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

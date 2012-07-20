@@ -8,6 +8,8 @@ package com.it.iddl.idatasource;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -39,6 +41,11 @@ public abstract class AbstractIDataSource implements DataSource {
 	@Override
 	public PrintWriter getLogWriter() throws SQLException {
 		return getDatasource().getLogWriter();
+	}
+	
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

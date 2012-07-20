@@ -13,12 +13,6 @@
 	<name>iddl-atom-datasource</name>
 	<url>http://www.ihome.com</url>
   
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    	<java.version>1.6</java.version>
-		<java.encoding>UTF-8</java.encoding>
-	</properties>
-  
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -127,6 +121,11 @@
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers</artifactId>
+		</dependency>
+		<dependency>  
+    		<groupId>net.sf.json-lib</groupId>  
+    		<artifactId>json-lib</artifactId>  
+    		<classifier>jdk15</classifier>  
 		</dependency>
 	  </dependencies>
 	  

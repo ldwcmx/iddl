@@ -503,4 +503,19 @@ public class CachedCallableStatement extends CachedPreparedStatement implements 
 	public void setNClob(String parameterName, Reader reader) throws SQLException {
 		cs.setNClob(parameterName, reader);
 	}
+	
+	// for jdk7
+	@Override
+	public <T> T getObject(int parameterIndex, Class<T> type)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> T getObject(String parameterName, Class<T> type)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

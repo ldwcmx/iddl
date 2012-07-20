@@ -7,11 +7,15 @@ package com.it.iddl.atom.config.impl;
 
 import java.util.Properties;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.iacrqq.util.StringUtil;
 import com.it.iddl.atom.config.AtomDataSourceConfigManager;
+import com.it.iddl.atom.config.AtomDatabaseStatusEnum;
+import com.it.iddl.atom.config.AtomDatabaseTypeEnum;
 import com.it.iddl.atom.config.DataSourceConfig;
 import com.it.iddl.atom.config.listener.DataSourceConfigListener;
 import com.it.iddl.atom.exception.AtomException;
@@ -21,6 +25,7 @@ import com.it.iddl.config.ZookeeperConfigManager.ZookeeperConfig;
 import com.it.iddl.config.exception.ConfigException;
 import com.it.iddl.config.factory.ConfigManagerFactory;
 import com.it.iddl.config.listener.AbstractConfigListener;
+import com.it.iddl.util.PropertyUtil;
 
 /**
  * 
@@ -57,10 +62,12 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 
 	@Override
 	public void stop() throws AtomException {
-		try {
-			configManager.stop();
-		} catch (ConfigException e) {
-			throw new AtomException(e);
+		if(null != configManager) {
+			try {
+				configManager.stop();
+			} catch (ConfigException e) {
+				throw new AtomException(e);
+			}
 		}
 	}
 	
@@ -70,8 +77,25 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 		try {
 			String configId = configManager.makeConfigId(appName, dbKey);
 			// ×¢²áµ×²ãµÄListener
-			register(listener);
-			String value = configManager.getConfigValue(configId, new AbstractConfigListener() {
+			register(appName, dbKey, listener);
+			String value = configManager.getConfigValue(configId);
+			return parse(value);
+		} catch (ConfigException e) {
+			throw new AtomException(e);
+		}
+	}
+
+	@Override
+	public void register(String appName, String dbKey, DataSourceConfigListener listener) throws AtomException {
+		this.listener = listener;
+		final String id = configManager.makeConfigId(appName, dbKey);
+		try {
+			configManager.register(new AbstractConfigListener() {
+				
+				@Override
+				public String getConfigId() {
+					return id;
+				}
 				@Override
 				public void changed(String newValue) {
 					logger.warn(String.format("Config changed for configId:%s, newValue:%s", configId, newValue));
@@ -80,15 +104,9 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 					}
 				}
 			});
-			return parse(value);
 		} catch (ConfigException e) {
 			throw new AtomException(e);
 		}
-	}
-
-	@Override
-	public void register(DataSourceConfigListener listener) throws AtomException {
-		this.listener = listener;
 	}
 
 	@Override
@@ -112,6 +130,34 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 	 */
 	private DataSourceConfig parse(String value) {
 		DataSourceConfig config = new DataSourceConfig();
+		
+		JSONObject json = JSONObject.fromObject(value);
+		config.setIp(json.getString(DataSourceConfig.IP));
+		config.setPort(json.getInt(DataSourceConfig.PORT));
+		config.setDbName(json.getString(DataSourceConfig.DB_NAME));
+		config.setUserName(json.getString(DataSourceConfig.USER_NAME));
+		config.setPassword(json.getString(DataSourceConfig.PASSWORD));
+		config.setDriverClassName(json.getString(DataSourceConfig.DRIVER_CLASS_NAME));
+		config.setSorterClassName(json.getString(DataSourceConfig.SORTER_CLASS_NAME));
+		config.setPreparedStatementCacheSize(json.getInt(DataSourceConfig.PREPARED_STATEMENT_CACHE_SIZE));
+		config.setMinPoolSize(json.getInt(DataSourceConfig.MIN_POOL_SIZE));
+		config.setMaxPoolSize(json.getInt(DataSourceConfig.MAX_POOL_SIZE));
+		config.setBlockingTimeout(json.getInt(DataSourceConfig.BLOCKING_TIMEOUT));
+		config.setIdleTimeout(json.getInt(DataSourceConfig.IDLE_TIMEOUT));
+		
+		config.setDbType(AtomDatabaseTypeEnum.valueOf(json.getString(DataSourceConfig.DB_TYPE)));
+		if(AtomDatabaseTypeEnum.ORACLE == config.getDbType()) {
+			config.setOracleConnectionType(json.getString(DataSourceConfig.ORACLE_CONNECTION_TYPE));
+		}
+		config.setDbStatus(AtomDatabaseStatusEnum.valueOf(json.getString(DataSourceConfig.DB_STATUS)));
+		config.setConnectionProperties(PropertyUtil.parse2Map(json.getString(DataSourceConfig.CONNECTION_PROPERTIES)));
+		config.setWriteRestrictTimes(json.getInt(DataSourceConfig.WRITE_RESTRICT_TIMES));
+		config.setReadRestrictTimes(json.getInt(DataSourceConfig.READ_RESTRICT_TIMES));
+		config.setTimeSliceInMillis(json.getInt(DataSourceConfig.TIME_SLICE_MILLIS));
+		config.setThreadCountRestrict(json.getInt(DataSourceConfig.THREAD_COUNT_RESTRICT));
+		config.setMaxConcurrentReadRestrict(json.getInt(DataSourceConfig.MAX_CONCURRENT_READ_RESTRICT));
+		config.setMaxConcurrentWriteRestrict(json.getInt(DataSourceConfig.MAX_CONCURRENT_WRITE_RESTRICT));
+		config.setIsSingleInGroup(json.getBoolean(DataSourceConfig.IS_SINGLE_IN_GROUP));
 		return config;
 	}
 }

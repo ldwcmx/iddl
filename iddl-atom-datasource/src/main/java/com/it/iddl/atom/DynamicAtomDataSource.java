@@ -6,8 +6,10 @@
 package com.it.iddl.atom;
 
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -40,8 +42,8 @@ import com.it.iddl.idatasource.resource.adapter.jdbc.local.LocalTxDataSource;
  *
  */
 public class DynamicAtomDataSource extends AbstractAtomDataSource {
-
-	private static Log logger = LogFactory.getLog(DynamicConfigSupporter.class);
+	
+	private static Log logger = LogFactory.getLog(DynamicAtomDataSource.class);
 	
 	private ConfigServerType configServerType = ConfigServerType.CONFIG_SERVER_ZOOKEEPER;
 	private String configServerHost;
@@ -68,7 +70,7 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 		// 
 		reflush(config);
 
-		configManager.register(new DataSourceConfigListener() {
+		configManager.register(appName, dbKey, new DataSourceConfigListener() {
 			@Override
 			public void changed(DataSourceConfig newConfig) {
 				// 刷新数据源
@@ -124,7 +126,7 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 					throw new SQLException(errorMsg);
 				}
 				
-				AtomDatabaseStatusEnum status = config.getDbStautsEnum();
+				AtomDatabaseStatusEnum status = config.getDbStatus();
 				if(null == status || status == AtomDatabaseStatusEnum.NA_STATUS) {
 					errorMsg = "DynamicAtomDataSource database status unknown";
 					logger.error(errorMsg);
@@ -152,11 +154,11 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 		
 		try {
 			_ds_lock_.lock();
-			if(config.getDbStautsEnum() == AtomDatabaseStatusEnum.NA_STATUS && newConfig.getDbStautsEnum() != AtomDatabaseStatusEnum.NA_STATUS) {
+			if(null == config || (config.getDbStatus() == AtomDatabaseStatusEnum.NA_STATUS && newConfig.getDbStatus() != AtomDatabaseStatusEnum.NA_STATUS)) {
 				// 创建数据源
 				localTxDataSource = IDataSourceFactory.createLocalTxDataSource(dataSourceConfig2LocalTxDataSourceConfig(newConfig));
 				logger.warn("Init datasource");
-			} else if(config.getDbStautsEnum() != AtomDatabaseStatusEnum.NA_STATUS && newConfig.getDbStautsEnum() == AtomDatabaseStatusEnum.NA_STATUS) {
+			} else if(config.getDbStatus() != AtomDatabaseStatusEnum.NA_STATUS && newConfig.getDbStatus() == AtomDatabaseStatusEnum.NA_STATUS) {
 				// 销毁数据源
 				destroy();
 				logger.warn("Destroy datasource");
@@ -210,12 +212,13 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 	 */
 	private LocalTxDataSourceConfig dataSourceConfig2LocalTxDataSourceConfig(DataSourceConfig dsConfig) {
 		LocalTxDataSourceConfig config = new LocalTxDataSourceConfig();
+		config.setJndiName(dsConfig.getDbName());
 		config.setUserName(dsConfig.getUserName());
 		config.setPassword(dsConfig.getPassword());
 		config.setDriverClassName(dsConfig.getDriverClassName());
 		config.setExceptionSorterClassName(dsConfig.getSorterClassName());
-		if(dsConfig.getDbTypeEnum() == AtomDatabaseTypeEnum.MYSQL) {
-			String connectionURL = AtomCononectionURLTool.getMySqlConURL(dsConfig.getIp(), dsConfig.getPort(), dsConfig.getDbName(), dsConfig.getConnectionProperties());
+		if(dsConfig.getDbType() == AtomDatabaseTypeEnum.MYSQL) {
+			String connectionURL = AtomCononectionURLTool.getMySqlConnectionURL(dsConfig.getIp(), dsConfig.getPort(), dsConfig.getDbName(), dsConfig.getConnectionProperties());
 			config.setConnectionURL(connectionURL);
 			// 如果可以找到mysql driver中的Valid就使用，否则不设置valid
 			try {
@@ -248,8 +251,8 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 				logger.warn("MYSQL Driver is Not Suport " + AtomConstants.MYSQL_INTEGRATION_SORTER_CLASS
 						+ " use default sorter " + AtomConstants.DEFAULT_MYSQL_SORTER_CLASS);
 			}
-		} else if(dsConfig.getDbTypeEnum() == AtomDatabaseTypeEnum.ORACLE) {
-			String connectionURL = AtomCononectionURLTool.getOracleConnectionURL(dsConfig.getIp(), dsConfig.getPort(), dsConfig.getDbName(), dsConfig.getOracleConType());
+		} else if(dsConfig.getDbType() == AtomDatabaseTypeEnum.ORACLE) {
+			String connectionURL = AtomCononectionURLTool.getOracleConnectionURL(dsConfig.getIp(), dsConfig.getPort(), dsConfig.getDbName(), dsConfig.getOracleConnectionType());
 			config.setConnectionURL(connectionURL);
 			//如果是oracle没有设置ConnectionProperties则给以个默认的
 			if (!dsConfig.getConnectionProperties().isEmpty()) {
@@ -272,7 +275,7 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 	}
 	
 	private boolean isNeedFlush(DataSourceConfig oldConfig, DataSourceConfig newConfig)  {
-		return false;
+		return true;
 	}
 	
 	private Properties toProperties() {

@@ -25,6 +25,8 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 import javax.naming.Reference;
 import javax.resource.Referenceable;
@@ -47,7 +49,7 @@ import com.it.iddl.idatasource.tx.TransactionTimeoutConfiguration;
  */
 public class WrapperDataSource implements Referenceable, DataSource, Serializable {
 
-    static final long serialVersionUID = 3570285419164793501L;
+	static final long serialVersionUID = 3570285419164793501L;
 
     private final BaseWrapperManagedConnectionFactory mcf;
     private final ConnectionManager cm;
@@ -63,6 +65,12 @@ public class WrapperDataSource implements Referenceable, DataSource, Serializabl
         // TODO: implement this javax.sql.DataSource method
         return null;
     }
+    
+    @Override
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
     public void setLogWriter(PrintWriter param1) throws SQLException {
         // TODO: implement this javax.sql.DataSource method

@@ -455,7 +455,6 @@ public class JBossManagedConnectionPool implements JBossManagedConnectionPoolMBe
 
                 // This is the connection for this transaction
                 cl.setTrackByTx(true);
-                // FIXME 应该是trackByTx.set(trackByTransaction, cl)吧？
                 trackByTx.set(cl);
                 if (traceEnabled)
                     dump("Using connection from pool tracked by transaction " + cl + " tx=" + trackByTransaction);
@@ -606,7 +605,6 @@ public class JBossManagedConnectionPool implements JBossManagedConnectionPoolMBe
             for (Iterator i = subPools.values().iterator(); i.hasNext();) {
 
                 SubPoolContext subPool = (SubPoolContext) i.next();
-                // FIXME 应该是subPool.getSubPool().flush()吧？
                 subPool.getSubPool().shutdown();
             }
             subPools.clear();

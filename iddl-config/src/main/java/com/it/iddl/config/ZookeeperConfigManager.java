@@ -129,7 +129,7 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 		// init cache directory
 		File cacheDirectory = new File(zookeeperConfig.getCacheDirecory());
 		if(!cacheDirectory.exists()) {
-			cacheDirectory.mkdir();
+			cacheDirectory.mkdirs();
 		}
 		_cache_rw_lock_ = new ReentrantReadWriteLock();
 		// restore from cache file

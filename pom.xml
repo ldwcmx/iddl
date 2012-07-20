@@ -40,6 +40,7 @@
 		<commons-lang.version>2.2</commons-lang.version>
 		<lucene.version>3.5.0</lucene.version>
 		<lucene-analyzers.version>3.5.0</lucene-analyzers.version>
+		<json-lib.version>2.1</json-lib.version>
 		<downloadSources>true</downloadSources>
 	</properties>
   
@@ -277,6 +278,12 @@
                 <artifactId>zookeeper</artifactId>
                 <version>3.4.3</version>
            </dependency>
+           	<dependency>  
+	    		<groupId>net.sf.json-lib</groupId>  
+	    		<artifactId>json-lib</artifactId>  
+	    		<version>${json-lib.version}</version>  
+	    		<classifier>jdk15</classifier>  
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>

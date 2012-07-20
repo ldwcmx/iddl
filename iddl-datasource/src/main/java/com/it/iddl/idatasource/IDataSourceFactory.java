@@ -32,13 +32,11 @@ public class IDataSourceFactory {
 			throw new IllegalArgumentException("dataSource config is Empty!");
 		}
 		LocalTxDataSource localTxDataSource = new LocalTxDataSource();
-		//�������ӻ����������������ʹ�ø�ģ����ûָ����Ĭ�ϸ�һ��
 		if(null != cachedConnectionManager){
 			localTxDataSource.setCachedConnectionManager(cachedConnectionManager);
 		}else{
 			localTxDataSource.setCachedConnectionManager(defaultCachedConnectionManager);
 		}
-		//��������������������ʹ�ø�ģ����û����Ĭ�ϸ�һ��
 		if(null != transactionManager){
 			localTxDataSource.setTransactionManager(transactionManager);
 		}else{

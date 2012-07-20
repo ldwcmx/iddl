@@ -53,10 +53,12 @@ public interface AtomDataSourceConfigManager {
 	
 	/**
 	 * 注册数据源配置项监听器
+	 * @param appName
+	 * @param dbKey
 	 * @param listener
-	 * @throws AtomException TODO
+	 * @throws AtomException
 	 */
-	void register(DataSourceConfigListener listener) throws AtomException;
+	void register(String appName, String dbKey, DataSourceConfigListener listener) throws AtomException;
 	
 	/**
 	 * 注销数据源配置项监听器

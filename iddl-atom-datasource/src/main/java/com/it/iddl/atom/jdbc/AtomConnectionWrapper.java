@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.Executor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -306,5 +307,32 @@ public class AtomConnectionWrapper implements Connection {
 
 	public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
 		return this.targetConnection.createStruct(typeName, attributes);
+	}
+	
+	// for jdk7
+	public void setSchema(String schema) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String getSchema() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void abort(Executor executor) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setNetworkTimeout(Executor executor, int milliseconds)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int getNetworkTimeout() throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

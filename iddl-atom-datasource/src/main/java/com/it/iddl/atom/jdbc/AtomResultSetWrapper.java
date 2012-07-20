@@ -34,6 +34,7 @@ import java.util.Map;
  *
  */
 public class AtomResultSetWrapper implements ResultSet {
+
 	private final AtomStatementWrapper statementWrapper;
 	//private final AtomConnectionWrapper connectionWrapper;
 	private final ResultSet targetResultSet;
@@ -816,5 +817,17 @@ public class AtomResultSetWrapper implements ResultSet {
 
 	public void updateNClob(String columnLabel, Reader reader) throws SQLException {
 		this.targetResultSet.updateNClob(columnLabel, reader);
+	}
+
+	// for jdk7
+	public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public <T> T getObject(String columnLabel, Class<T> type)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

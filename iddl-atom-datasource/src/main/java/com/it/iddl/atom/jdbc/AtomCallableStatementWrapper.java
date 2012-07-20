@@ -31,6 +31,7 @@ import java.util.Map;
  *
  */
 public class AtomCallableStatementWrapper extends AtomPreparedStatementWrapper implements CallableStatement {
+
 	public AtomCallableStatementWrapper(Statement targetStatement, AtomConnectionWrapper connectionWrapper,
 			AtomDataSourceWrapper dataSourceWrapper, String sql) {
 		super(targetStatement, connectionWrapper, dataSourceWrapper, sql);
@@ -554,5 +555,20 @@ public class AtomCallableStatementWrapper extends AtomPreparedStatementWrapper i
 			throws SQLException
 	{
 		((CallableStatement)targetStatement).setNClob(parameterName, reader);		
+	}
+	
+	// for jdk7
+	@Override
+	public <T> T getObject(int parameterIndex, Class<T> type)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> T getObject(String parameterName, Class<T> type)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

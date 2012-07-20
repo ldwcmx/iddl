@@ -18,8 +18,44 @@ import com.it.iddl.atom.common.AtomConstants;
  */
 public class DataSourceConfig {
 	
+	public static final String IP = "ip";
+	public static final String PORT = "port";
+	public static final String DB_NAME = "dbName";
+	public static final String USER_NAME = "userName";
+	public static final String PASSWORD = "password";
+	public static final String DRIVER_CLASS_NAME = "driverClassName";
+	public static final String SORTER_CLASS_NAME = "sorterClassName";
+	public static final String PREPARED_STATEMENT_CACHE_SIZE = "preparedStatementCacheSize";
+	public static final String MIN_POOL_SIZE = "minPoolSize";
+	public static final String MAX_POOL_SIZE = "maxPoolSize";
+	public static final String BLOCKING_TIMEOUT = "blockingTimeout";
+	public static final String IDLE_TIMEOUT = "idleTimeout";
+	public static final String ORACLE_CONNECTION_TYPE = "oracleConnectionType";
+	public static final String DB_TYPE = "dbType";
+	public static final String DB_STATUS = "dbStatus";
+	public static final String CONNECTION_PROPERTIES = "connectionProperties";
+	public static final String WRITE_RESTRICT_TIMES = "writeRestrictTimes";
+	public static final String READ_RESTRICT_TIMES = "readRestrictTimes";
+	public static final String TIME_SLICE_MILLIS = "timeSliceInMillis";
+	public static final String THREAD_COUNT_RESTRICT = "threadCountRestrict";
+	public static final String MAX_CONCURRENT_READ_RESTRICT = "maxConcurrentReadRestrict";
+	public static final String MAX_CONCURRENT_WRITE_RESTRICT = "maxConcurrentWriteRestrict";
+	public static final String IS_SINGLE_IN_GROUP = "isSingleInGroup";
+	
+	public static final int DEFAULT_PREPARED_STATEMENT_CACHE_SIZE = 32;
+	public static final int DEFAULT_MIN_POOL_SIZE = 1;
+	public static final int DEFAULT_MAX_POOL_SIZE = 1;
+	public static final int DEFAULT_BLOCKING_TIMEOUT = 5000;
+	public static final int DEFAULT_IDLE_TIMEOUT = 5000;
+	public static final int DEFAULT_WRITE_RESTRICT_TIMES = 16;
+	public static final int DEFAULT_READ_RESTRICT_TIMES = 16;
+	public static final int DEFAULT_TIME_SLICE_MILLIS = 32;
+	public static final int DEFAULT_THREAD_COUNT_RESTRICT = 4;
+	public static final int DEFAULT_MAX_CONCURRENT_READ_RESTRICT = 4;
+	public static final int DEFAULT_MAX_CONCURRENT_WRITE_RESTRICT = 4;
+	
 	private String ip;			// 数据库IP
-	private String port;		// 数据库Port
+	private int port;			// 数据库Port
 	private String dbName;		// 数据库名
 
 	private String userName;	// 用户名
@@ -30,30 +66,30 @@ public class DataSourceConfig {
 
 	private int preparedStatementCacheSize;
 
-	private int minPoolSize;	// 连接池最小数目
-	private int maxPoolSize;	// 连接池最大数目
+	private int minPoolSize = DEFAULT_MIN_POOL_SIZE;	// 连接池最小数目
+	private int maxPoolSize = DEFAULT_MAX_POOL_SIZE;	// 连接池最大数目
 
-	private int blockingTimeout;	//
-	private long idleTimeout;		// 
+	private int blockingTimeout = DEFAULT_BLOCKING_TIMEOUT;	//
+	private long idleTimeout = DEFAULT_IDLE_TIMEOUT;		// 
 
-	private String oracleConType = AtomConstants.DEFAULT_ORACLE_CON_TYPE;
+	private String oracleConnectionType = AtomConstants.DEFAULT_ORACLE_CONNECTION_TYPE;
 
-	private AtomDatabaseTypeEnum dbTypeEnum;		// 数据库类型
-	private AtomDatabaseStatusEnum dbStautsEnum = AtomDatabaseStatusEnum.NA_STATUS;	// 数据库状态
+	private AtomDatabaseTypeEnum dbType;										// 数据库类型
+	private AtomDatabaseStatusEnum dbStatus = AtomDatabaseStatusEnum.NA_STATUS;	// 数据库状态
 
 	private Map<String, String> connectionProperties = new HashMap<String, String>();
 	
-	private int writeRestrictTimes;		// 写次数限制
-	private int readRestrictTimes;		// 读次数限制
+	private int writeRestrictTimes = DEFAULT_WRITE_RESTRICT_TIMES;		// 写次数限制
+	private int readRestrictTimes = DEFAULT_READ_RESTRICT_TIMES;		// 读次数限制
 
-	private int timeSliceInMillis;		// 统计时间片 
+	private int timeSliceInMillis = DEFAULT_TIME_SLICE_MILLIS;		// 统计时间片 
 
-	private int threadCountRestrict;	// 线程技术count限制
+	private int threadCountRestrict = DEFAULT_THREAD_COUNT_RESTRICT;	// 线程技术count限制
 	
-	private int maxConcurrentReadRestrict;	// 允许并发读的最大个数，0为不限制
-	private int maxConcurrentWriteRestrict; // 允许并发写的最大个数，0为不限制
+	private int maxConcurrentReadRestrict = DEFAULT_MAX_CONCURRENT_READ_RESTRICT;	// 允许并发读的最大个数，0为不限制
+	private int maxConcurrentWriteRestrict = DEFAULT_MAX_CONCURRENT_WRITE_RESTRICT; // 允许并发写的最大个数，0为不限制
 	
-	private volatile boolean isSingleInGroup;
+	private volatile boolean isSingleInGroup = true;
 
 	public String getIp() {
 		return ip;
@@ -63,11 +99,11 @@ public class DataSourceConfig {
 		this.ip = ip;
 	}
 
-	public String getPort() {
+	public int getPort() {
 		return port;
 	}
 
-	public void setPort(String port) {
+	public void setPort(int port) {
 		this.port = port;
 	}
 
@@ -96,8 +132,8 @@ public class DataSourceConfig {
 	}
 
 	public String getDriverClassName() {
-		if (StringUtil.isBlank(driverClassName) && null != this.dbTypeEnum) {
-			return this.dbTypeEnum.getDriverClassName();
+		if (StringUtil.isBlank(driverClassName) && null != this.dbType) {
+			return this.dbType.getDriverClassName();
 		}
 		return driverClassName;
 	}
@@ -107,8 +143,8 @@ public class DataSourceConfig {
 	}
 
 	public String getSorterClassName() {
-		if (StringUtil.isBlank(sorterClassName) && null != this.dbTypeEnum) {
-			return this.dbTypeEnum.getSorterClassName();
+		if (StringUtil.isBlank(sorterClassName) && null != this.dbType) {
+			return this.dbType.getSorterClassName();
 		}
 		return sorterClassName;
 	}
@@ -157,28 +193,28 @@ public class DataSourceConfig {
 		this.idleTimeout = idleTimeout;
 	}
 
-	public String getOracleConType() {
-		return oracleConType;
+	public String getOracleConnectionType() {
+		return oracleConnectionType;
 	}
 
-	public void setOracleConType(String oracleConType) {
-		this.oracleConType = oracleConType;
+	public void setOracleConnectionType(String oracleConnectionType) {
+		this.oracleConnectionType = oracleConnectionType;
 	}
 
-	public AtomDatabaseTypeEnum getDbTypeEnum() {
-		return dbTypeEnum;
+	public AtomDatabaseTypeEnum getDbType() {
+		return dbType;
 	}
 
-	public void setDbTypeEnum(AtomDatabaseTypeEnum dbTypeEnum) {
-		this.dbTypeEnum = dbTypeEnum;
+	public void setDbType(AtomDatabaseTypeEnum dbType) {
+		this.dbType = dbType;
 	}
 
-	public AtomDatabaseStatusEnum getDbStautsEnum() {
-		return dbStautsEnum;
+	public AtomDatabaseStatusEnum getDbStatus() {
+		return dbStatus;
 	}
 
-	public void setDbStautsEnum(AtomDatabaseStatusEnum dbStautsEnum) {
-		this.dbStautsEnum = dbStautsEnum;
+	public void setDbStatus(AtomDatabaseStatusEnum dbStatus) {
+		this.dbStatus = dbStatus;
 	}
 
 	public Map<String, String> getConnectionProperties() {
@@ -237,11 +273,11 @@ public class DataSourceConfig {
 		this.maxConcurrentWriteRestrict = maxConcurrentWriteRestrict;
 	}
 
-	public boolean isSingleInGroup() {
+	public boolean getIsSingleInGroup() {
 		return isSingleInGroup;
 	}
 
-	public void setSingleInGroup(boolean isSingleInGroup) {
+	public void setIsSingleInGroup(boolean isSingleInGroup) {
 		this.isSingleInGroup = isSingleInGroup;
 	}
 }

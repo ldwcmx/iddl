@@ -63,7 +63,7 @@ public class LocalTxDataSource {
     }
 
     /**
-     * 初始化连接池
+     * 
      */
     private void initPool() {
         pool.setManagedConnectionFactory(mcf);
@@ -71,9 +71,9 @@ public class LocalTxDataSource {
         pool.setDataSource(this);
     }
     
-    /**
-     * 初始化链接管理器
-     */
+   /**
+    * 
+    */
     private void initConnectionManager() {
         if (transactionManager == null) {
             throw new IllegalStateException("transactionManager is required");
@@ -91,7 +91,6 @@ public class LocalTxDataSource {
      * @throws Exception
      */
     private void registerMBean() throws Exception {
-    	//如果没有设置JNDI的名字则不注册MBEAN
     	if(null != name && useJmx){
             ObjectName objectName = new ObjectName(String.format(POOL_OBJECT_NAME_FORMAT, name));
             server.registerMBean(pool, objectName);
@@ -142,7 +141,6 @@ public class LocalTxDataSource {
     }
 
     private void unregisterMBean() throws Exception {
-    	//如果有设置JNDI的名字则注销MBEAN
     	if(null!=name&&useJmx){
     	      ObjectName objectName = new ObjectName(String.format(POOL_OBJECT_NAME_FORMAT, name));
     	      server.unregisterMBean(objectName);

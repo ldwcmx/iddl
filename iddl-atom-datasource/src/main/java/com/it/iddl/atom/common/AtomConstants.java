@@ -25,7 +25,7 @@ public class AtomConstants {
 
 	//public final static String MYSQL_DBTYPE_STR = "MYSQL";
 
-	public final static String DEFAULT_ORACLE_CON_TYPE = "oci";
+	public final static String DEFAULT_ORACLE_CONNECTION_TYPE = "oci";
 
 	public final static String DB_STATUS_R = "R";
 
@@ -43,11 +43,10 @@ public class AtomConstants {
 				"defaultRowPrefetch", "50");
 	}
 
-	public static Map<String, String> DEFAULT_MYSQL_CONNECTION_PROPERTIES = new HashMap<String, String>(
-			1);
+	public static Map<String, String> DEFAULT_MYSQL_CONNECTION_PROPERTIES = new HashMap<String, String>(1);
 	static {
 		AtomConstants.DEFAULT_MYSQL_CONNECTION_PROPERTIES.put(
-				"characterEncoding", "gbk");
+				"characterEncoding", "utf8");
 	}
 
 	public final static String DEFAULT_ORACLE_DRIVER_CLASS = "oracle.jdbc.driver.OracleDriver";

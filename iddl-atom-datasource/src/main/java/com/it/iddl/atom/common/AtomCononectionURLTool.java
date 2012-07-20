@@ -29,11 +29,11 @@ public class AtomCononectionURLTool {
 	 * @param connectionType
 	 * @return
 	 */
-	public static final String getOracleConnectionURL(String ip, String port, String sid, String connectionType) {
-		if (StringUtil.isBlank(connectionType) || AtomConstants.DEFAULT_ORACLE_CON_TYPE.equals(connectionType.toLowerCase().trim())) {
-			return ORACLE_URL_OCI_FORMAT.format(new String[]{ip, port, sid});
+	public static final String getOracleConnectionURL(String ip, int port, String sid, String connectionType) {
+		if (StringUtil.isBlank(connectionType) || AtomConstants.DEFAULT_ORACLE_CONNECTION_TYPE.equals(connectionType.toLowerCase().trim())) {
+			return ORACLE_URL_OCI_FORMAT.format(new String[]{ip, String.valueOf(port), sid});
 		} else {
-			return ORACLE_URL_THIN_FORMAT.format(new String[]{ip, port, sid});
+			return ORACLE_URL_THIN_FORMAT.format(new String[]{ip, String.valueOf(port), sid});
 		}
 	}
 	
@@ -45,8 +45,8 @@ public class AtomCononectionURLTool {
 	 * @param prams
 	 * @return
 	 */
-	public static final String getMySqlConURL(String ip, String port, String dbName, Map<String, String> prams) {
-		String connectionURL = MYSQL_URL_FORMAT.format(new String[] { ip, port, dbName });
+	public static final String getMySqlConnectionURL(String ip, int port, String dbName, Map<String, String> prams) {
+		String connectionURL = MYSQL_URL_FORMAT.format(new String[] { ip, String.valueOf(port), dbName });
 		if (null == prams || prams.isEmpty()) {
 			prams = AtomConstants.DEFAULT_MYSQL_CONNECTION_PROPERTIES;
 		}

@@ -955,4 +955,18 @@ public class AtomDatabaseMetaDataWrapper implements DatabaseMetaData {
 			throw new SQLException(e);
 		}
 	}
+	
+	// for jdk7
+	public ResultSet getPseudoColumns(String catalog, String schemaPattern,
+			String tableNamePattern, String columnNamePattern)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	// for jdk7
+	public boolean generatedKeyAlwaysReturned() throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

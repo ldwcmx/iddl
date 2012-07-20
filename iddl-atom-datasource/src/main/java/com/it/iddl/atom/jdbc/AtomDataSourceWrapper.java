@@ -8,10 +8,12 @@ package com.it.iddl.atom.jdbc;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -114,7 +116,7 @@ public class AtomDataSourceWrapper implements DataSource {
 		try {
 			if(smoothResumeValve.isAvailable()) {
 				if(smoothResumeValve.smoothThroughOnInitial()) {
-					return targetDataSource.getConnection(username, password);
+					return getConnectionByTargetDataSource(username, password);
 				} else {
 					throw new AtomNotAvailableException(String.format(""));
 				}
@@ -133,7 +135,7 @@ public class AtomDataSourceWrapper implements DataSource {
 				}
 			}
 		} catch (SQLException e) {
-			if (exceptionSorterMap.get(config.getDbTypeEnum().name()).isExceptionFatal(e)) {
+			if (exceptionSorterMap.get(config.getDbType().name()).isExceptionFatal(e)) {
 				// 告警
 				NagiosUtil.warn(NagiosUtil.KEY_DB_NOT_AVAILABLE, e.getMessage());
 				//isNotAvailable = true;
@@ -145,6 +147,12 @@ public class AtomDataSourceWrapper implements DataSource {
 	
 	@Override
 	public PrintWriter getLogWriter() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	// for jdk7
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
 		// TODO Auto-generated method stub
 		return null;
 	}

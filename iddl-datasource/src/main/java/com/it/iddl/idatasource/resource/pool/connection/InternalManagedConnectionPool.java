@@ -678,7 +678,7 @@ public class InternalManagedConnectionPool
                }
                finally
                {
-                  if(!destroyed) // FIXME: 只要有一个被destroy，那么之后的所有cl都不会被返还给cls了
+                  if(!destroyed)
                   {
                      synchronized (cls)
                      {
