@@ -1,0 +1,59 @@
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <a class="brand" href="#">iddl-console</a>
+      #if($loginContext)
+          <div class="btn-group pull-right">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="icon-user"></i> $!{loginContext.vistorNick}
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/v2/member/show.jhtml">我的空间</a></li>
+              <li class="divider"></li>
+              <li><a href="/v2/member/memberAction.jhtml?_operation_=_logout_">退出</a></li>
+            </ul>
+          </div>
+      #else
+      	<div class="btn-group pull-right">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="icon-user"></i> 亲，欢迎您！
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="/v2/member/login.jhtml?rt=$!{curl}">登录</a></li>
+              <li class="divider"></li>
+            </ul>
+        </div>
+      #end
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li #if(${_MENU_INDEX_} == 0) class="active" #end><a href="/v2/home.jhtml">首页</a></li>
+		  <!--
+          <li #if(${_MENU_INDEX_} == 1) class="active" #end><a href="/v2/member/show.jhtml">我</a></li>
+          <li #if(${_MENU_INDEX_} == 2) class="active" #end><a href="#contact">社区</a></li>
+		  -->
+          <li #if(${_MENU_INDEX_} == 3) class="active" #end><a href="/v2/event/index.jhtml">活动</a></li>
+          <!--
+		  <li #if(${_MENU_INDEX_} == 4) class="active" #end><a href="#contact">创意</a></li>
+          <li #if(${_MENU_INDEX_} == 5) class="active" #end><a href="#contact">问答</a></li>
+          <li #if(${_MENU_INDEX_} == 6) class="active" #end><a href="#contact">博客</a></li>
+          <li #if(${_MENU_INDEX_} == 7) class="active" #end><a href="#contact">相册</a></li>
+          <li #if(${_MENU_INDEX_} == 8) class="active" #end><a href="#contact">文档</a></li>
+          <li></li>
+		  -->
+        </ul>
+        <!--搜索-->
+        <form action="/v2/search.jhtml" class="navbar-search pull-left" method="post">
+  			<input type="text" name="q" class="search-query span3" value="" placeholder="搜索">
+		</form>
+		<!--搜索 End-->
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>

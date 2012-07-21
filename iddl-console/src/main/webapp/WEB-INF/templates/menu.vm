@@ -1,0 +1,16 @@
+<div class="span3">
+	<div class="well member-box round-all"> 
+		<a><img #if(${community.logo}) src="$!{community.logo}" #else src="/assets/v2/img/test.jpg" #end></a>
+	</div>
+	<div class="well sidebar-nav">
+		<ul class="nav nav-list">
+          	<li class="nav-header">$!{community.name}</li>
+          	<li #if(!${_COMMUNITY_NAV_INDEX_} || ${_COMMUNITY_NAV_INDEX_} == 0 ) class="active" #end><a href="/v2/community/show.jhtml?community_id=$!{community.id}"><i class="icon-home"></i>社区空间</a></li>
+          	<li #if(${_COMMUNITY_NAV_INDEX_} == 1 ) class="active" #end><a href="/v2/community/member_list.jhtml?community_id=$!{community.id}"><i class="icon-user"></i><i class="icon-user"></i>社区成员</a></li>
+          	<li #if(${_COMMUNITY_NAV_INDEX_} == 5 ) class="active" #end><a href="/v2/community/event_list.jhtml?community_id=$!{community.id}"><i class="icon-time"></i>社区活动</a></li>
+          	<li #if(${_COMMUNITY_NAV_INDEX_} == 3 ) class="active" #end><a href="/v2/community/album_list.jhtml?community_id=$!{community.id}"><i class="icon-picture"></i>社区相册</a></li>
+          	<li #if(${_COMMUNITY_NAV_INDEX_} == 4 ) class="active" #end><a href="/v2/community/discuss_list.jhtml?community_id=$!{community.id}"><i class="icon-volume-up"></i>社区讨论</a></li>
+          	<li #if(${_COMMUNITY_NAV_INDEX_} == 2 ) class="active" #end><a href="/v2/community/sponsors_list.jhtml?community_id=$!{community.id}"><i class="icon-home"></i>社区赞助商</a></li>
+		</ul>
+	</div><!--/.well -->
+</div><!--/span-->

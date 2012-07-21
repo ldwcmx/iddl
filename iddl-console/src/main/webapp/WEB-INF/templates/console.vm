@@ -1,0 +1,452 @@
+#set($JQUERY='$.')
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+	    <title>iddl-console</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <meta name="description" content="iddl-console">
+	    <meta name="author" content="Qiangqiang RAO">
+	
+	    <!-- Le styles -->
+	    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+	    <style type="text/css">
+			body {
+		    	padding-top: 60px;
+		        padding-bottom: 40px;
+		    }
+	      	.sidebar-nav {
+	       	 	padding: 9px 0;
+	      	}
+	      	.member-box {
+	       	 	display: block;
+				padding: 10px;
+	      	}
+	      	.round-all {
+				-webkit-border-radius: 3px;
+				-moz-border-radius: 3px;
+				border-radius: 3px;
+			}
+			.os, .softs, .langs {
+				display: inline-block;
+				width: auto;
+				font-size: 16px;
+				color: white;
+				opacity: 0.6;
+				cursor: pointer;
+				margin: 10px 8px 0px 0px;
+				padding: 5px 12px 6px 12px;
+				-webkit-transition: opacity .2s ease-in-out;
+				-moz-transition: opacity .2s ease-in-out;
+				-ms-transition: opacity .2s ease-in-out;
+				-o-transition: opacity .2s ease-in-out;
+				transition: opacity .2s ease-in-out;
+				box-shadow: 0px 0px 7px 1px 
+				rgba(0, 0, 0, 0.2);
+				border-radius: 2px;
+			}
+			.os {
+				background-color: 
+				rgba(210, 18, 66, 1);
+			}
+			.langs {
+				background-color: 
+				rgba(0, 175, 219, 1);
+			}
+			.softs {
+				background-color: 
+				rgba(0, 194, 78, 1);
+			}
+			
+			.widget_container {
+			    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.1);
+			}
+			.widget_container {
+			    margin-bottom: 20px;
+			    padding: 7px;
+			}
+			.widget_container .well {
+    			background: url("../examples/19.png") repeat scroll 0 0 #FDFDFD;
+			}
+			.well.nomargin {
+    			border: 0 none;
+    			padding: 0;
+			}
+			.widget_container .well {
+			    border-radius: 0 0 0 0;
+			    margin-bottom: 0;
+			}
+			.well.nomargin .navbar.navbar-static.navbar_as_heading, .well.nomargin .navbar.navbar-static.navbar_as_heading .navbar-inner {
+			    border-color: transparent;
+			    margin: 0;
+			}
+			.well.nomargin .navbar.navbar-static.navbar_as_heading, .well.nomargin .navbar.navbar-static.navbar_as_heading .navbar-inner {
+			    border-color: transparent;
+			    margin: 0;
+			}
+			.navbar.navbar-static.navbar_as_heading .navbar-inner {
+			    border-radius: 0 0 0 0;
+			    margin: -20px -20px 20px;
+			}
+			.navbar.navbar-static.navbar_as_heading .navbar-inner .brand {
+			    color: #EFEFEF;
+			    font-size: 14px;
+			    font-weight: bold;
+			    margin-top: 5px;
+			    text-transform: uppercase;
+			}
+			.subnav {
+			    background-color: #DEDEDE;
+			    height: 40px;
+			    margin: 0;
+			    padding: 5px 10px 6px;
+			}
+			.badge {
+			    padding: 3px 7px;
+			    z-index: 50;
+			}
+			.abs1 {
+			    position: absolute;
+			    right: -10px;
+			    top: -13px;
+			    z-index: 260;
+			}
+			.subnav .search-query {
+			    background-color: #FFFFFF !important;
+			    border: 1px solid #CCCCCC !important;
+			}
+			.btn-duadua {
+			    color: #FFFFFF !important;
+			    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.33);
+			}
+			.btn-duadua {
+			    background-color: #272431 !important;
+			    background-image: -moz-linear-gradient(center top , #54506C, #272431);
+			    background-repeat: repeat-x;
+			    border-color: #272431 #272431 #1B1A23;
+			    color: #FFFFFF !important;
+			    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.33);
+			}
+			[class^="icon-"], [class*=" icon-"] {
+			    background-image: none;
+			    background-position: 0 0;
+			    background-repeat: repeat;
+			    display: inline;
+			    height: auto;
+			    line-height: inherit;
+			    vertical-align: baseline;
+			    width: auto;
+			}
+			.icon-trash-2:before {
+			    content: "";
+			}
+			[class^="icon-"]:before, [class*=" icon-"]:before {
+			    display: inline-block;
+			    font-family: combine_fonts;
+			    font-style: normal;
+			    font-weight: normal;
+			    text-decoration: inherit;
+			}
+			.btn [class^="icon-"], .btn [class*=" icon-"] {
+			    line-height: 0.9em;
+			}
+			.subnav.nobg {
+			    background-color: rgba(0, 0, 0, 0.3);
+			    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+			    border-top: 1px solid rgba(0, 0, 0, 0.4);
+			    height: 30px;
+			}
+			.subnav.nobg .pagination {
+			    float: right;
+			    margin: 1px 0;
+			}
+			.well.nomargin table {
+			    border-color: transparent;
+			    margin: 0;
+			}
+			.table thead {
+			    background: -moz-linear-gradient(center top , #EEEEEE 0%, #CCCCCC 100%) repeat scroll 0 0 transparent;
+			}
+			.table.smallfont th, .table.smallfont td, p.smallfont, ul.smallfont {
+			    font-size: 11px;
+			}
+			.table th, .table td {
+			    border-top: 1px solid #BBBBBB;
+			}
+			.table th, .table td {
+			    border-color: transparent;
+			}
+			.post_title {
+    			font-size: 12px;
+    			font-weight: bold;
+			}
+			.operation {
+    			height: 30px;
+			}
+			
+			.input-xxlarge-fluid {
+			    font-size: 18px;
+			    height: 30px;
+			    line-height: 30px;
+			    width: 98%;
+			}
+			.table-bordered {
+			    -moz-border-bottom-colors: none;
+			    -moz-border-image: none;
+			    -moz-border-left-colors: none;
+			    -moz-border-right-colors: none;
+			    -moz-border-top-colors: none;
+			    border-color: #BABABA #BABABA #BABABA -moz-use-text-color;
+			    border-style: solid solid solid none;
+			    border-width: 1px 1px 1px 0;
+			}
+			.wm {
+			    margin-bottom: 20px;
+			}
+			.myTabContent {
+			    background: none repeat scroll 0 0 #E9E9E9;
+			    border-radius: 0 0 4px 4px;
+			    margin: 0;
+			}
+			.myTabContent .tab-pane .inner {
+			    margin: 20px;
+			}
+			.nav.nav-tabs.myTab {
+			    margin-bottom: 0;
+			}
+			.table.smallfont th, .table.smallfont td, p.smallfont, ul.smallfont {
+			    font-size: 11px;
+			}
+			.nav.nav-tabs.myTab.smallfont li a {
+			    padding: 4px 8px;
+			}
+			.nav.nav-tabs.myTab li.active a, .nav.nav-tabs.myTab li.active a:hover {
+			    background: none repeat scroll 0 0 #E9E9E9;
+			    border: 1px solid transparent;
+			}
+			.nav.nav-tabs.myTab li.active a, .nav.nav-tabs.myTab li.active a:hover {
+			    color: #454545;
+			    text-shadow: none;
+			}
+			.custom-acc .accordion-heading, .nav.nav-tabs.myTab li a {
+			    background: -moz-linear-gradient(center top , #575757 0%, #3D3D3D 100%) repeat scroll 0 0 transparent;
+			}
+			.nav.nav-tabs.myTab li a {
+			    border: 1px solid transparent;
+			    color: #DEDEDE;
+			    padding: 8px 16px;
+			    text-shadow: 1px 1px 1px rgba(24, 39, 62, 0.3);
+			}
+			.myTabContent .tab-pane .inner {
+			    margin: 20px;
+			}
+			.modal {
+				position: absolute;
+			}
+	    </style>
+	    <link href="/assets/css/bootstrap-responsive.css" rel="stylesheet">
+	
+	    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+	    <!--[if lt IE 9]>
+	      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	    <![endif]-->
+	
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css" type="text/css" media="all" />
+		<link rel="stylesheet" href="/assets/css/jquery.areaopt.css" type="text/css" />
+		
+	    <!-- Le fav and touch icons -->
+	    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+	    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/ico/apple-touch-icon-144-precomposed.png">
+	    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/ico/apple-touch-icon-114-precomposed.png">
+	    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/ico/apple-touch-icon-72-precomposed.png">
+	    <link rel="apple-touch-icon-precomposed" href="/assets/ico/apple-touch-icon-57-precomposed.png">
+	</head>
+	<body>
+  		#parse("nav.vm")
+  		<div class="container-fluid">
+      		<div class="row-fluid">
+        		#parse("menu.vm")
+        		<div class="span9">
+          			<div class="row-fluid">
+          				<div class="page-header">
+          					<table style="width:100%;">
+								<tr>
+									<td style="text-align:left;"><h1>配置数据 <small>统一配置, 实时推送！</small></h1></td>
+									#if(${isLogined})
+										<td style="text-align:right;"><a class="btn btn-primary" href="#" onclick="newConfig()">添加配置</a></td>
+									#end
+								</tr>
+					    	</table>
+						</div>
+		            	
+		            	<div class="widget_container">
+						<div class="well nomargin">
+							<div class="navbar navbar-static navbar_as_heading">
+								<div class="navbar-inner">
+									<div style="width: auto;" class="container">
+										<a class="brand">配置项列表</a>
+									</div>
+								</div>
+							</div>
+							<div class="subnav">
+								<div class="btn-toolbar pull-left">
+									<div class="btn-group">
+										<button class="btn btn-small active btn-duadua">All<span class="badge abs1">30</span></button>
+										<button class="btn btn-small btn-duadua"><i class="icon-ok-3"></i> Published <span class="badge badge-info abs1">30</span></button>
+										<button class="btn btn-small btn-duadua"><i class="icon-pencil"></i> Draft <span class="badge badge-warning abs1">0</span></button>
+										<button class="btn btn-small btn-duadua"><i class="icon-trash-2 btn-duadua"></i> Trash <span class="badge badge-important abs1">0</span></button>
+									</div>
+								</div>
+								<form action="" class="navbar-search pull-right">
+									<input type="text" placeholder="Search" class="search-query">
+								</form>
+							</div>
+							
+							<div class="subnav nobg">
+								<div class="span2">
+								</div>
+								<div class="span1">
+								</div>
+								<div class="span2">
+								</div>
+								<div class="span2">
+								</div>
+								<div class="span1">
+								</div>
+								<div class="span4">
+								</div>
+							</div>
+							<table class="table smallfont">
+								<thead>
+									<tr>
+										<td>configId</td>
+										<td>value</td>
+										<td>operation</td>
+									</tr>
+								</thead>
+								<tbody>
+									#foreach($entry in ${resultMap.entrySet()})
+										<tr>
+											<td>$!{entry.key}</td>
+											<td>
+												<textarea id="value_$!{velocityCount}" cols="160" style="width:600px;height:120px;">$!{entry.value}</textarea>
+											</td>
+											<td>
+												<a href="#" class="btn btn-primary" onclick="updateConfig('$!entry.key', 'value_$!{velocityCount}')">更新</a>
+												<a href="/console_action.jhtml?_operation_=remove&key=${!entry.key}" class="btn btn-primary">删除</a>
+											</td>
+										</tr>
+									#end
+								</tbody>
+							</table>
+							<div class="subnav nobg">
+								<div class="span2">
+									
+								</div>
+								<div class="span1">
+									
+								</div>
+								<div class="span2">
+								
+								</div>
+								<div class="span2">
+								
+								</div>
+								<div class="span1">
+									
+								</div>
+								<div class="span4">
+								</div>
+							</div>
+						</div>
+					</div>
+		            	
+	          		</div><!--/row-->
+       	 		</div><!--/span-->
+      		</div><!--/row-->
+			#parse("footer.vm")
+    	</div><!--/.fluid-container-->
+    	
+		<!--二次确认层-->
+		<div class="modal hide fade" id="deleteLayer" style="width:400px;">
+  			<div class="modal-header">
+    			<h5>请确认</h5>
+  			</div>
+		  	<div id="ask" class="alert alert-error">
+		  		
+		  	</div>
+  			<div class="modal-footer">
+  				<form id="deleteForm" class="form-horizontal" method="post" action="/member/albumAction.jhtml">
+  					<input type="hidden" name="_operation_" value="_delete_">
+			 		<input type="hidden" id="album_id" name="album_id" value="">
+	  				<div class="btn-toolbar">
+						<div class="btn-group">
+					    	<button class="btn btn-danger" onclick="">确认</button>
+					    	<a href="#" class="btn" data-dismiss="modal">取消</a>
+					  	</div>
+					</div>
+				</form>
+  			</div>
+		</div>
+		<!--二次确认层End-->
+		
+		<div class="modal hide fade" id="newLayer" style="width:700px;">
+  			<div class="widget_container">
+				<div class="well">
+					<div class="navbar navbar-static navbar_as_heading">
+						<div class="navbar-inner">
+							<div style="width: auto;" class="container">
+								<a class="brand"><i class="icon-th-large-1"></i>添加配置项</a>
+							</div>
+						</div>
+					</div>
+					<form id="newForm" action="/console_action.jhtml">
+						<input type="hidden" name="_operation_" value="_create_">
+			 			
+						<input type="text" placeholder="配置项id" class="input-xxlarge-fluid" name="key">
+						<textarea  id="value" name="value" placeholder="配置项值" style="width:100%;height:300px;"></textarea>
+						
+						<div class="btn-toolbar" style="float:right;margin-bottom:10px;">
+							<div class="btn-group">
+						    	<button type="submit" class="btn btn-primary" style="width:128px;">提交</button>
+						    	<button class="btn btn-danger" data-dismiss="modal" style="width:128px;">取消</button>
+						  	</div>
+						</div>
+					</form>
+				</div>	
+			</div>
+		</div>
+		#parse("js.vm")
+  	</body>
+  
+  	<script type="text/javascript">
+		$(document).ready(function() {
+			
+		});
+		
+		function newConfig() {
+			$("#newForm")[0].reset();
+			$('#newLayer').modal({
+	 				keyboard: true
+				});
+		}
+		
+		function updateConfig(key, valueId) {
+			${JQUERY}getJSON("/console_action.jhtml?_operation_=_update_&key=" + key + "&value=" + $("#value_" + key).val(), null, function(data) {
+				if(data.isSucceed) {
+					alert("更新成功");
+				} else {
+					alert("更新失败，错误：" + data.errorMsg);
+				}
+			});
+		}
+		
+		function deleteConfig(key) {
+			$("#key").val(key);
+			$("#ask").html("<strong>Warning!</strong>" + "您确认删除配置项：" + key + "？");
+			$('#deleteLayer').modal({
+	 			keyboard: true
+			});
+		}
+	</script>
+</html>

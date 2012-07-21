@@ -1,0 +1,161 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/icommunity/!svn/ver/38/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js
+END
+bootstrap.js
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap.js
+END
+bootstrap-collapse.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-collapse.js
+END
+jquery.ui.widget.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/icommunity/!svn/ver/23/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/jquery.ui.widget.js
+END
+jquery.js
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/jquery.js
+END
+bootstrap-typeahead.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-typeahead.js
+END
+bootstrap-tab.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-tab.js
+END
+bootstrap-alert.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-alert.js
+END
+jquery.tinymce.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/icommunity/!svn/ver/28/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/jquery.tinymce.js
+END
+bootstrap-button.js
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-button.js
+END
+jquery.contextMenu.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/icommunity/!svn/ver/8/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/jquery.contextMenu.js
+END
+bootstrap-carousel.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-carousel.js
+END
+jquery.validate.min.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/icommunity/!svn/ver/8/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/jquery.validate.min.js
+END
+jquery.ui.position.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/icommunity/!svn/ver/8/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/jquery.ui.position.js
+END
+bootstrap.min.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap.min.js
+END
+areaopt.data.js
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/icommunity/!svn/ver/38/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/areaopt.data.js
+END
+bootstrap-transition.js
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-transition.js
+END
+bootstrap-tooltip.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-tooltip.js
+END
+bootstrap-scrollspy.js
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-scrollspy.js
+END
+bootstrap-popover.js
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-popover.js
+END
+jquery.ui.datepicker.js
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/icommunity/!svn/ver/23/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/jquery.ui.datepicker.js
+END
+bootstrap-modal.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-modal.js
+END
+bootstrap-dropdown.js
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/icommunity/!svn/ver/2/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/bootstrap-dropdown.js
+END
+jquery-ui-i18n.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/icommunity/!svn/ver/23/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/jquery-ui-i18n.js
+END
+jquery.validate.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/icommunity/!svn/ver/8/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/jquery.validate.js
+END
+jquery.areaopt.js
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/icommunity/!svn/ver/38/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/jquery.areaopt.js
+END
+jquery-ui.min.js
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/icommunity/!svn/ver/23/trunk/icommunity/icommunity-web/src/main/webapp/assets/v2/js/jquery-ui.min.js
+END
