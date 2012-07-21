@@ -14,7 +14,7 @@
         http://www.springframework.org/schema/tx   
         http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
-	<context:component-scan base-package="waverider" />
+	<context:component-scan base-package="iddl-console" />
 
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
 		<property name="viewClass">
@@ -42,12 +42,25 @@
 	<bean id="simpleUrlHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<props>
-				<prop key="/index.jhtml">index</prop>
+				<prop key="/index.jhtml">console</prop>
+				<prop key="/login.jhtml">login</prop>
+				<prop key="/console.jhtml">console</prop>
+				<prop key="/member_action.jhtml">memberAction</prop>
+				<prop key="/console_action.jhtml">consoleAction</prop>
 			</props>
 		</property>
 	</bean>
 
 	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
 	
-	<bean id="index" class="com.taobao.top.xprocess.demo.web.Index"/>
+	<bean id="login" class="com.it.iddl.console.web.controller.Login"/>
+	<bean id="console" class="com.it.iddl.console.web.controller.Console">
+		<property name="configManager" ref="configManager" />
+	</bean>
+	<bean id="memberAction" class="com.it.iddl.console.web.action.MemberAction">
+		<property name="configManager" ref="configManager" />
+	</bean>
+	<bean id="consoleAction" class="com.it.iddl.console.web.action.ConsoleAction">
+		<property name="configManager" ref="configManager" />
+	</bean>
 </beans>  

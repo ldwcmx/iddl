@@ -141,11 +141,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
-				<artifactId>spring-webmvc</artifactId>
-				<version>${org.springframework.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
 				<artifactId>spring-tx</artifactId>
 				<version>${org.springframework.version}</version>
 			</dependency>
@@ -278,12 +273,12 @@
                 <artifactId>zookeeper</artifactId>
                 <version>3.4.3</version>
            </dependency>
-           	<dependency>  
+           <dependency>  
 	    		<groupId>net.sf.json-lib</groupId>  
 	    		<artifactId>json-lib</artifactId>  
 	    		<version>${json-lib.version}</version>  
 	    		<classifier>jdk15</classifier>  
-			</dependency>
+		</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>

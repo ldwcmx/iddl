@@ -15,7 +15,7 @@
 	</context-param>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:/spring/spring-xprocess-demo.xml</param-value>
+		<param-value>classpath:/spring/iddl-console.xml</param-value>
 	</context-param>
 	<!-- ====================================================== -->
 	<!-- Listeners                                                -->
@@ -76,6 +76,6 @@
 	</session-config>
 	
 	<welcome-file-list>
-		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jhtml</welcome-file>
 	</welcome-file-list>
 </web-app>
