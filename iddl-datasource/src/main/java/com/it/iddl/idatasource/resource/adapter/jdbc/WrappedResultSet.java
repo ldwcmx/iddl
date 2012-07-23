@@ -1822,13 +1822,15 @@ public class WrappedResultSet implements ResultSet {
 		}
 	}
 	
-	@Override
+	////////////////////////////////////////////////////////////////////////////////////
+	//		For jdk7
+	////////////////////////////////////////////////////////////////////////////////////
+
 	public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public <T> T getObject(String columnLabel, Class<T> type)
 			throws SQLException {
 		// TODO Auto-generated method stub

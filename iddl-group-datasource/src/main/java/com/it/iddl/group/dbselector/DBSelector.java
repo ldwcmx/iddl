@@ -3,7 +3,7 @@
  * 
  * Intelligent Distributed Data Layer
  * 
- * iddl-group-datasources
+ * iddl-group-datasource
  */
 package com.it.iddl.group.dbselector;
 
@@ -14,10 +14,10 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
-
 import com.it.iddl.common.DBType;
+import com.it.iddl.common.jdbc.sorter.ExceptionSorter;
 import com.it.iddl.group.jdbc.GroupDataSourceWrapper;
+import com.it.iddl.group.util.ExceptionUtil;
 
 /**
  * <p>对等数据库选择器。
@@ -136,7 +136,7 @@ public interface DBSelector {
 		@SuppressWarnings("unchecked")
 		public T onSQLException(List<SQLException> exceptions, ExceptionSorter exceptionSorter, Object... args)
 				throws SQLException {
-			ExceptionUtils.throwSQLException(exceptions, null, Collections.EMPTY_LIST);
+			ExceptionUtil.throwSQLException(exceptions, null, Collections.EMPTY_LIST);
 			return null;
 		}
 	}

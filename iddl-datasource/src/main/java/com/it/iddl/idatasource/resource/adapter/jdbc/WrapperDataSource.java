@@ -66,12 +66,6 @@ public class WrapperDataSource implements Referenceable, DataSource, Serializabl
         return null;
     }
     
-    @Override
-	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
     public void setLogWriter(PrintWriter param1) throws SQLException {
         // TODO: implement this javax.sql.DataSource method
     }
@@ -142,4 +136,12 @@ public class WrapperDataSource implements Referenceable, DataSource, Serializabl
     public <T> T unwrap(Class<T> iface) throws SQLException {
         return null;
     }
+    
+    ////////////////////////////////////////////////////////////////////////////////////
+	//		For jdk7
+	////////////////////////////////////////////////////////////////////////////////////
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

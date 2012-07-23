@@ -150,11 +150,6 @@ public class AtomDataSourceWrapper implements DataSource {
 		return targetDataSource.getLogWriter();
 	}
 	
-	// for jdk7
-	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-		return targetDataSource.getParentLogger();
-	}
-
 	@Override
 	public int getLoginTimeout() throws SQLException {
 		return targetDataSource.getLoginTimeout();
@@ -278,5 +273,12 @@ public class AtomDataSourceWrapper implements DataSource {
 		 * 允许并发写的最大个数，0为不限制
 		 */
 		public volatile int maxConcurrentWriteRestrict;
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////
+	//		For jdk7
+	////////////////////////////////////////////////////////////////////////////////////
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		return null;
 	}
 }

@@ -35,6 +35,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.it.iddl.group.AbstractGroupDataSource;
+import com.it.iddl.group.dbselector.DBSelector;
+import com.it.iddl.group.dbselector.ThreadLocalDataSourceIndex;
+import com.it.iddl.group.dbselector.DBSelector.AbstractDataSourceTryer;
+import com.it.iddl.group.dbselector.DBSelector.DataSourceTryer;
 
 /**
  *相关的JDBC规范：
@@ -65,7 +69,7 @@ import com.it.iddl.group.AbstractGroupDataSource;
  */
 public class GroupConnection implements Connection {
 	
-	private static final Log logger = LogFactory.getLog(TGroupConnection.class);
+	private static final Log logger = LogFactory.getLog(GroupConnection.class);
 
 	private AbstractGroupDataSource groupDataSource;
 

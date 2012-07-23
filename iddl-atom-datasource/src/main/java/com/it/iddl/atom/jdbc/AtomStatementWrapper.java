@@ -8,8 +8,10 @@ package com.it.iddl.atom.jdbc;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
@@ -461,14 +463,19 @@ public class AtomStatementWrapper implements Statement {
 		return this.targetStatement.isPoolable();
 	}
 	
-	// for jdk7
-	@Override
+	////////////////////////////////////////////////////////////////////////////////////
+	//		For jdk7
+	////////////////////////////////////////////////////////////////////////////////////
+	
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		return null;
+	}
+	
 	public void closeOnCompletion() throws SQLException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public boolean isCloseOnCompletion() throws SQLException {
 		// TODO Auto-generated method stub
 		return false;

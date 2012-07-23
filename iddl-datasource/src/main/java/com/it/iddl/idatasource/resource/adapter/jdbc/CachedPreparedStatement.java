@@ -525,13 +525,14 @@ public class CachedPreparedStatement implements PreparedStatement {
 		ps.setNClob(parameterIndex, reader);
 	}
 	
-	@Override
+	////////////////////////////////////////////////////////////////////////////////////
+	//		For jdk7
+	////////////////////////////////////////////////////////////////////////////////////
 	public void closeOnCompletion() throws SQLException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public boolean isCloseOnCompletion() throws SQLException {
 		// TODO Auto-generated method stub
 		return false;

@@ -18,12 +18,14 @@ import java.sql.NClob;
 import java.sql.Ref;
 import java.sql.RowId;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.sql.SQLXML;
 import java.sql.Statement;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -557,15 +559,21 @@ public class AtomCallableStatementWrapper extends AtomPreparedStatementWrapper i
 		((CallableStatement)targetStatement).setNClob(parameterName, reader);		
 	}
 	
-	// for jdk7
-	@Override
+	////////////////////////////////////////////////////////////////////////////////////
+	//		For jdk7
+	////////////////////////////////////////////////////////////////////////////////////
+	
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public <T> T getObject(int parameterIndex, Class<T> type)
 			throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public <T> T getObject(String parameterName, Class<T> type)
 			throws SQLException {
 		// TODO Auto-generated method stub

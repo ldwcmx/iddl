@@ -631,17 +631,19 @@ public class WrappedConnection implements Connection {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	////////////////////////////////////////////////////////////////////////////////////
+	//		For jdk7
+	////////////////////////////////////////////////////////////////////////////////////
+	
 	public void setNetworkTimeout(Executor executor, int milliseconds)
 			throws SQLException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public int getNetworkTimeout() throws SQLException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 }

@@ -5,7 +5,7 @@
  * 
  * iddl-group-datasources
  */
-package com.it.iddl.util;
+package com.it.iddl.group.util;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,6 +15,8 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.it.iddl.common.jdbc.ParameterContext;
 
 /**
  * 
