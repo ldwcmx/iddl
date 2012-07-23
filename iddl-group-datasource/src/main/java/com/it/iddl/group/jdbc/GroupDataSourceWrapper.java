@@ -120,7 +120,8 @@ public class GroupDataSourceWrapper implements DataSource {
 	}
 
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-		return wrappedDataSource.getParentLogger();
+		return null;
+		//return wrappedDataSource.getParentLogger();
 	}
 
 	public Connection getConnection() throws SQLException {
