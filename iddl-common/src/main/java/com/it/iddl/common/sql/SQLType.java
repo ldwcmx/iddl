@@ -3,7 +3,7 @@
  * 
  * Intelligent Distributed Data Layer
  */
-package com.it.iddl.atom.common;
+package com.it.iddl.common.sql;
 
 
 /**

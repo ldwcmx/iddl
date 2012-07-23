@@ -20,10 +20,10 @@ import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.it.iddl.atom.config.AtomDatabaseStatusEnum;
-import com.it.iddl.atom.config.AtomDatabaseTypeEnum;
 import com.it.iddl.atom.config.DataSourceConfig;
 import com.it.iddl.atom.exception.AtomNotAvailableException;
+import com.it.iddl.common.DBStatus;
+import com.it.iddl.common.DBType;
 import com.it.iddl.common.flow.CountPunisher;
 import com.it.iddl.common.flow.TimesliceFlowControl;
 import com.it.iddl.common.valve.SmoothResumeValve;
@@ -76,8 +76,8 @@ public class AtomDataSourceWrapper implements DataSource {
 	
 	private static final Map<String, ExceptionSorter> exceptionSorterMap = new HashMap<String, ExceptionSorter>(2);
 	static {
-		exceptionSorterMap.put(AtomDatabaseTypeEnum.ORACLE.name(), new OracleExceptionSorter());
-		exceptionSorterMap.put(AtomDatabaseTypeEnum.MYSQL.name(), new MySQLExceptionSorter());
+		exceptionSorterMap.put(DBType.ORACLE.name(), new OracleExceptionSorter());
+		exceptionSorterMap.put(DBType.MYSQL.name(), new MySQLExceptionSorter());
 	}
 	
 	static {
@@ -147,44 +147,41 @@ public class AtomDataSourceWrapper implements DataSource {
 	
 	@Override
 	public PrintWriter getLogWriter() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return targetDataSource.getLogWriter();
 	}
 	
 	// for jdk7
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-		// TODO Auto-generated method stub
-		return null;
+		return targetDataSource.getParentLogger();
 	}
 
 	@Override
 	public int getLoginTimeout() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return targetDataSource.getLoginTimeout();
 	}
 
 	@Override
 	public void setLogWriter(PrintWriter out) throws SQLException {
-		// TODO Auto-generated method stub
-
+		targetDataSource.setLogWriter(out);
 	}
 
 	@Override
 	public void setLoginTimeout(int seconds) throws SQLException {
-		// TODO Auto-generated method stub
-
+		targetDataSource.setLoginTimeout(seconds);
 	}
 
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return AtomDataSourceWrapper.class.isAssignableFrom(iface);
 	}
 
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		if(isWrapperFor(iface)){
+			return (T) this;
+		}else{
+			throw new SQLException("not a wrapper for "+ iface);
+		}
 	}
 	
 	/**
@@ -246,7 +243,7 @@ public class AtomDataSourceWrapper implements DataSource {
 	 */
 	public static class ConnectionProperties {
 		
-		public volatile AtomDatabaseStatusEnum dbStatus;
+		public volatile DBStatus dbStatus;
 		/**
 		 * 当前数据库的名字
 		 */

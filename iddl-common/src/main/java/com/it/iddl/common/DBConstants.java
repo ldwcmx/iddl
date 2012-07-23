@@ -3,7 +3,7 @@
  * 
  * Intelligent Distributed Data Layer
  */
-package com.it.iddl.atom.common;
+package com.it.iddl.common;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.Map;
  * @author sihai
  *
  */
-public class AtomConstants {
+public class DBConstants {
 
 	public final static String DEFAULT_DIAMOND_GROUP = null;
 
@@ -37,15 +37,15 @@ public class AtomConstants {
 
 	public static Map<String, String> DEFAULT_ORACLE_CONNECTION_PROPERTIES = new HashMap<String, String>(2);
 	static {
-		AtomConstants.DEFAULT_ORACLE_CONNECTION_PROPERTIES.put(
+		DBConstants.DEFAULT_ORACLE_CONNECTION_PROPERTIES.put(
 				"SetBigStringTryClob", "true");
-		AtomConstants.DEFAULT_ORACLE_CONNECTION_PROPERTIES.put(
+		DBConstants.DEFAULT_ORACLE_CONNECTION_PROPERTIES.put(
 				"defaultRowPrefetch", "50");
 	}
 
 	public static Map<String, String> DEFAULT_MYSQL_CONNECTION_PROPERTIES = new HashMap<String, String>(1);
 	static {
-		AtomConstants.DEFAULT_MYSQL_CONNECTION_PROPERTIES.put(
+		DBConstants.DEFAULT_MYSQL_CONNECTION_PROPERTIES.put(
 				"characterEncoding", "utf8");
 	}
 

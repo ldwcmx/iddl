@@ -14,11 +14,11 @@ import org.apache.commons.logging.LogFactory;
 
 import com.iacrqq.util.StringUtil;
 import com.it.iddl.atom.config.AtomDataSourceConfigManager;
-import com.it.iddl.atom.config.AtomDatabaseStatusEnum;
-import com.it.iddl.atom.config.AtomDatabaseTypeEnum;
 import com.it.iddl.atom.config.DataSourceConfig;
 import com.it.iddl.atom.config.listener.DataSourceConfigListener;
 import com.it.iddl.atom.exception.AtomException;
+import com.it.iddl.common.DBStatus;
+import com.it.iddl.common.DBType;
 import com.it.iddl.config.ConfigManager;
 import com.it.iddl.config.ConfigServerType;
 import com.it.iddl.config.ZookeeperConfigManager.ZookeeperConfig;
@@ -145,11 +145,11 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 		config.setBlockingTimeout(json.getInt(DataSourceConfig.BLOCKING_TIMEOUT));
 		config.setIdleTimeout(json.getInt(DataSourceConfig.IDLE_TIMEOUT));
 		
-		config.setDbType(AtomDatabaseTypeEnum.valueOf(json.getString(DataSourceConfig.DB_TYPE)));
-		if(AtomDatabaseTypeEnum.ORACLE == config.getDbType()) {
+		config.setDbType(DBType.valueOf(json.getString(DataSourceConfig.DB_TYPE)));
+		if(DBType.ORACLE == config.getDbType()) {
 			config.setOracleConnectionType(json.getString(DataSourceConfig.ORACLE_CONNECTION_TYPE));
 		}
-		config.setDbStatus(AtomDatabaseStatusEnum.valueOf(json.getString(DataSourceConfig.DB_STATUS)));
+		config.setDbStatus(DBStatus.valueOf(json.getString(DataSourceConfig.DB_STATUS)));
 		config.setConnectionProperties(PropertyUtil.parse2Map(json.getString(DataSourceConfig.CONNECTION_PROPERTIES)));
 		config.setWriteRestrictTimes(json.getInt(DataSourceConfig.WRITE_RESTRICT_TIMES));
 		config.setReadRestrictTimes(json.getInt(DataSourceConfig.READ_RESTRICT_TIMES));

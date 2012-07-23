@@ -3,19 +3,20 @@
  * 
  * Intelligent Distributed Data Layer
  */
-package com.it.iddl.atom.common;
+package com.it.iddl.common;
 
 import java.text.MessageFormat;
 import java.util.Map;
 
 import com.iacrqq.util.StringUtil;
+import com.it.iddl.common.DBConstants;
 
 /**
  * 
  * @author sihai
  *
  */
-public class AtomCononectionURLTool {
+public class DBCononectionURLTool {
 
 	private static MessageFormat MYSQL_URL_FORMAT = new MessageFormat("jdbc:mysql://{0}:{1}/{2}");
 	private static MessageFormat ORACLE_URL_THIN_FORMAT = new MessageFormat("jdbc:oracle:thin:@{0}:{1}:{2}");
@@ -30,7 +31,7 @@ public class AtomCononectionURLTool {
 	 * @return
 	 */
 	public static final String getOracleConnectionURL(String ip, int port, String sid, String connectionType) {
-		if (StringUtil.isBlank(connectionType) || AtomConstants.DEFAULT_ORACLE_CONNECTION_TYPE.equals(connectionType.toLowerCase().trim())) {
+		if (StringUtil.isBlank(connectionType) || DBConstants.DEFAULT_ORACLE_CONNECTION_TYPE.equals(connectionType.toLowerCase().trim())) {
 			return ORACLE_URL_OCI_FORMAT.format(new String[]{ip, String.valueOf(port), sid});
 		} else {
 			return ORACLE_URL_THIN_FORMAT.format(new String[]{ip, String.valueOf(port), sid});
@@ -48,7 +49,7 @@ public class AtomCononectionURLTool {
 	public static final String getMySqlConnectionURL(String ip, int port, String dbName, Map<String, String> prams) {
 		String connectionURL = MYSQL_URL_FORMAT.format(new String[] { ip, String.valueOf(port), dbName });
 		if (null == prams || prams.isEmpty()) {
-			prams = AtomConstants.DEFAULT_MYSQL_CONNECTION_PROPERTIES;
+			prams = DBConstants.DEFAULT_MYSQL_CONNECTION_PROPERTIES;
 		}
 		StringBuilder sb = new StringBuilder();
 		for (Map.Entry<String, String> entry : prams.entrySet()) {

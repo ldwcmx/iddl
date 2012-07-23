@@ -27,7 +27,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import com.it.iddl.atom.common.SQLType;
+import com.it.iddl.common.sql.SQLType;
 
 
 /**

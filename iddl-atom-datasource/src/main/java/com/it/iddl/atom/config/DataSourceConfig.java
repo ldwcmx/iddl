@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.iacrqq.util.StringUtil;
-import com.it.iddl.atom.common.AtomConstants;
+import com.it.iddl.common.DBConstants;
+import com.it.iddl.common.DBStatus;
+import com.it.iddl.common.DBType;
 
 /**
  * 数据源配置信息
@@ -72,10 +74,10 @@ public class DataSourceConfig {
 	private int blockingTimeout = DEFAULT_BLOCKING_TIMEOUT;	//
 	private long idleTimeout = DEFAULT_IDLE_TIMEOUT;		// 
 
-	private String oracleConnectionType = AtomConstants.DEFAULT_ORACLE_CONNECTION_TYPE;
+	private String oracleConnectionType = DBConstants.DEFAULT_ORACLE_CONNECTION_TYPE;
 
-	private AtomDatabaseTypeEnum dbType;										// 数据库类型
-	private AtomDatabaseStatusEnum dbStatus = AtomDatabaseStatusEnum.NA_STATUS;	// 数据库状态
+	private DBType dbType;										// 数据库类型
+	private DBStatus dbStatus = DBStatus.NA_STATUS;	// 数据库状态
 
 	private Map<String, String> connectionProperties = new HashMap<String, String>();
 	
@@ -201,19 +203,19 @@ public class DataSourceConfig {
 		this.oracleConnectionType = oracleConnectionType;
 	}
 
-	public AtomDatabaseTypeEnum getDbType() {
+	public DBType getDbType() {
 		return dbType;
 	}
 
-	public void setDbType(AtomDatabaseTypeEnum dbType) {
+	public void setDbType(DBType dbType) {
 		this.dbType = dbType;
 	}
 
-	public AtomDatabaseStatusEnum getDbStatus() {
+	public DBStatus getDbStatus() {
 		return dbStatus;
 	}
 
-	public void setDbStatus(AtomDatabaseStatusEnum dbStatus) {
+	public void setDbStatus(DBStatus dbStatus) {
 		this.dbStatus = dbStatus;
 	}
 

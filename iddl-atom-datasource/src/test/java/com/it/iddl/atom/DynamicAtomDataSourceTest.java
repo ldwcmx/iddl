@@ -18,9 +18,9 @@ import org.apache.zookeeper.ZooKeeper;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.it.iddl.atom.config.AtomDatabaseStatusEnum;
-import com.it.iddl.atom.config.AtomDatabaseTypeEnum;
 import com.it.iddl.atom.config.DataSourceConfig;
+import com.it.iddl.common.DBStatus;
+import com.it.iddl.common.DBType;
 import com.it.iddl.config.ConfigManager;
 import com.it.iddl.config.ConfigServerType;
 import com.it.iddl.util.PropertyUtil;
@@ -44,10 +44,10 @@ public class DynamicAtomDataSourceTest extends TestCase {
 		config.setDbName("icommunity");
 		config.setUserName("icommunity");
 		config.setPassword("thinkmall");
-		config.setDbType(AtomDatabaseTypeEnum.MYSQL);
-		config.setDbStatus(AtomDatabaseStatusEnum.RW_STATUS);
-		config.setDriverClassName(AtomDatabaseTypeEnum.MYSQL.getDriverClassName());
-		config.setSorterClassName(AtomDatabaseTypeEnum.MYSQL.getSorterClassName());
+		config.setDbType(DBType.MYSQL);
+		config.setDbStatus(DBStatus.RW_STATUS);
+		config.setDriverClassName(DBType.MYSQL.getDriverClassName());
+		config.setSorterClassName(DBType.MYSQL.getSorterClassName());
 		
 		config(config);
 	}
@@ -151,8 +151,8 @@ public class DynamicAtomDataSourceTest extends TestCase {
 		ZooKeeper zookeeper = new ZooKeeper(String.format("%s:%d", "localhost", 2181), 5000, new ZookeeperWatcher());
 		JSONObject json = JSONObject.fromObject(config);
 		json.put(DataSourceConfig.CONNECTION_PROPERTIES, PropertyUtil.asString(config.getConnectionProperties()));
-		json.put(DataSourceConfig.DB_TYPE, AtomDatabaseTypeEnum.MYSQL.name());
-		json.put(DataSourceConfig.DB_STATUS, AtomDatabaseStatusEnum.RW_STATUS.name());
+		json.put(DataSourceConfig.DB_TYPE, DBType.MYSQL.name());
+		json.put(DataSourceConfig.DB_STATUS, DBStatus.RW_STATUS.name());
 		zookeeper.setData(String.format("/iddl/ds/%s/%s", APP_NAME, DB_KEY), json.toString().getBytes(), -1);
 		zookeeper.close();
 	}
@@ -164,10 +164,10 @@ public class DynamicAtomDataSourceTest extends TestCase {
 		config.setDbName("test");
 		config.setUserName("icommunity");
 		config.setPassword("thinkmall");
-		config.setDbType(AtomDatabaseTypeEnum.MYSQL);
-		config.setDbStatus(AtomDatabaseStatusEnum.RW_STATUS);
-		config.setDriverClassName(AtomDatabaseTypeEnum.MYSQL.getDriverClassName());
-		config.setSorterClassName(AtomDatabaseTypeEnum.MYSQL.getSorterClassName());
+		config.setDbType(DBType.MYSQL);
+		config.setDbStatus(DBStatus.RW_STATUS);
+		config.setDriverClassName(DBType.MYSQL.getDriverClassName());
+		config.setSorterClassName(DBType.MYSQL.getSorterClassName());
 		
 		config(config);
 	}
@@ -179,10 +179,10 @@ public class DynamicAtomDataSourceTest extends TestCase {
 		config.setDbName("icommunity");
 		config.setUserName("icommunity");
 		config.setPassword("thinkmall");
-		config.setDbType(AtomDatabaseTypeEnum.MYSQL);
-		config.setDbStatus(AtomDatabaseStatusEnum.RW_STATUS);
-		config.setDriverClassName(AtomDatabaseTypeEnum.MYSQL.getDriverClassName());
-		config.setSorterClassName(AtomDatabaseTypeEnum.MYSQL.getSorterClassName());
+		config.setDbType(DBType.MYSQL);
+		config.setDbStatus(DBStatus.RW_STATUS);
+		config.setDriverClassName(DBType.MYSQL.getDriverClassName());
+		config.setSorterClassName(DBType.MYSQL.getSorterClassName());
 		
 		config(config);
 	}

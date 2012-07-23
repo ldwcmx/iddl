@@ -67,7 +67,6 @@ public abstract class AbstractAtomDataSource implements DataSource {
 	}
 	
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

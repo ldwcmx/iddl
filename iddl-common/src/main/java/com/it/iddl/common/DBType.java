@@ -3,9 +3,8 @@
  * 
  * Intelligent Distributed Data Layer
  */
-package com.it.iddl.atom.config;
+package com.it.iddl.common;
 
-import com.it.iddl.atom.common.AtomConstants;
 
 /**
  * 数据库类型枚举类型
@@ -13,21 +12,21 @@ import com.it.iddl.atom.common.AtomConstants;
  * @author sihai
  *
  */
-public enum AtomDatabaseTypeEnum {
+public enum DBType {
 
-	ORACLE(AtomConstants.DEFAULT_ORACLE_DRIVER_CLASS, AtomConstants.DEFAULT_ORACLE_SORTER_CLASS),
-	MYSQL(AtomConstants.DEFAULT_MYSQL_DRIVER_CLASS, AtomConstants.DEFAULT_MYSQL_SORTER_CLASS),
-	POSTGRESQL(AtomConstants.DEFAULT_POSTGRESQL_DRIVER_CLASS, AtomConstants.DEFAULT_POSTGRESQL_SORTER_CLASS);
-
+	ORACLE(DBConstants.DEFAULT_ORACLE_DRIVER_CLASS, DBConstants.DEFAULT_ORACLE_SORTER_CLASS),
+	MYSQL(DBConstants.DEFAULT_MYSQL_DRIVER_CLASS, DBConstants.DEFAULT_MYSQL_SORTER_CLASS),
+	POSTGRESQL(DBConstants.DEFAULT_POSTGRESQL_DRIVER_CLASS, DBConstants.DEFAULT_POSTGRESQL_SORTER_CLASS);
+	
 	private String driverClassName;
 	private String sorterClassName;
 
-	AtomDatabaseTypeEnum(String driverClassName, String sorterClassName) {
+	DBType(String driverClassName, String sorterClassName) {
 		this.driverClassName = driverClassName;
 		this.sorterClassName = sorterClassName;
 	}
 
-	public static AtomDatabaseTypeEnum getAtomDbTypeEnumByType(String type) {
+	public static DBType getAtomDbTypeEnumByType(String type) {
 		/*
 		if (StringUtil.isNotBlank(type)) {
 			for (AtomDbTypeEnum typeEnum : AtomDbTypeEnum.values()) {
@@ -39,7 +38,7 @@ public enum AtomDatabaseTypeEnum {
 		return null;
 		*/
 		try {
-			return AtomDatabaseTypeEnum.valueOf(type.trim().toUpperCase());
+			return DBType.valueOf(type.trim().toUpperCase());
 		} catch (Exception e) {
 			return null;
 		}

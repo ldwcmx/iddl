@@ -1,4 +1,4 @@
-package com.it.iddl.atom.common;
+package com.it.iddl.util;
 
 import java.io.IOException;
 import java.io.StringReader;

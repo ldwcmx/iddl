@@ -12,14 +12,12 @@ import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.regex.Pattern;
 
-import javax.management.monitor.Monitor;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.it.iddl.atom.common.SQLType;
-import com.it.iddl.atom.common.StringUtils;
-import com.it.iddl.atom.config.AtomDatabaseStatusEnum;
+import com.it.iddl.common.DBStatus;
+import com.it.iddl.common.sql.SQLType;
+import com.it.iddl.util.StringUtils;
 
 /**
  * 
@@ -76,8 +74,8 @@ public class AtomStatementWrapper implements Statement {
 	}
 
 	protected void recordReadTimes() throws SQLException {
-		AtomDatabaseStatusEnum status = datasourceWrapper.connectionProperties.dbStatus;
-		if (status != AtomDatabaseStatusEnum.R_STAUTS && status != AtomDatabaseStatusEnum.RW_STATUS) {
+		DBStatus status = datasourceWrapper.connectionProperties.dbStatus;
+		if (status != DBStatus.R_STAUTS && status != DBStatus.RW_STATUS) {
 			throw new SQLException("db do not allow to execute read ! dbStatus is " + status);
 		}
 		/*
@@ -96,8 +94,8 @@ public class AtomStatementWrapper implements Statement {
 	}
 
 	protected void recordWriteTimes() throws SQLException {
-		AtomDatabaseStatusEnum status = datasourceWrapper.connectionProperties.dbStatus;
-		if (status != AtomDatabaseStatusEnum.W_STATUS && status != AtomDatabaseStatusEnum.RW_STATUS) {
+		DBStatus status = datasourceWrapper.connectionProperties.dbStatus;
+		if (status != DBStatus.W_STATUS && status != DBStatus.RW_STATUS) {
 			throw new SQLException("db do not allow to execute write ! dbStatus is " + status);
 		}
 		/*

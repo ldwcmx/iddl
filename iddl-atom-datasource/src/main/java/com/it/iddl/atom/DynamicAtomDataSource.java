@@ -6,10 +6,8 @@
 package com.it.iddl.atom;
 
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -17,16 +15,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.iacrqq.util.StringUtil;
-import com.it.iddl.atom.common.AtomCononectionURLTool;
-import com.it.iddl.atom.common.AtomConstants;
 import com.it.iddl.atom.config.AtomDataSourceConfigManager;
-import com.it.iddl.atom.config.AtomDatabaseStatusEnum;
-import com.it.iddl.atom.config.AtomDatabaseTypeEnum;
 import com.it.iddl.atom.config.DataSourceConfig;
 import com.it.iddl.atom.config.impl.DefaultAtomDataSourceConfigManager;
 import com.it.iddl.atom.config.listener.DataSourceConfigListener;
 import com.it.iddl.atom.exception.AtomException;
 import com.it.iddl.atom.jdbc.AtomDataSourceWrapper;
+import com.it.iddl.common.DBCononectionURLTool;
+import com.it.iddl.common.DBConstants;
+import com.it.iddl.common.DBStatus;
+import com.it.iddl.common.DBType;
 import com.it.iddl.config.ConfigManager;
 import com.it.iddl.config.ConfigServerType;
 import com.it.iddl.idatasource.IDataSourceFactory;
@@ -126,8 +124,8 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 					throw new SQLException(errorMsg);
 				}
 				
-				AtomDatabaseStatusEnum status = config.getDbStatus();
-				if(null == status || status == AtomDatabaseStatusEnum.NA_STATUS) {
+				DBStatus status = config.getDbStatus();
+				if(null == status || status == DBStatus.NA_STATUS) {
 					errorMsg = "DynamicAtomDataSource database status unknown";
 					logger.error(errorMsg);
 					throw new SQLException(errorMsg);
@@ -154,11 +152,11 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 		
 		try {
 			_ds_lock_.lock();
-			if(null == config || (config.getDbStatus() == AtomDatabaseStatusEnum.NA_STATUS && newConfig.getDbStatus() != AtomDatabaseStatusEnum.NA_STATUS)) {
+			if(null == config || (config.getDbStatus() == DBStatus.NA_STATUS && newConfig.getDbStatus() != DBStatus.NA_STATUS)) {
 				// 创建数据源
 				localTxDataSource = IDataSourceFactory.createLocalTxDataSource(dataSourceConfig2LocalTxDataSourceConfig(newConfig));
 				logger.warn("Init datasource");
-			} else if(config.getDbStatus() != AtomDatabaseStatusEnum.NA_STATUS && newConfig.getDbStatus() == AtomDatabaseStatusEnum.NA_STATUS) {
+			} else if(config.getDbStatus() != DBStatus.NA_STATUS && newConfig.getDbStatus() == DBStatus.NA_STATUS) {
 				// 销毁数据源
 				destroy();
 				logger.warn("Destroy datasource");
@@ -217,48 +215,48 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 		config.setPassword(dsConfig.getPassword());
 		config.setDriverClassName(dsConfig.getDriverClassName());
 		config.setExceptionSorterClassName(dsConfig.getSorterClassName());
-		if(dsConfig.getDbType() == AtomDatabaseTypeEnum.MYSQL) {
-			String connectionURL = AtomCononectionURLTool.getMySqlConnectionURL(dsConfig.getIp(), dsConfig.getPort(), dsConfig.getDbName(), dsConfig.getConnectionProperties());
+		if(dsConfig.getDbType() == DBType.MYSQL) {
+			String connectionURL = DBCononectionURLTool.getMySqlConnectionURL(dsConfig.getIp(), dsConfig.getPort(), dsConfig.getDbName(), dsConfig.getConnectionProperties());
 			config.setConnectionURL(connectionURL);
 			// 如果可以找到mysql driver中的Valid就使用，否则不设置valid
 			try {
-				Class validClass = Class.forName(AtomConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
+				Class validClass = Class.forName(DBConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
 				if (null != validClass) {
-					config.setValidConnectionCheckerClassName(AtomConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
+					config.setValidConnectionCheckerClassName(DBConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
 				} else {
-					logger.warn("MYSQL Driver is Not Suport " + AtomConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
+					logger.warn("MYSQL Driver is Not Suport " + DBConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
 				}
 			} catch (ClassNotFoundException e) {
-				logger.warn("MYSQL Driver is Not Suport " + AtomConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
+				logger.warn("MYSQL Driver is Not Suport " + DBConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
 			} catch (NoClassDefFoundError e) {
-				logger.warn("MYSQL Driver is Not Suport " + AtomConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
+				logger.warn("MYSQL Driver is Not Suport " + DBConstants.DEFAULT_MYSQL_VALID_CONNECTION_CHECKERCLASS);
 			}
 			
 			//如果可以找到mysqlDriver中的integrationSorter就使用否则使用默认的
 			try {
-				Class integrationSorterCalss = Class.forName(AtomConstants.MYSQL_INTEGRATION_SORTER_CLASS);
+				Class integrationSorterCalss = Class.forName(DBConstants.MYSQL_INTEGRATION_SORTER_CLASS);
 				if (null != integrationSorterCalss) {
-					config.setExceptionSorterClassName(AtomConstants.MYSQL_INTEGRATION_SORTER_CLASS);
+					config.setExceptionSorterClassName(DBConstants.MYSQL_INTEGRATION_SORTER_CLASS);
 				} else {
-					config.setExceptionSorterClassName(AtomConstants.DEFAULT_MYSQL_SORTER_CLASS);
-					logger.warn("MYSQL Driver is Not Suport " + AtomConstants.MYSQL_INTEGRATION_SORTER_CLASS
-							+ " use default sorter " + AtomConstants.DEFAULT_MYSQL_SORTER_CLASS);
+					config.setExceptionSorterClassName(DBConstants.DEFAULT_MYSQL_SORTER_CLASS);
+					logger.warn("MYSQL Driver is Not Suport " + DBConstants.MYSQL_INTEGRATION_SORTER_CLASS
+							+ " use default sorter " + DBConstants.DEFAULT_MYSQL_SORTER_CLASS);
 				}
 			} catch (ClassNotFoundException e) {
-				logger.warn("MYSQL Driver is Not Suport " + AtomConstants.MYSQL_INTEGRATION_SORTER_CLASS
-						+ " use default sorter " + AtomConstants.DEFAULT_MYSQL_SORTER_CLASS);
+				logger.warn("MYSQL Driver is Not Suport " + DBConstants.MYSQL_INTEGRATION_SORTER_CLASS
+						+ " use default sorter " + DBConstants.DEFAULT_MYSQL_SORTER_CLASS);
 			} catch (NoClassDefFoundError e){
-				logger.warn("MYSQL Driver is Not Suport " + AtomConstants.MYSQL_INTEGRATION_SORTER_CLASS
-						+ " use default sorter " + AtomConstants.DEFAULT_MYSQL_SORTER_CLASS);
+				logger.warn("MYSQL Driver is Not Suport " + DBConstants.MYSQL_INTEGRATION_SORTER_CLASS
+						+ " use default sorter " + DBConstants.DEFAULT_MYSQL_SORTER_CLASS);
 			}
-		} else if(dsConfig.getDbType() == AtomDatabaseTypeEnum.ORACLE) {
-			String connectionURL = AtomCononectionURLTool.getOracleConnectionURL(dsConfig.getIp(), dsConfig.getPort(), dsConfig.getDbName(), dsConfig.getOracleConnectionType());
+		} else if(dsConfig.getDbType() == DBType.ORACLE) {
+			String connectionURL = DBCononectionURLTool.getOracleConnectionURL(dsConfig.getIp(), dsConfig.getPort(), dsConfig.getDbName(), dsConfig.getOracleConnectionType());
 			config.setConnectionURL(connectionURL);
 			//如果是oracle没有设置ConnectionProperties则给以个默认的
 			if (!dsConfig.getConnectionProperties().isEmpty()) {
 				config.setConnectionProperties(dsConfig.getConnectionProperties());
 			} else {
-				config.setConnectionProperties(AtomConstants.DEFAULT_ORACLE_CONNECTION_PROPERTIES);
+				config.setConnectionProperties(DBConstants.DEFAULT_ORACLE_CONNECTION_PROPERTIES);
 			}
 		}
 		
