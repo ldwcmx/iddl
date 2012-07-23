@@ -39,6 +39,7 @@ import com.it.iddl.group.dbselector.DBSelector;
 import com.it.iddl.group.dbselector.ThreadLocalDataSourceIndex;
 import com.it.iddl.group.dbselector.DBSelector.AbstractDataSourceTryer;
 import com.it.iddl.group.dbselector.DBSelector.DataSourceTryer;
+import com.it.iddl.util.GroupHintParser;
 
 /**
  *相关的JDBC规范：
@@ -103,7 +104,7 @@ public class GroupConnection implements Connection {
 			//如果当前的数据源索引与上一次的数据源索引不一样，说明上一次缓存的Connection已经无用了，需要关闭后重建。
 		    dataSourceIndex = ThreadLocalDataSourceIndex.getIndex();
 		}else{
-			dataSourceIndex = GroupHintParser.convertHint2Index(sql);
+			dataSourceIndex = GroupHintParser.convertHint2Index(sql, DBSelector.NOT_EXIST_USER_SPECIFIED_INDEX);
 			if(dataSourceIndex < 0){
 				dataSourceIndex = ThreadLocalDataSourceIndex.getIndex();
 			}
