@@ -45,7 +45,8 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 	
 	private static Log logger = LogFactory.getLog(ZookeeperConfigManager.class);
 	
-	private static final String ZOOKEEPER_DATA_SOURCE_NODE_FORMAT = "/iddl/ds/{0}/{1}";
+	private static final String ZOOKEEPER_ATOM_DATA_SOURCE_NODE_FORMAT = "/iddl/atom/{0}/{1}";
+	private static final String ZOOKEEPER_GROUP_DATA_SOURCE_NODE_FORMAT = "/iddl/group/{0}/{1}";
 	
 	private static String DEFAULT_CACHE_DIRECTORY = "/tmp/iddl/zookeeper";
 	private static String CACHE_FILE_NAME  = "zookeeper.cache";
@@ -172,8 +173,13 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 	}
 	
 	@Override
-	public String makeConfigId(String appName, String dbKey) {
-		return MessageFormat.format(ZOOKEEPER_DATA_SOURCE_NODE_FORMAT, appName, dbKey);
+	public String makeAtomConfigId(String appName, String dbKey) {
+		return MessageFormat.format(ZOOKEEPER_ATOM_DATA_SOURCE_NODE_FORMAT, appName, dbKey);
+	}
+	
+	@Override
+	public String makeGroupConfigId(String appName, String groupKey) {
+		return MessageFormat.format(ZOOKEEPER_GROUP_DATA_SOURCE_NODE_FORMAT, appName, groupKey);
 	}
 	
 	/**

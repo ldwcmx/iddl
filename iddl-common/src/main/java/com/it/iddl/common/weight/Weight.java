@@ -68,7 +68,9 @@ public class Weight {
 	private static final Pattern WEIGHT_PATTERN_P = Pattern.compile("[P](\\d*)");
 	private static final Pattern WEIGHT_PATTERN_Q = Pattern.compile("[Q](\\d*)");
 	private static final Pattern WEIGHT_PATTERN_I = Pattern.compile("[I](\\d*)");
-
+	
+	private String conf;
+	
 	/**
 	 * 读权重，默认是10
 	 */
@@ -95,6 +97,7 @@ public class Weight {
 	public final Set<Integer> indexes;
 	
 	public Weight(String conf) {
+		this.conf = conf;
 		// 当权重字符串是null时，相当于"r10w10p0q0",
 		if (StringUtil.isBlank(conf)) {
 			r = 10;
@@ -151,6 +154,10 @@ public class Weight {
 			start = m.end();
 		}
 		return is;
+	}
+	
+	public String getConf() {
+		return conf;
 	}
 
 	public static void main(String[] args) {

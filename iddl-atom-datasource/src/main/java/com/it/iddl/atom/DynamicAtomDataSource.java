@@ -47,6 +47,8 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 	private String configServerHost;
 	private int    configServerPort;
 	
+	private String gateway;						// 配置中心gateway
+
 	private volatile DataSourceConfig config;	// 运行时配置
 	private DataSourceConfig localConfig;		// 优先的本地配置
 
@@ -298,5 +300,13 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 
 	public void setConfigServerPort(int configServerPort) {
 		this.configServerPort = configServerPort;
+	}
+	
+	public String getGateway() {
+		return gateway;
+	}
+
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
 	}
 }

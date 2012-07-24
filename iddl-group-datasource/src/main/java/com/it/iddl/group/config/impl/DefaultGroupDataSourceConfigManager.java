@@ -7,9 +7,14 @@
  */
 package com.it.iddl.group.config.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.iacrqq.util.StringUtil;
+import com.it.iddl.common.weight.Weight;
 import com.it.iddl.config.ConfigManager;
 import com.it.iddl.config.exception.ConfigException;
 import com.it.iddl.config.factory.ConfigManagerFactory;
@@ -52,12 +57,12 @@ public class DefaultGroupDataSourceConfigManager implements GroupDataSourceConfi
 	}
 	
 	@Override
-	public GroupDataSourceConfig getConfig(String appName, String dbKey, GroupDataSourceConfigListener listener) throws GroupException {
+	public GroupDataSourceConfig getConfig(String appName, String groupKey, GroupDataSourceConfigListener listener) throws GroupException {
 		
 		try {
-			String configId = configManager.makeConfigId(appName, dbKey);
+			String configId = configManager.makeGroupConfigId(appName, groupKey);
 			// ×¢²áµ×²ãµÄListener
-			register(appName, dbKey, listener);
+			register(appName, groupKey, listener);
 			String value = configManager.getConfigValue(configId);
 			return parse(value);
 		} catch (ConfigException e) {
@@ -66,9 +71,9 @@ public class DefaultGroupDataSourceConfigManager implements GroupDataSourceConfi
 	}
 
 	@Override
-	public void register(String appName, String dbKey, GroupDataSourceConfigListener listener) throws GroupException {
+	public void register(String appName, String groupKey, GroupDataSourceConfigListener listener) throws GroupException {
 		this.listener = listener;
-		final String id = configManager.makeConfigId(appName, dbKey);
+		final String id = configManager.makeGroupConfigId(appName, groupKey);
 		try {
 			configManager.register(new AbstractConfigListener() {
 				
@@ -95,9 +100,9 @@ public class DefaultGroupDataSourceConfigManager implements GroupDataSourceConfi
 	}
 
 	@Override
-	public GroupDataSourceConfig getConfig(String appName, String dbKey) throws GroupException {
+	public GroupDataSourceConfig getConfig(String appName, String groupKey) throws GroupException {
 		try {
-			return parse(configManager.getConfigValue(configManager.makeConfigId(appName, dbKey)));
+			return parse(configManager.getConfigValue(configManager.makeGroupConfigId(appName, groupKey)));
 		} catch (ConfigException e) {
 			throw new GroupException(e);
 		}
@@ -109,6 +114,20 @@ public class DefaultGroupDataSourceConfigManager implements GroupDataSourceConfi
 	 * @return
 	 */
 	private GroupDataSourceConfig parse(String value) {
-		return null;
+		if(StringUtil.isBlank(value)) {
+			throw new IllegalArgumentException("GroupDataSource groupConf must not be blank.");
+		}
+		Map<String, Weight> weightMap = new HashMap<String, Weight>();
+		String[] configArray = value.split(",");
+		String atomDsKey = null;
+		String weightStr = null;
+		String[] tmp = null;
+		for(String config : configArray) {
+			tmp = config.split(":");
+			atomDsKey = StringUtil.trim(tmp[0]);
+			weightStr = tmp.length == 2 ? tmp[1] : null;
+			weightMap.put(atomDsKey, new Weight(weightStr));
+		}
+		return new GroupDataSourceConfig(value, weightMap);
 	}
 }

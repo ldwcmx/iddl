@@ -75,7 +75,7 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 	public DataSourceConfig getConfig(String appName, String dbKey, DataSourceConfigListener listener) throws AtomException {
 		
 		try {
-			String configId = configManager.makeConfigId(appName, dbKey);
+			String configId = configManager.makeAtomConfigId(appName, dbKey);
 			// ×¢²áµ×²ãµÄListener
 			register(appName, dbKey, listener);
 			String value = configManager.getConfigValue(configId);
@@ -88,7 +88,7 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 	@Override
 	public void register(String appName, String dbKey, DataSourceConfigListener listener) throws AtomException {
 		this.listener = listener;
-		final String id = configManager.makeConfigId(appName, dbKey);
+		final String id = configManager.makeAtomConfigId(appName, dbKey);
 		try {
 			configManager.register(new AbstractConfigListener() {
 				
@@ -117,7 +117,7 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 	@Override
 	public DataSourceConfig getConfig(String appName, String dbKey) throws AtomException {
 		try {
-			return parse(configManager.getConfigValue(configManager.makeConfigId(appName, dbKey)));
+			return parse(configManager.getConfigValue(configManager.makeAtomConfigId(appName, dbKey)));
 		} catch (ConfigException e) {
 			throw new AtomException(e);
 		}
