@@ -30,11 +30,11 @@ import com.it.iddl.group.config.GroupDataSourceConfigManager;
 import com.it.iddl.group.config.impl.DefaultGroupDataSourceConfigManager;
 import com.it.iddl.group.dbselector.DBSelector;
 import com.it.iddl.group.dbselector.OneDBSelector;
+import com.it.iddl.group.dbselector.RuntimeWritableAtomDBSelector;
 import com.it.iddl.group.exception.AtomDataSourceException;
 import com.it.iddl.group.exception.GroupException;
 import com.it.iddl.group.jdbc.GroupDataSourceWrapper;
 import com.it.iddl.group.listener.GroupDataSourceConfigListener;
-import com.taobao.tddl.jdbc.group.DataSourceWrapper;
 
 /**
  * 
@@ -156,9 +156,9 @@ public class DynamicGroupDataSource extends AbstractGroupDataSource {
 			this.writeDBSelectorWrapper = w_DBSelector;
 
 			if (autoSelectWriteDataSource)
-				runtimeWritableAtomDBSelectorWrapper = new RuntimeWritableAtomDBSelector(dataSourceWrapperMap, groupExtraConfig);
+				runtimeWritableAtomDBSelectorWrapper = new RuntimeWritableAtomDBSelector(dataSourceWrapperMap);
 
-		} catch () {
+		} catch (Exception e) {
 			
 		} finally {
 			_gds_lock_.unlock();
