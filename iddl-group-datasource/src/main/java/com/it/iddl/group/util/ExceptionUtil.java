@@ -29,6 +29,7 @@ public class ExceptionUtil {
 	public static final String SQL_EXECUTION_ERROR_CONTEXT_LOG = "SQL_EXECUTION_ERROR_CONTEXT_LOG";
 	private static final String SQL_EXECUTION_ERROR_CONTEXT_MESSAGE = "SQLException ,context is ";
 	private static final Log log = LogFactory.getLog(SQL_EXECUTION_ERROR_CONTEXT_LOG);
+	
 	public static void throwSQLException(List<SQLException> exceptions, String sql, List<Object> args) throws SQLException {
 		if (exceptions != null && !exceptions.isEmpty()) {
 			SQLException first = exceptions.get(0);

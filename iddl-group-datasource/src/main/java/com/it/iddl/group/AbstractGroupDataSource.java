@@ -11,12 +11,16 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
 import com.it.iddl.common.DBType;
 import com.it.iddl.common.DataSourceFetcher;
+import com.it.iddl.group.dbselector.DBSelector;
+import com.it.iddl.group.jdbc.GroupDataSourceWrapper;
 
 
 /**
@@ -42,7 +46,7 @@ import com.it.iddl.common.DataSourceFetcher;
  * @author sihai
  *
  */
-public class AbstractGroupDataSource implements DataSource {
+public abstract class AbstractGroupDataSource implements DataSource {
 	
 	public static final int DEFAULT_RETRY_TIMES = 3;
 	
@@ -54,6 +58,68 @@ public class AbstractGroupDataSource implements DataSource {
 	
 	private int retryTimes = DEFAULT_RETRY_TIMES; // 默认读写失败时重试3次
 	
+	/* ========================================================================
+	 * 以下是保留当前写操作是在哪个库上执行的, 满足类似日志库插入的场景
+	 * ======================================================================*/
+	private static ThreadLocal<GroupDataSourceWrapper> targetThreadLocal;
+	
+	/**
+	 * 通过spring注入或直接调用该方法开启、关闭目标库记录
+	 */
+	public void setTracerWriteTarget(boolean isTraceTarget) {
+		if (isTraceTarget) {
+			if (targetThreadLocal == null) {
+				targetThreadLocal = new ThreadLocal<GroupDataSourceWrapper>();
+			}
+		} else {
+			targetThreadLocal = null;
+		}
+	}
+	
+	/**
+	 * 在执行完写操作后，调用改方法获得当前线程写操作是在哪个数据源执行的
+	 * 获取完自动立即清空
+	 */
+	public GroupDataSourceWrapper getCurrentTarget() {
+		if (targetThreadLocal == null) {
+			return null;
+		}
+		GroupDataSourceWrapper dsw = targetThreadLocal.get();
+		targetThreadLocal.remove();
+		return dsw;
+	}
+
+	/**
+	 * 下游调用该方法设置目标库
+	 */
+	public void setWriteTarget(GroupDataSourceWrapper dsw) {
+		if (targetThreadLocal != null) {
+			targetThreadLocal.set(dsw);
+		}
+	}
+	
+	/* ========================================================================
+	 * 遍历需求API
+	 * ======================================================================*/
+	//在ConfigManager中我们将配置信息最终封装为读写DBSelector，要得到从dbKey到DataSource的映射，将DBSelector中的信息方向输出。
+	public Map<String, DataSource> getDataSourceMap() {
+		Map<String, DataSource> dsMap = new LinkedHashMap<String, DataSource>();
+		dsMap.putAll(this.getDBSelector(true).getDataSources());
+		dsMap.putAll(this.getDBSelector(false).getDataSources());
+		return dsMap;
+	}
+
+	public Map<String, DataSource> getDataSourcesMap(boolean isRead) {
+		return this.getDBSelector(isRead).getDataSources();
+	}
+	
+	/**
+	 * 
+	 * @param isRead
+	 * @return
+	 */
+	public abstract DBSelector getDBSelector(boolean isRead);
+	
 	/**
 	 * 初始化
 	 */
@@ -61,6 +127,18 @@ public class AbstractGroupDataSource implements DataSource {
 		
 	}
 	
+	public int getRetryTimes() {
+		return retryTimes;
+	}
+
+	public void setRetryTimes(int retryTimes) {
+		this.retryTimes = retryTimes;
+	}
+	
+	
+	////////////////////////////////////////////////////////////////
+	//		以下是javax.sql.DataSource的API实现
+	////////////////////////////////////////////////////////////////
 	@Override
 	public Connection getConnection() throws SQLException {
 		// TODO Auto-generated method stub
@@ -94,18 +172,23 @@ public class AbstractGroupDataSource implements DataSource {
 		return 0;
 	}
 	
-	
-	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-		return null;
-	}
-	@Override
+	////////////////////////////////////////////////////////////////
+	//		For jdk1.6
+	////////////////////////////////////////////////////////////////
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
+	
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	////////////////////////////////////////////////////////////////
+	//		For jdk1.7
+	////////////////////////////////////////////////////////////////
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		return null;
 	}
 }

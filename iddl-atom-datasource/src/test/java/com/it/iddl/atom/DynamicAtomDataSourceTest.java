@@ -92,7 +92,6 @@ public class DynamicAtomDataSourceTest extends TestCase {
 		Thread.sleep(10 * 1000);
 		
 		try {
-			ds.init();
 			connection = ds.getConnection();
 			Statement s = connection.createStatement();
 			s.execute("DROP TABLE IF EXISTS test");
@@ -119,7 +118,6 @@ public class DynamicAtomDataSourceTest extends TestCase {
 		changeDbServer();
 		Thread.sleep(10 * 1000);
 		try {
-			ds.init();
 			connection = ds.getConnection();
 			Statement s = connection.createStatement();
 			s.execute("DROP TABLE IF EXISTS test");
@@ -159,7 +157,7 @@ public class DynamicAtomDataSourceTest extends TestCase {
 	
 	private void changeDbName() throws Exception {
 		DataSourceConfig config = new DataSourceConfig();
-		config.setIp("192.168.10.100");
+		config.setIp("192.168.10.101");
 		config.setPort(3306);
 		config.setDbName("test");
 		config.setUserName("icommunity");
@@ -174,7 +172,7 @@ public class DynamicAtomDataSourceTest extends TestCase {
 	
 	private void changeDbServer() throws Exception {
 		DataSourceConfig config = new DataSourceConfig();
-		config.setIp("192.168.10.101");
+		config.setIp("192.168.10.100");
 		config.setPort(3306);
 		config.setDbName("icommunity");
 		config.setUserName("icommunity");

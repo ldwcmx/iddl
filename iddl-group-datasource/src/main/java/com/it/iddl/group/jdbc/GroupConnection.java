@@ -3,7 +3,7 @@
  * 
  * Intelligent Distributed Data Layer
  * 
- * iddl-group-datasources
+ * iddl-group-datasource
  */
 package com.it.iddl.group.jdbc;
 
@@ -30,15 +30,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.it.iddl.group.AbstractGroupDataSource;
 import com.it.iddl.group.dbselector.DBSelector;
-import com.it.iddl.group.dbselector.ThreadLocalDataSourceIndex;
 import com.it.iddl.group.dbselector.DBSelector.AbstractDataSourceTryer;
 import com.it.iddl.group.dbselector.DBSelector.DataSourceTryer;
+import com.it.iddl.group.dbselector.ThreadLocalDataSourceIndex;
+import com.it.iddl.group.util.ExceptionUtil;
 import com.it.iddl.util.GroupHintParser;
 
 /**
@@ -96,6 +96,8 @@ public class GroupConnection implements Connection {
 	private Connection wBaseConnection;
 	private GroupDataSourceWrapper rBaseDsWrapper;
 	private GroupDataSourceWrapper wBaseDsWrapper;
+	
+	private Set<GroupStatement> openedStatements = new HashSet<GroupStatement>(2);
 
 	Connection getBaseConnection(String sql, boolean isRead) throws SQLException {
 		
@@ -137,7 +139,7 @@ public class GroupConnection implements Connection {
 			//先写后读，重用写连接读后，rBaseConnection仍然是null
 		} else {
 			if (wBaseConnection != null){
-				this.AbstractGroupDataSource.setWriteTarget(wBaseDsWrapper);
+				this.groupDataSource.setWriteTarget(wBaseDsWrapper);
 				return wBaseConnection;
 			} else if (rBaseConnection != null && rBaseDsWrapper.hasWriteWeight()) {
 				//在写连接null的情况下，如果读连接已经建立，且对应的库可写，则复用
@@ -147,7 +149,7 @@ public class GroupConnection implements Connection {
 				    wBaseConnection.setAutoCommit(isAutoCommit);
 				//wBaseDsKey = rBaseDsKey;
 				wBaseDsWrapper = rBaseDsWrapper;
-				this.AbstractGroupDataSource.setWriteTarget(wBaseDsWrapper);
+				this.groupDataSource.setWriteTarget(wBaseDsWrapper);
 				return wBaseConnection;
 			} else {
 				return null;
@@ -197,7 +199,7 @@ public class GroupConnection implements Connection {
 			//this.wBaseDsKey = dsw.getDataSourceKey();
 			//this.wBaseDataSourceIndex = dsw.getDataSourceIndex();
 			this.wBaseDsWrapper = dsw;
-			this.AbstractGroupDataSource.setWriteTarget(dsw);
+			this.groupDataSource.setWriteTarget(dsw);
 		}
 	}
 
@@ -229,8 +231,6 @@ public class GroupConnection implements Connection {
 		}
 	}
  
-	private Set<TGroupStatement> openedStatements = new HashSet<TGroupStatement>(2);
-
 	void removeOpenedStatements(Statement statement) {
 		if (!openedStatements.remove(statement)) {
 			logger.warn("current statmenet ：" + statement + " doesn't exist!");
@@ -262,7 +262,7 @@ public class GroupConnection implements Connection {
 		List<SQLException> exceptions = new LinkedList<SQLException>();
 		try {
 			// 关闭statement
-			for (TGroupStatement stmt : openedStatements) {
+			for (GroupStatement stmt : openedStatements) {
 				try {
 					stmt.close(false);
 				} catch (SQLException e) {
@@ -292,29 +292,31 @@ public class GroupConnection implements Connection {
 
 			ThreadLocalDataSourceIndex.clearIndex();
 		}
-		ExceptionUtils.throwSQLException(exceptions, "close tconnection", Collections.EMPTY_LIST);
+		
+		// exceptions 非空时才抛异常
+		ExceptionUtil.throwSQLException(exceptions, "close groupConnection", Collections.EMPTY_LIST);
 	}
 
 	/* ========================================================================
 	 * 创建Statement逻辑
 	 * ======================================================================*/
-	public TGroupStatement createStatement() throws SQLException {
+	public GroupStatement createStatement() throws SQLException {
 		checkClosed();
-		TGroupStatement stmt = new TGroupStatement(AbstractGroupDataSource, this);
+		GroupStatement stmt = new GroupStatement(groupDataSource, this);
 		openedStatements.add(stmt);
 		return stmt;
 	}
 
-	public TGroupStatement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-		TGroupStatement stmt = createStatement();
+	public GroupStatement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
+		GroupStatement stmt = createStatement();
 		stmt.setResultSetType(resultSetType);
 		stmt.setResultSetConcurrency(resultSetConcurrency);
 		return stmt;
 	}
 
-	public TGroupStatement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)
+	public GroupStatement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability)
 			throws SQLException {
-		TGroupStatement stmt = createStatement(resultSetType, resultSetConcurrency);
+		GroupStatement stmt = createStatement(resultSetType, resultSetConcurrency);
 		stmt.setResultSetHoldability(resultSetHoldability);
 		return stmt;
 	}
@@ -404,7 +406,7 @@ public class GroupConnection implements Connection {
 				dataSourceIndex = ThreadLocalDataSourceIndex.getIndex();
 			}
 			target = AbstractGroupDataSource.getDBSelector(false).tryExecute(null, getCallableStatementTryer,
-					this.AbstractGroupDataSource.getRetryingTimes(), sql, resultSetType, resultSetConcurrency,
+					this.groupDataSource.getRetryingTimes(), sql, resultSetType, resultSetConcurrency,
 					resultSetHoldability,dataSourceIndex);
 		}
 		TGroupCallableStatement stmt = new TGroupCallableStatement(AbstractGroupDataSource, this, target, sql);
