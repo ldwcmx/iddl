@@ -59,7 +59,7 @@ public class DynamicGroupDataSource extends AbstractGroupDataSource {
 		return null;
 	}
 	
-	private void reflush(GroupDataSourceConfig newConfi) {
+	private void reflush(GroupDataSourceConfig newConfig) {
 		
 	}
 }
