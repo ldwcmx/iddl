@@ -29,6 +29,10 @@
 			<artifactId>iddl-common</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.it.iddl</groupId>
+			<artifactId>iddl-config</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.iacrqq</groupId>
 			<artifactId>util</artifactId>
 		</dependency>

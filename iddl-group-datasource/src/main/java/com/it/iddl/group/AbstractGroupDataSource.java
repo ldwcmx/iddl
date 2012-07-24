@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 import com.it.iddl.common.DBType;
 import com.it.iddl.common.DataSourceFetcher;
 import com.it.iddl.group.dbselector.DBSelector;
+import com.it.iddl.group.exception.GroupException;
 import com.it.iddl.group.jdbc.GroupDataSourceWrapper;
 
 
@@ -50,9 +51,9 @@ public abstract class AbstractGroupDataSource implements DataSource {
 	
 	public static final int DEFAULT_RETRY_TIMES = 3;
 	
-	private String appName;							// 
-	private String groupKey;						// 
-	private String groupConf;						// 
+	protected String appName;						// 
+	protected String groupKey;						// 
+	protected String groupConf;						// 
 	private DataSourceFetcher dataSourceFetcher;	// 
 	private DBType dbType = DBType.MYSQL;			// 
 	
@@ -62,6 +63,37 @@ public abstract class AbstractGroupDataSource implements DataSource {
 	 * 以下是保留当前写操作是在哪个库上执行的, 满足类似日志库插入的场景
 	 * ======================================================================*/
 	private static ThreadLocal<GroupDataSourceWrapper> targetThreadLocal;
+	
+	/**
+	 * 构造函数
+	 * @param appName
+	 * @param groupKey
+	 */
+	public AbstractGroupDataSource(String appName, String groupKey) {
+		this.appName = appName;
+		this.groupKey = groupKey;
+	}
+	
+	/**
+	 * 
+	 * @param isRead
+	 * @return
+	 */
+	public abstract DBSelector getDBSelector(boolean isRead);
+	
+	/**
+	 * 
+	 * @throws GroupException
+	 */
+	public abstract void internalInit() throws GroupException;
+	
+	/**
+	 * 初始化
+	 * @throws GroupException
+	 */
+	public void init() throws GroupException {
+		internalInit();
+	}
 	
 	/**
 	 * 通过spring注入或直接调用该方法开启、关闭目标库记录
@@ -113,20 +145,9 @@ public abstract class AbstractGroupDataSource implements DataSource {
 		return this.getDBSelector(isRead).getDataSources();
 	}
 	
-	/**
-	 * 
-	 * @param isRead
-	 * @return
-	 */
-	public abstract DBSelector getDBSelector(boolean isRead);
-	
-	/**
-	 * 初始化
-	 */
-	public void init() {
-		
-	}
-	
+	////////////////////////////////////////////////////////////////
+	//		setter/getter
+	////////////////////////////////////////////////////////////////
 	public int getRetryTimes() {
 		return retryTimes;
 	}
@@ -135,6 +156,37 @@ public abstract class AbstractGroupDataSource implements DataSource {
 		this.retryTimes = retryTimes;
 	}
 	
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public String getGroupKey() {
+		return groupKey;
+	}
+
+	public void setGroupKey(String groupKey) {
+		this.groupKey = groupKey;
+	}
+
+	public String getGroupConf() {
+		return groupConf;
+	}
+
+	public void setGroupConf(String groupConf) {
+		this.groupConf = groupConf;
+	}
+
+	public DBType getDbType() {
+		return dbType;
+	}
+
+	public void setDbType(DBType dbType) {
+		this.dbType = dbType;
+	}
 	
 	////////////////////////////////////////////////////////////////
 	//		以下是javax.sql.DataSource的API实现
@@ -176,13 +228,15 @@ public abstract class AbstractGroupDataSource implements DataSource {
 	//		For jdk1.6
 	////////////////////////////////////////////////////////////////
 	public <T> T unwrap(Class<T> iface) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		if(isWrapperFor(iface)){
+			return (T) this;
+		}else{
+			throw new SQLException("not a wrapper for "+ iface);
+		}
 	}
 	
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		return this.getClass().isAssignableFrom(iface);
 	}
 	
 	////////////////////////////////////////////////////////////////

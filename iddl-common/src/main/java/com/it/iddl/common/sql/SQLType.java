@@ -2,6 +2,8 @@
  * iddl
  * 
  * Intelligent Distributed Data Layer
+ * 
+ * iddl-common
  */
 package com.it.iddl.common.sql;
 
@@ -24,6 +26,7 @@ public enum SQLType {
 	LOAD(9),
 	MERGE(10),
 	SHOW(11),
+	ALTER(12),
 	DEFAULT_SQL_TYPE(-100);
 	
 	private int i;

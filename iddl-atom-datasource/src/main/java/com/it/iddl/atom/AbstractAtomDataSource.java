@@ -87,7 +87,7 @@ public abstract class AbstractAtomDataSource implements DataSource {
 
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		return AbstractAtomDataSource.class.isAssignableFrom(iface);
+		return this.getClass().isAssignableFrom(iface);
 	}
 
 	@Override

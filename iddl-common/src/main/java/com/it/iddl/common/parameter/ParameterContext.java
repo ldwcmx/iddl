@@ -1,19 +1,29 @@
+/**
+ * iddl
+ * 
+ * Intelligent Distributed Data Layer
+ * 
+ * iddl-common
+ */
 package com.it.iddl.common.parameter;
 
+
+
 /**
- * ���������ġ�
+ * 参数上下文。
  * 
- * @author shenxun
+ * @author sihai
  *
  */
 public class ParameterContext {
 	
 	private ParameterMethod parameterMethod;
+	
 	/**
 	 * args[0]: parameterIndex
-	 * args[1]: ����ֵ
-	 * args[2]: length �����ڣ�setAsciiStream��setBinaryStream��setCharacterStream��setUnicodeStream
-	 * ������
+	 * args[1]: 参数值
+	 * args[2]: length 适用于：setAsciiStream、setBinaryStream、setCharacterStream、setUnicodeStream
+	 * 。。。
 	 * 
 	 */
 	private Object[] args;

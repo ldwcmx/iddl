@@ -16,7 +16,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.it.iddl.common.jdbc.ParameterContext;
+import com.it.iddl.common.parameter.ParameterContext;
 
 /**
  * 

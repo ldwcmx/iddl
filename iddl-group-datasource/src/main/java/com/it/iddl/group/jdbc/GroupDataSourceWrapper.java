@@ -133,6 +133,14 @@ public class GroupDataSourceWrapper implements DataSource {
 		return wrappedDataSource.getConnection(username, password);
 	}
 	
+	public String toString() {
+		return new StringBuilder("DataSourceWrapper{dataSourceKey=").append(dbKey).append(", dataSourceIndex=")
+				.append(dataSourceIndex).append(",weight=").append(weight).append("}").toString();
+	}
+	
+	///////////////////////////////////////////////////////////////////
+	//		For jdk1.6
+	///////////////////////////////////////////////////////////////////
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		if(isWrapperFor(iface)){
 			return (T) this;
@@ -143,10 +151,5 @@ public class GroupDataSourceWrapper implements DataSource {
 
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		return this.getClass().isAssignableFrom(iface);
-	}
-	
-	public String toString() {
-		return new StringBuilder("DataSourceWrapper{dataSourceKey=").append(dbKey).append(", dataSourceIndex=")
-				.append(dataSourceIndex).append(",weight=").append(weight).append("}").toString();
 	}
 }

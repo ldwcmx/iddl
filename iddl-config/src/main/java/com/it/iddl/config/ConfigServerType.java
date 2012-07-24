@@ -13,7 +13,9 @@ import com.iacrqq.util.StringUtil;
  *
  */
 public enum ConfigServerType {
-	CONFIG_SERVER_ZOOKEEPER("zookeeper");
+	
+	CONFIG_SERVER_ZOOKEEPER("zookeeper"),
+	CONFIG_SERVER_DATABASE("database");
 	
 	private String value;
 	
