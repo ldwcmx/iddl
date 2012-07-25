@@ -31,20 +31,18 @@ import com.it.iddl.common.weight.Weight;
 public class GroupDataSourceWrapper implements DataSource {
 
 	private final String dbKey;  			// 这个DataSource对应的dbKey
-	private final String conf;				// 权重信息字符串
 	private final Weight weight;  			// 权重信息
 	private final DataSource wrappedDataSource; // 被封装的目标DataSource
 	private final DBType dbType;			// 数据库类型
 	private final int dataSourceIndex;		// dataSourceIndex是指这个DataSource在Group中的位置
 	
-	public GroupDataSourceWrapper(String dbKey, String conf, DataSource wrappedDataSource, DBType dbType) {
-		this(dbKey, conf, wrappedDataSource, dbType, -1);
+	public GroupDataSourceWrapper(String dbKey, Weight weight, DataSource wrappedDataSource, DBType dbType) {
+		this(dbKey, weight, wrappedDataSource, dbType, -1);
 	}
 	
-	public GroupDataSourceWrapper(String dbKey, String conf, DataSource wrappedDataSource, DBType dbType, int dataSourceIndex) {
+	public GroupDataSourceWrapper(String dbKey, Weight weight, DataSource wrappedDataSource, DBType dbType, int dataSourceIndex) {
 		this.dbKey = dbKey;
-		this.conf = conf;
-		this.weight = new Weight(conf);
+		this.weight = weight;
 		this.wrappedDataSource = wrappedDataSource;
 		this.dbType = dbType;
 
@@ -85,7 +83,7 @@ public class GroupDataSourceWrapper implements DataSource {
 	}
 
 	public String getConf() {
-		return conf;
+		return weight.getConf();
 	}
 	
 	public Weight getWeight() {

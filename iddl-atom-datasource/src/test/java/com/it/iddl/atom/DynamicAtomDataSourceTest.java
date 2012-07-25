@@ -21,8 +21,6 @@ import org.junit.Test;
 import com.it.iddl.atom.config.DataSourceConfig;
 import com.it.iddl.common.DBStatus;
 import com.it.iddl.common.DBType;
-import com.it.iddl.config.ConfigManager;
-import com.it.iddl.config.ConfigServerType;
 import com.it.iddl.util.PropertyUtil;
 
 /**
@@ -58,9 +56,7 @@ public class DynamicAtomDataSourceTest extends TestCase {
 		DynamicAtomDataSource ds = new DynamicAtomDataSource();
 		ds.setAppName(APP_NAME);
 		ds.setDbKey(DB_KEY);
-		ds.setConfigServerType(ConfigServerType.CONFIG_SERVER_ZOOKEEPER.value());
-		ds.setConfigServerHost(ConfigManager.DEFAULT_CONFIG_SERVER_ZOOKEEPER_HOST);
-		ds.setConfigServerPort(ConfigManager.DEFAULT_CONFIG_SERVER_ZOOKEEPER_PORT);
+		ds.setGateway("http:/www.google.com");
 		
 		Connection connection = null;
 		try {

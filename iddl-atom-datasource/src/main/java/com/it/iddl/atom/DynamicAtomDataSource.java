@@ -2,11 +2,12 @@
  * iddl
  * 
  * Intelligent Distributed Data Layer
+ * 
+ * iddl-atom-datasource
  */
 package com.it.iddl.atom;
 
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.sql.DataSource;
@@ -25,8 +26,6 @@ import com.it.iddl.common.DBCononectionURLTool;
 import com.it.iddl.common.DBConstants;
 import com.it.iddl.common.DBStatus;
 import com.it.iddl.common.DBType;
-import com.it.iddl.config.ConfigManager;
-import com.it.iddl.config.ConfigServerType;
 import com.it.iddl.idatasource.IDataSourceFactory;
 import com.it.iddl.idatasource.LocalTxDataSourceConfig;
 import com.it.iddl.idatasource.resource.adapter.jdbc.local.LocalTxDataSource;
@@ -43,10 +42,8 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 	
 	private static Log logger = LogFactory.getLog(DynamicAtomDataSource.class);
 	
-	private ConfigServerType configServerType = ConfigServerType.CONFIG_SERVER_ZOOKEEPER;
-	private String configServerHost;
-	private int    configServerPort;
-	
+	private String gateway;						// 配置中心gateway
+
 	private volatile DataSourceConfig config;	// 运行时配置
 	private DataSourceConfig localConfig;		// 优先的本地配置
 
@@ -61,7 +58,7 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 
 		// 默认使用zookeeper
 		configManager = new DefaultAtomDataSourceConfigManager();
-		configManager.init(toProperties());
+		configManager.init(gateway);
 		
 		_ds_lock_ = new  ReentrantLock();
 		DataSourceConfig config = configManager.getConfig(appName, dbKey);
@@ -276,27 +273,11 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 		return true;
 	}
 	
-	private Properties toProperties() {
-		Properties properties = new Properties();
-		properties.put(ConfigManager.CONFIG_SERVER_TYPE, configServerType.value());
-		if(StringUtil.isNotBlank(configServerHost)) {
-			properties.put(ConfigManager.CONFIG_SERVER_SERVER_HOST, configServerHost);
-		}
-		if(configServerPort != 0) {
-			properties.put(ConfigManager.CONFIG_SERVER_SERVER_PORT, configServerPort);
-		}
-		return properties;
-	}
-	
-	public void setConfigServerType(String type) {
-		this.configServerType = ConfigServerType.toEnum(type);
+	public String getGateway() {
+		return gateway;
 	}
 
-	public void setConfigServerHost(String configServerHost) {
-		this.configServerHost = configServerHost;
-	}
-
-	public void setConfigServerPort(int configServerPort) {
-		this.configServerPort = configServerPort;
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
 	}
 }

@@ -54,10 +54,9 @@ public abstract class AbstractGroupDataSource implements DataSource {
 	protected String appName;						// 
 	protected String groupKey;						// 
 	protected String groupConf;						// 
-	private DataSourceFetcher dataSourceFetcher;	// 
 	private DBType dbType = DBType.MYSQL;			// 
 	
-	private int retryTimes = DEFAULT_RETRY_TIMES; // 默认读写失败时重试3次
+	private int retryTimes = DEFAULT_RETRY_TIMES; 	// 默认读写失败时重试3次
 	
 	/* ========================================================================
 	 * 以下是保留当前写操作是在哪个库上执行的, 满足类似日志库插入的场景
@@ -146,49 +145,6 @@ public abstract class AbstractGroupDataSource implements DataSource {
 	}
 	
 	////////////////////////////////////////////////////////////////
-	//		setter/getter
-	////////////////////////////////////////////////////////////////
-	public int getRetryTimes() {
-		return retryTimes;
-	}
-
-	public void setRetryTimes(int retryTimes) {
-		this.retryTimes = retryTimes;
-	}
-	
-	public String getAppName() {
-		return appName;
-	}
-
-	public void setAppName(String appName) {
-		this.appName = appName;
-	}
-
-	public String getGroupKey() {
-		return groupKey;
-	}
-
-	public void setGroupKey(String groupKey) {
-		this.groupKey = groupKey;
-	}
-
-	public String getGroupConf() {
-		return groupConf;
-	}
-
-	public void setGroupConf(String groupConf) {
-		this.groupConf = groupConf;
-	}
-
-	public DBType getDbType() {
-		return dbType;
-	}
-
-	public void setDbType(DBType dbType) {
-		this.dbType = dbType;
-	}
-	
-	////////////////////////////////////////////////////////////////
 	//		以下是javax.sql.DataSource的API实现
 	////////////////////////////////////////////////////////////////
 	@Override
@@ -244,5 +200,49 @@ public abstract class AbstractGroupDataSource implements DataSource {
 	////////////////////////////////////////////////////////////////
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
 		return null;
+	}
+	
+	
+	////////////////////////////////////////////////////////////////
+	//		setter/getter
+	////////////////////////////////////////////////////////////////
+	public int getRetryTimes() {
+		return retryTimes;
+	}
+
+	public void setRetryTimes(int retryTimes) {
+		this.retryTimes = retryTimes;
+	}
+	
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public String getGroupKey() {
+		return groupKey;
+	}
+
+	public void setGroupKey(String groupKey) {
+		this.groupKey = groupKey;
+	}
+
+	public String getGroupConf() {
+		return groupConf;
+	}
+
+	public void setGroupConf(String groupConf) {
+		this.groupConf = groupConf;
+	}
+
+	public DBType getDbType() {
+		return dbType;
+	}
+
+	public void setDbType(DBType dbType) {
+		this.dbType = dbType;
 	}
 }

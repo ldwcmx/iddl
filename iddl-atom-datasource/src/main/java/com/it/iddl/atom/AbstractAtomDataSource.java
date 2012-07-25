@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import com.it.iddl.atom.exception.AtomException;
+import com.it.iddl.common.DBType;
 
 /**
  * 抽象的原子数据源, 对应一个数据库的数据源
@@ -24,6 +25,7 @@ public abstract class AbstractAtomDataSource implements DataSource {
 	
 	protected String appName;					// 系统分配的应用名称
 	protected String dbKey;						// 系统分配的数据库key
+	protected DBType dbType;					// 数据库类型
 	
 	/**
 	 * 获取子类的底层DataSource
@@ -114,4 +116,8 @@ public abstract class AbstractAtomDataSource implements DataSource {
 	public void setDbKey(String dbKey) {
 		this.dbKey = dbKey;
 	} 
+	
+	public DBType getDbType() {
+		return dbType;
+	}
 }

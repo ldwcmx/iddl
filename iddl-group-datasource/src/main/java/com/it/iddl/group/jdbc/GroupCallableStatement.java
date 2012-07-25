@@ -571,4 +571,19 @@ public class GroupCallableStatement extends GroupPreparedStatement implements Ca
 	{
 		((CallableStatement)targetStatement).setNClob(parameterName, reader);		
 	}
+	
+	///////////////////////////////////////////////////////////////////
+	//		For jdk1.7
+	///////////////////////////////////////////////////////////////////
+	public <T> T getObject(int parameterIndex, Class<T> type)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public <T> T getObject(String parameterName, Class<T> type)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

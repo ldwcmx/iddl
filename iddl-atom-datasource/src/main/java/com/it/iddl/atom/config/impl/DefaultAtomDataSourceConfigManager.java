@@ -40,21 +40,9 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 	private volatile DataSourceConfigListener listener;
 	
 	@Override
-	public void init(Properties config) throws AtomException {
+	public void init(String gateway) throws AtomException {
 		try {
-			String type = config.getProperty(ConfigManager.CONFIG_SERVER_TYPE);
-			if(StringUtil.isBlank(type)) {
-				throw new AtomException("Please assign configServer type");
-			}
-			ConfigServerType configServerType = ConfigServerType.toEnum(type);
-			if(null == configServerType) {
-				throw new AtomException(String.format("Unknows configServer type:%s", type));
-			}
-			if(configServerType == ConfigServerType.CONFIG_SERVER_ZOOKEEPER) {
-				configManager = ConfigManagerFactory.newZookeeperConfigManagerInstance(ZookeeperConfig.fromProperties(config));
-			} else {
-				throw new AtomException(String.format("Unsupport configServer type:%s", configServerType.value()));
-			}
+			configManager = ConfigManagerFactory.newConfigManagerInstance(gateway);
 		} catch (ConfigException e) {
 			throw new AtomException(e);
 		}
@@ -75,7 +63,7 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 	public DataSourceConfig getConfig(String appName, String dbKey, DataSourceConfigListener listener) throws AtomException {
 		
 		try {
-			String configId = configManager.makeConfigId(appName, dbKey);
+			String configId = configManager.makeAtomConfigId(appName, dbKey);
 			// ×¢²áµ×²ãµÄListener
 			register(appName, dbKey, listener);
 			String value = configManager.getConfigValue(configId);
@@ -88,7 +76,7 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 	@Override
 	public void register(String appName, String dbKey, DataSourceConfigListener listener) throws AtomException {
 		this.listener = listener;
-		final String id = configManager.makeConfigId(appName, dbKey);
+		final String id = configManager.makeAtomConfigId(appName, dbKey);
 		try {
 			configManager.register(new AbstractConfigListener() {
 				
@@ -117,7 +105,7 @@ public class DefaultAtomDataSourceConfigManager implements AtomDataSourceConfigM
 	@Override
 	public DataSourceConfig getConfig(String appName, String dbKey) throws AtomException {
 		try {
-			return parse(configManager.getConfigValue(configManager.makeConfigId(appName, dbKey)));
+			return parse(configManager.getConfigValue(configManager.makeAtomConfigId(appName, dbKey)));
 		} catch (ConfigException e) {
 			throw new AtomException(e);
 		}

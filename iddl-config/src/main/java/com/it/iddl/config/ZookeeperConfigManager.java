@@ -18,19 +18,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.zookeeper.AsyncCallback.StatCallback;
 import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.KeeperException.Code;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.AsyncCallback.StatCallback;
+import org.apache.zookeeper.KeeperException.Code;
 import org.apache.zookeeper.data.Stat;
 
 import com.iacrqq.util.StringUtil;
@@ -45,7 +44,8 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 	
 	private static Log logger = LogFactory.getLog(ZookeeperConfigManager.class);
 	
-	private static final String ZOOKEEPER_DATA_SOURCE_NODE_FORMAT = "/iddl/ds/{0}/{1}";
+	private static final String ZOOKEEPER_ATOM_DATA_SOURCE_NODE_FORMAT = "/iddl/atom/{0}/{1}";
+	private static final String ZOOKEEPER_GROUP_DATA_SOURCE_NODE_FORMAT = "/iddl/group/{0}/{1}";
 	
 	private static String DEFAULT_CACHE_DIRECTORY = "/tmp/iddl/zookeeper";
 	private static String CACHE_FILE_NAME  = "zookeeper.cache";
@@ -61,6 +61,37 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 	
 	private Map<String, String> cache;
 	private ReentrantReadWriteLock _cache_rw_lock_;		// protect cache
+	
+	@Override
+	public void init(Object config) throws ConfigException {
+		zookeeperConfig = (ZookeeperConfig)config;
+		configIdList = new ArrayList<String>();
+		// init cache directory
+		File cacheDirectory = new File(zookeeperConfig.getCacheDirecory());
+		if(!cacheDirectory.exists()) {
+			cacheDirectory.mkdirs();
+		}
+		_cache_rw_lock_ = new ReentrantReadWriteLock();
+		// restore from cache file
+		cacheFileName = String.format("%s%s%s", zookeeperConfig.getCacheDirecory(), File.separator, CACHE_FILE_NAME);
+		restoreFromCacheFile(cacheFileName);
+		
+		connected2ConfigCenter = false;
+		try {
+			connect2Zookeeper(cache.isEmpty(), DEFAULT_TIMEOUT);
+			if(connected2ConfigCenter) {
+				logger.info(String.format("Connected to config center, connectionURL:%s", zookeeperConfig.getConnectionURL()));
+			}
+		} catch (IOException e) {
+			logger.error(String.format("Can not connect to config center, connectionURL:%s, so try to use local configuration", zookeeperConfig.getConnectionURL()));
+		}
+		
+		if(cache.isEmpty()) {
+			if(!connected2ConfigCenter) {
+				throw new RuntimeException(String.format("Failed restore cache from cache file:%s, and can not connect to config center, connectionURL:%s", cacheDirectory + File.separator + CACHE_FILE_NAME, zookeeperConfig.getConnectionURL()));
+			}
+		}
+	}
 	
 	@Override
 	protected String getValue(String configId) throws ConfigException {
@@ -123,37 +154,6 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 	}
 
 	@Override
-	public void init(Object config) throws ConfigException {
-		zookeeperConfig = (ZookeeperConfig)config;
-		configIdList = new ArrayList<String>();
-		// init cache directory
-		File cacheDirectory = new File(zookeeperConfig.getCacheDirecory());
-		if(!cacheDirectory.exists()) {
-			cacheDirectory.mkdirs();
-		}
-		_cache_rw_lock_ = new ReentrantReadWriteLock();
-		// restore from cache file
-		cacheFileName = String.format("%s%s%s", zookeeperConfig.getCacheDirecory(), File.separator, CACHE_FILE_NAME);
-		restoreFromCacheFile(cacheFileName);
-		
-		connected2ConfigCenter = false;
-		try {
-			connect2Zookeeper(cache.isEmpty(), DEFAULT_TIMEOUT);
-			if(connected2ConfigCenter) {
-				logger.info(String.format("Connected to config center, host:%s, port:%d", zookeeperConfig.getZookeeperHost(), zookeeperConfig.getZookeeperPort()));
-			}
-		} catch (IOException e) {
-			logger.error(String.format("Can not connect to config center, host:%s, port:%d, so try to use local configuration", zookeeperConfig.getZookeeperHost(), zookeeperConfig.getZookeeperPort()));
-		}
-		
-		if(cache.isEmpty()) {
-			if(!connected2ConfigCenter) {
-				throw new RuntimeException(String.format("Failed restore cache from cache file:%s, and can not connect to config center, host:%s, port:%s", cacheDirectory + File.separator + CACHE_FILE_NAME, zookeeperConfig.getZookeeperHost(), zookeeperConfig.getZookeeperPort()));
-			}
-		}
-	}
-
-	@Override
 	public void stop() throws ConfigException {
 		if(null != configIdList) {
 			configIdList.clear();
@@ -172,8 +172,13 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 	}
 	
 	@Override
-	public String makeConfigId(String appName, String dbKey) {
-		return MessageFormat.format(ZOOKEEPER_DATA_SOURCE_NODE_FORMAT, appName, dbKey);
+	public String makeAtomConfigId(String appName, String dbKey) {
+		return MessageFormat.format(ZOOKEEPER_ATOM_DATA_SOURCE_NODE_FORMAT, appName, dbKey);
+	}
+	
+	@Override
+	public String makeGroupConfigId(String appName, String groupKey) {
+		return MessageFormat.format(ZOOKEEPER_GROUP_DATA_SOURCE_NODE_FORMAT, appName, groupKey);
 	}
 	
 	/**
@@ -272,13 +277,13 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 	}
 	
 	private void connect2Zookeeper(boolean sync, int timeout) throws IOException {
-		zookeeper = new ZooKeeper(String.format("%s:%d", zookeeperConfig.getZookeeperHost(), zookeeperConfig.getZookeeperPort()), timeout, new ZookeeperWatcher());
+		zookeeper = new ZooKeeper(zookeeperConfig.getConnectionURL(), timeout, new ZookeeperWatcher());
 		if(sync) {
 			latch = new CountDownLatch(1);
 			try {
 				latch.await(timeout * 2, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
-				logger.error(String.format("Waiting connect to config center, host:%s port:%d, exception:", zookeeperConfig.getZookeeperHost(), zookeeperConfig.getZookeeperPort()), e);
+				logger.error(String.format("Waiting connect to config center, connectionURL:%s, exception:", zookeeperConfig.getConnectionURL()), e);
 				Thread.currentThread().interrupt();
 			}
 		}
@@ -373,9 +378,9 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 		        try {
 	        		_changed_(path);
 	        	} catch (KeeperException e) {
-	        		logger.error(String.format("Get %s config from config center, host:%s, port:%d failed", path, zookeeperConfig.getZookeeperHost(), zookeeperConfig.getZookeeperPort()), e);
+	        		logger.error(String.format("Get %s config from config center, connectionURL:%s failed", path, zookeeperConfig.getConnectionURL()), e);
 	        	} catch (InterruptedException e) {
-	        		logger.error(String.format("Get %s config from config center, host:%s, port:%d failed", path, zookeeperConfig.getZookeeperHost(), zookeeperConfig.getZookeeperPort()), e);
+	        		logger.error(String.format("Get %s config from config center, connectionURL:%s failed", path, zookeeperConfig.getConnectionURL()), e);
 	        		Thread.currentThread().interrupt();
 	        	}
 	        } else {
@@ -391,24 +396,15 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 	 */
 	public static class ZookeeperConfig {
 		
-		private String    zookeeperHost = DEFAULT_CONFIG_SERVER_ZOOKEEPER_HOST;
-		private int		  zookeeperPort = DEFAULT_CONFIG_SERVER_ZOOKEEPER_PORT;
+		private String    connectionURL;
 		private String    cacheDirecory = DEFAULT_CACHE_DIRECTORY;
 		
-		public String getZookeeperHost() {
-			return zookeeperHost;
+		public String getConnectionURL() {
+			return connectionURL;
 		}
 
-		public void setZookeeperHost(String zookeeperHost) {
-			this.zookeeperHost = zookeeperHost;
-		}
-
-		public int getZookeeperPort() {
-			return zookeeperPort;
-		}
-
-		public void setZookeeperPort(int zookeeperPort) {
-			this.zookeeperPort = zookeeperPort;
+		public void setConnectionURL(String connectionURL) {
+			this.connectionURL = connectionURL;
 		}
 		
 		public String getCacheDirecory() {
@@ -424,18 +420,13 @@ public class ZookeeperConfigManager extends AbstractConfigManager {
 		 * @param properties
 		 * @return
 		 */
-		public static ZookeeperConfig fromProperties(Properties properties) {
-			ZookeeperConfig config = new ZookeeperConfig();
+		public static ZookeeperConfig fromConfigServer(ConfigServer configServer) {
+			if(configServer.getConfigServerType() != ConfigServerType.CONFIG_SERVER_ZOOKEEPER) {
+				throw new IllegalArgumentException("ZookeeperConfig.fromConfigServer only accept zookeeper configServer");
+			}
 			
-			if(properties.contains(CONFIG_SERVER_SERVER_HOST)) {
-				config.zookeeperHost = (String)properties.get(CONFIG_SERVER_SERVER_HOST);
-			}
-			if(properties.contains(CONFIG_SERVER_SERVER_PORT)) {
-				config.zookeeperPort = Integer.valueOf((String)properties.get(CONFIG_SERVER_SERVER_PORT));
-			}
-			if(properties.contains(CONFIG_MANAGER_CACHE_DIRECTORY)) {
-				config.cacheDirecory = (String)properties.get(CONFIG_MANAGER_CACHE_DIRECTORY);
-			}
+			ZookeeperConfig config = new ZookeeperConfig();
+			config.connectionURL = configServer.getConfigServerConnectionURL();
 			return config;
 		}
 	}

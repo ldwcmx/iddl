@@ -16,8 +16,15 @@ public interface DataSourceFetcher {
 	
 	/**
 	 * 取datasource
-	 * @param key
+	 * @param dsKey
 	 * @return
 	 */
-	DataSource getDataSource(String key);
+	DataSource getDataSource(String dsKey);
+	
+	/**
+	 * 取datasource的dbtype
+	 * @param dsKey
+	 * @return
+	 */
+	DBType getDataSourceDBType(String dsKey);
 }

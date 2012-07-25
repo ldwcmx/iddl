@@ -21,10 +21,10 @@ public interface AtomDataSourceConfigManager {
 	
 	/**
 	 * 初始化
-	 * @param config
+	 * @param gateway
 	 * @throws AtomException
 	 */
-	void init(Properties config) throws AtomException;
+	void init(String gateway) throws AtomException;
 	
 	/**
 	 * 停止

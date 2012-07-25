@@ -86,5 +86,13 @@ public interface ConfigManager {
 	 * @param dbKey
 	 * @return
 	 */
-	String makeConfigId(String appName, String dbKey);
+	String makeAtomConfigId(String appName, String dbKey);
+	
+	/**
+	 * 
+	 * @param appName
+	 * @param groupKey
+	 * @return
+	 */
+	String makeGroupConfigId(String appName, String groupKey);
 }
