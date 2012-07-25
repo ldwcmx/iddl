@@ -169,6 +169,7 @@ public class DynamicAtomDataSource extends AbstractAtomDataSource {
 			}
 			
 			config = newConfig;
+			dbType = config.getDbType();
 		} catch (Exception e) {
 			logger.error(e);
 		} finally {

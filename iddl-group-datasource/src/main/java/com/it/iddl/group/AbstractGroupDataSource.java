@@ -18,9 +18,9 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import com.it.iddl.common.DBType;
-import com.it.iddl.common.DataSourceFetcher;
 import com.it.iddl.group.dbselector.DBSelector;
 import com.it.iddl.group.exception.GroupException;
+import com.it.iddl.group.jdbc.GroupConnection;
 import com.it.iddl.group.jdbc.GroupDataSourceWrapper;
 
 
@@ -139,14 +139,12 @@ public abstract class AbstractGroupDataSource implements DataSource {
 	////////////////////////////////////////////////////////////////
 	@Override
 	public Connection getConnection() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new GroupConnection(this);
 	}
 	@Override
 	public Connection getConnection(String username, String password)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return new GroupConnection(this, username, password);
 	}
 	
 	@Override

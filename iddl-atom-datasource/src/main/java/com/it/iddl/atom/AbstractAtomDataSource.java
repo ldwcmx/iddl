@@ -25,7 +25,7 @@ public abstract class AbstractAtomDataSource implements DataSource {
 	
 	protected String appName;					// 系统分配的应用名称
 	protected String dbKey;						// 系统分配的数据库key
-	protected DBType dbType;					// 数据库类型
+	protected volatile DBType dbType;			// 数据库类型
 	
 	/**
 	 * 获取子类的底层DataSource

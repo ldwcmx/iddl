@@ -1,3 +1,10 @@
+/**
+ * iddl
+ * 
+ * Intelligent Distributed Data Layer
+ * 
+ * iddl-util
+ */
 package com.it.iddl.util;
 
 import java.io.IOException;
@@ -6,7 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-
+/**
+ * 
+ * @author sihai
+ *
+ */
 public class StringUtils {
 	public static final String NL=System.getProperty("line.separator");
 	

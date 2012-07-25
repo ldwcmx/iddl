@@ -2,6 +2,8 @@
  * iddl
  * 
  * Intelligent Distributed Data Layer
+ * 
+ * iddl-util
  */
 package com.it.iddl.util;
 

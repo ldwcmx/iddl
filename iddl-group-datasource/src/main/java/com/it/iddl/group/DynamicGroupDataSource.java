@@ -98,8 +98,18 @@ public class DynamicGroupDataSource extends AbstractGroupDataSource {
 	
 	@Override
 	public DBSelector getDBSelector(boolean isRead) {
-		// TODO Auto-generated method stub
-		return null;
+		DBSelector dbSelector = isRead ? readDBSelectorWrapper : writeDBSelectorWrapper;
+		if (!isRead && autoSelectWriteDataSource) {
+			// 因为所有dbSelector内部的TAtomDataSource都是指向同一个实例，如果某一个TAtomDataSource的状态改了，
+			// 那么所有包含这个TAtomDataSource的dbSelector都会知道状态改变了，
+			// 所以只要有一个TAtomDataSource的状态变成W，
+			// 那么不管这个dbSelector是专门用于读的，还是专门用于写的，也不管是不是runtimeWritableAtomDBSelector，
+			// 只要调用了hasWritableDataSource()都会返回true
+
+			// if(!dbSelector.hasWritableDataSource())
+			dbSelector = runtimeWritableAtomDBSelectorWrapper;
+		}
+		return dbSelector;
 	}
 	
 	/**
@@ -159,8 +169,9 @@ public class DynamicGroupDataSource extends AbstractGroupDataSource {
 			if (autoSelectWriteDataSource)
 				runtimeWritableAtomDBSelectorWrapper = new RuntimeWritableAtomDBSelector(dataSourceWrapperMap);
 
-		} catch (Exception e) {
-			
+		} catch (AtomDataSourceException e) {
+			logger.error(String.format("Group datasource reflush failed, errorMsg:%s", e.getMessage()), e);
+			throw e;
 		} finally {
 			_gds_lock_.unlock();
 		}
