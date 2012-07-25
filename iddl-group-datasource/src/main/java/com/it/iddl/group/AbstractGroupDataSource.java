@@ -64,16 +64,6 @@ public abstract class AbstractGroupDataSource implements DataSource {
 	private static ThreadLocal<GroupDataSourceWrapper> targetThreadLocal;
 	
 	/**
-	 * 构造函数
-	 * @param appName
-	 * @param groupKey
-	 */
-	public AbstractGroupDataSource(String appName, String groupKey) {
-		this.appName = appName;
-		this.groupKey = groupKey;
-	}
-	
-	/**
 	 * 
 	 * @param isRead
 	 * @return

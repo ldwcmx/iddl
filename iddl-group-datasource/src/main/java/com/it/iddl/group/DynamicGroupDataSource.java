@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.iacrqq.util.StringUtil;
 import com.it.iddl.atom.AbstractAtomDataSource;
 import com.it.iddl.atom.DynamicAtomDataSource;
 import com.it.iddl.atom.exception.AtomException;
@@ -71,17 +72,10 @@ public class DynamicGroupDataSource extends AbstractGroupDataSource {
 	private volatile DBSelector writeDBSelectorWrapper;
 	private volatile DBSelector runtimeWritableAtomDBSelectorWrapper;
 	
-	/**
-	 * 构造函数
-	 * @param appName
-	 * @param groupKey
-	 */
-	public DynamicGroupDataSource(String appName, String groupKey) {
-		super(appName, groupKey);
-	}
-	
 	@Override
 	public void internalInit() throws GroupException {
+		
+		checkProperty();
 		
 		// 默认使用zookeeper
 		configManager = new DefaultGroupDataSourceConfigManager();
@@ -281,6 +275,26 @@ public class DynamicGroupDataSource extends AbstractGroupDataSource {
 		c.add(value);
 	}
 	
+	private void checkProperty() {
+		if(StringUtil.isBlank(appName)) {
+			throw new IllegalArgumentException("Property appName must not be blank.");
+		}
+		if(StringUtil.isBlank(groupKey)) {
+			throw new IllegalArgumentException("Property groupKey must not be blank.");
+		}
+		if(StringUtil.isBlank(gateway)) {
+			throw new IllegalArgumentException("Property gateway must not be blank.");
+		}
+	}
+	
+	public String getGateway() {
+		return gateway;
+	}
+
+	public void setGateway(String gateway) {
+		this.gateway = gateway;
+	}
+	
 	/**
 	 * 
 	 * @author sihai
@@ -311,5 +325,5 @@ public class DynamicGroupDataSource extends AbstractGroupDataSource {
 		public DBType getDataSourceDBType(String dsKey) {
 			return dbType;
 		}
-	};
+	}
 }
