@@ -105,6 +105,13 @@ public class GroupConnection implements Connection {
 	
 	private Set<GroupStatement> openedStatements = new HashSet<GroupStatement>(2);
 
+	/**
+	 * 
+	 * @param sql
+	 * @param isRead
+	 * @return
+	 * @throws SQLException
+	 */
 	Connection getBaseConnection(String sql, boolean isRead) throws SQLException {
 		
 		int dataSourceIndex = DBSelector.NOT_EXIST_USER_SPECIFIED_INDEX;
@@ -113,7 +120,7 @@ public class GroupConnection implements Connection {
 		    dataSourceIndex = ThreadLocalDataSourceIndex.getIndex();
 		}else{
 			dataSourceIndex = GroupHintParser.convertHint2Index(sql, DBSelector.NOT_EXIST_USER_SPECIFIED_INDEX);
-			if(dataSourceIndex < 0){
+			if(dataSourceIndex == DBSelector.NOT_EXIST_USER_SPECIFIED_INDEX){
 				dataSourceIndex = ThreadLocalDataSourceIndex.getIndex();
 			}
 		}
@@ -121,7 +128,7 @@ public class GroupConnection implements Connection {
 		// 要切换数据源
 		if (dataSourceIndex != DBSelector.NOT_EXIST_USER_SPECIFIED_INDEX) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("dataSourceIndex=" + dataSourceIndex);
+				logger.debug(String.format("dataSourceIndex:%s", dataSourceIndex));
 			}
 			//在事务状态下，设置不同的数据源索引会导致异常。
 			if (!isAutoCommit) {
@@ -166,6 +173,10 @@ public class GroupConnection implements Connection {
 	/**
 	 * 从实际的DataSource获得一个下层（有可能不是真实的）Connection
 	 * 包权限：此方法只在GroupStatement、GroupPreparedStatement中使用
+	 * @param gdsw
+	 * @param isRead
+	 * @return
+	 * @throws SQLException
 	 */
 	Connection createNewConnection(GroupDataSourceWrapper gdsw, boolean isRead) throws SQLException {
 		//这个方法只发生在第一次建立读/写连接的时候，以后都是复用了
@@ -180,11 +191,17 @@ public class GroupConnection implements Connection {
 
 		//只在写连接上调用  setAutoCommit, 与  GroupConnection#setAutoCommit 的代码保持一致
 		if (!isRead || !isAutoCommit)
-		        connection.setAutoCommit(isAutoCommit); //新建连接的AutoCommit要与当前isAutoCommit的状态同步
+		        connection.setAutoCommit(isAutoCommit); // 新建连接的AutoCommit要与当前isAutoCommit的状态同步
 
 		return connection;
 	}
-
+	
+	/**
+	 * 
+	 * @param baseConnection
+	 * @param dsw
+	 * @param isRead
+	 */
 	private void setBaseConnection(Connection baseConnection, GroupDataSourceWrapper dsw, boolean isRead) {
 		if (baseConnection == null) {
 			logger.warn("setBaseConnection to null !!");
@@ -236,7 +253,11 @@ public class GroupConnection implements Connection {
 			wBaseConnection = null;
 		}
 	}
- 
+	
+	/**
+	 * 
+	 * @param statement
+	 */
 	void removeOpenedStatements(Statement statement) {
 		if (!openedStatements.remove(statement)) {
 			logger.warn("current statmenet ：" + statement + " doesn't exist!");
@@ -402,12 +423,12 @@ public class GroupConnection implements Connection {
 
 		Connection connection = this.getBaseConnection(sql,false); //存储过程默认走写库
 		if (connection != null) {
-			sql = GroupHintParser.removeTddlGroupHint(sql);
+			sql = GroupHintParser.removeIDDLGroupHint(sql);
 			target = getCallableStatement(connection, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 		} else {
 			// hint优先
 			Integer dataSourceIndex = GroupHintParser.convertHint2Index(sql, DBSelector.NOT_EXIST_USER_SPECIFIED_INDEX);
-			sql = GroupHintParser.removeTddlGroupHint(sql);
+			sql = GroupHintParser.removeIDDLGroupHint(sql);
 			if (dataSourceIndex < 0) {
 				dataSourceIndex = ThreadLocalDataSourceIndex.getIndex();
 			}

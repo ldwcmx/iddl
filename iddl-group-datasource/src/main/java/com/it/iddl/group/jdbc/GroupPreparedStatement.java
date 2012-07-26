@@ -142,12 +142,12 @@ public class GroupPreparedStatement extends GroupStatement implements PreparedSt
 		Connection conn = groupConnection.getBaseConnection(sql,gotoRead);
 
 		if (conn != null){
-			sql=GroupHintParser.removeTddlGroupHint(sql);
+			sql=GroupHintParser.removeIDDLGroupHint(sql);
 			return executeQueryOnConnection(conn, sql);
 		}else{
 			// hint优先
 			Integer dataSourceIndex = GroupHintParser.convertHint2Index(sql, DBSelector.NOT_EXIST_USER_SPECIFIED_INDEX);
-			sql=GroupHintParser.removeTddlGroupHint(sql);
+			sql=GroupHintParser.removeIDDLGroupHint(sql);
 			if (dataSourceIndex < 0) {
 				dataSourceIndex = ThreadLocalDataSourceIndex.getIndex();
 			}
@@ -173,14 +173,14 @@ public class GroupPreparedStatement extends GroupStatement implements PreparedSt
 		Connection connection = groupConnection.getBaseConnection(sql, false);
 
 		if (connection != null){
-			sql = GroupHintParser.removeTddlGroupHint(sql);
+			sql = GroupHintParser.removeIDDLGroupHint(sql);
 			int updateCount = executeUpdateOnConnection(connection);
 			super.updateCount = updateCount;
 			return updateCount;
 		} else {
 			// hint优先
 			Integer dataSourceIndex = GroupHintParser.convertHint2Index(sql, DBSelector.NOT_EXIST_USER_SPECIFIED_INDEX);
-			sql = GroupHintParser.removeTddlGroupHint(sql);
+			sql = GroupHintParser.removeIDDLGroupHint(sql);
 			if (dataSourceIndex < 0) {
 				dataSourceIndex = ThreadLocalDataSourceIndex.getIndex();
 			}
@@ -226,13 +226,13 @@ public class GroupPreparedStatement extends GroupStatement implements PreparedSt
 			Connection conn = groupConnection.getBaseConnection(sql,false);
 
 			if (conn != null) {
-				sql=GroupHintParser.removeTddlGroupHint(sql);
+				sql=GroupHintParser.removeIDDLGroupHint(sql);
 				// 如果当前已经有连接,则不做任何重试。对于更新来说，不管有没有事务，
 				// 用户总期望getConnection获得连接之后，后续的一系列操作都在这同一个库，同一个连接上执行
 				return executeBatchOnConnection(conn);
 			} else {
 				Integer dataSourceIndex = GroupHintParser.convertHint2Index(sql, DBSelector.NOT_EXIST_USER_SPECIFIED_INDEX);
-				sql=GroupHintParser.removeTddlGroupHint(sql);
+				sql=GroupHintParser.removeIDDLGroupHint(sql);
 				if (dataSourceIndex < 0) {
 					dataSourceIndex = ThreadLocalDataSourceIndex.getIndex();
 				}

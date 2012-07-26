@@ -50,7 +50,7 @@ public class PriorityDbGroupSelector extends AbstractDBSelector {
 	
 	public PriorityDbGroupSelector(EquityDbManager[] priorityGroups) {
 		if (priorityGroups == null || priorityGroups.length == 0) {
-			throw new IllegalArgumentException("EquityDbManager[] priorityGroups is null or empty");
+			throw new IllegalArgumentException("Parameter priorityGroups must not be null or empty.");
 		}
 		this.priorityGroups = priorityGroups;
 	}
@@ -145,9 +145,9 @@ public class PriorityDbGroupSelector extends AbstractDBSelector {
 
 		public T onSQLException(List<SQLException> exceptions, ExceptionSorter exceptionSorter, Object... args)
 				throws SQLException {
-			Exception last = exceptions.get(exceptions.size() - 1);
-			if (last instanceof NoMoreDataSourceException) {
-				if (exceptions.size() > 1) {
+			if (null != exceptions && !exceptions.isEmpty()) {
+				Exception last = exceptions.get(exceptions.size() - 1);
+				if (last instanceof NoMoreDataSourceException) {
 					exceptions.remove(exceptions.size() - 1);
 				}
 				historyExceptions.addAll(exceptions);
