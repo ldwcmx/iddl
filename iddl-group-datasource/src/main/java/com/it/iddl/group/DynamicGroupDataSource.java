@@ -55,7 +55,7 @@ public class DynamicGroupDataSource extends AbstractGroupDataSource {
 	private Log logger = LogFactory.getLog(DynamicGroupDataSource.class);
 	
 	private String gateway;
-	private GroupDataSourceConfigManager configManager;		// 
+	private GroupDataSourceConfigManager configManager;		// 配置管理器, 负责读取配置, 监听配置变更
 	private boolean createTAtomDataSource = true;			// 
 	private DataSourceFetcher dataSourceFetcher;			// 
 	private Map<String/* Atom dbIndex */, GroupDataSourceWrapper/* Wrapper过的Atom DS */> dataSourceWrapperMap = new HashMap<String, GroupDataSourceWrapper>();

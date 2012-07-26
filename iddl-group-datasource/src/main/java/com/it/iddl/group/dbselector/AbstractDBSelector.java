@@ -39,11 +39,11 @@ public abstract class AbstractDBSelector implements DBSelector {
 	
 	private static final Map<DBType, ExceptionSorter> exceptionSorters = new HashMap<DBType, ExceptionSorter>(2);
 	
-	private DBType dbType = DBType.MYSQL;							// 
+	private DBType dbType = DBType.MYSQL;							// 数据库类型
 	protected ExceptionSorter exceptionSorter = exceptionSorters.get(dbType);
 	private String id = "undefined"; 								// id值未使用
 	
-	protected boolean readable = false;								// 
+	protected boolean readable = false;								// 可读?
 	protected boolean isSupportRetry = true; 						// 默认情况下支持重试
 
 	private static final int DEFAULT_RETRY_BAD_DB_INTERVAL = 2000; 	// milliseconds
@@ -165,8 +165,7 @@ public abstract class AbstractDBSelector implements DBSelector {
 					exceptions.add(new NoMoreDataSourceException("dbKey:"
 							+ dsHolder.gdsw.getDbKey()
 							+ " not Available,toTry:" + toTry));
-					return tryer.onSQLException(exceptions, exceptionSorter,
-							args);
+					return tryer.onSQLException(exceptions, exceptionSorter, args);
 				}
 			} else {
 				return tryer.tryOnDataSource(dsHolder.gdsw, args); // 有一次成功直接返回

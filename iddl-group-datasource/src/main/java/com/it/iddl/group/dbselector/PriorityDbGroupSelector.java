@@ -49,10 +49,10 @@ public class PriorityDbGroupSelector extends AbstractDBSelector {
 	private EquityDbManager[] priorityGroups;
 	
 	public PriorityDbGroupSelector(EquityDbManager[] priorityGroups) {
-		this.priorityGroups = priorityGroups;
 		if (priorityGroups == null || priorityGroups.length == 0) {
 			throw new IllegalArgumentException("EquityDbManager[] priorityGroups is null or empty");
 		}
+		this.priorityGroups = priorityGroups;
 	}
 	
 	@Override

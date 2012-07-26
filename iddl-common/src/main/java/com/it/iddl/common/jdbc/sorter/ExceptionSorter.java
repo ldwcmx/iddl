@@ -22,7 +22,7 @@ public interface ExceptionSorter {
 	 * 
 	 * @param e the <code>java.sql.SQLException</code>
 	 * 
-	 * @return whether or not the exception is vatal.
+	 * @return whether or not the exception is fatal.
 	 */
 	boolean isExceptionFatal(SQLException e);
 }

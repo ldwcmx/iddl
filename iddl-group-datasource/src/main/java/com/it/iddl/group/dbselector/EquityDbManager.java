@@ -89,7 +89,7 @@ public class EquityDbManager extends AbstractDBSelector {
 			DataSourceTryer<T> tryer, int times, Object... args)
 			throws SQLException {
 		
-		//如果不支持重试，把times设为1就可以了
+		// 如果不支持重试，把times设为1就可以了
 		if (!this.isSupportRetry) {
 			times = 1;
 		}
@@ -101,8 +101,8 @@ public class EquityDbManager extends AbstractDBSelector {
 			times = times - failedDataSources.size(); //扣除已经失败掉的重试次数
 			for (SQLException e : failedDataSources.values()) {
 				if (!exceptionSorter.isExceptionFatal(e)) {
-					//有一个异常（其实是最后加入的异常，因map无法知道顺序，只能遍历）不是数据库不可用异常，则抛出
-					//是不是应该在发现非数据库fatal之后就立刻抛出，而不是放到failedDataSources这个map里?(guangxia)
+					// 有一个异常（其实是最后加入的异常，因map无法知道顺序，只能遍历）不是数据库不可用异常，则抛出
+					// 是不是应该在发现非数据库fatal之后就立刻抛出，而不是放到failedDataSources这个map里?
 					return tryer.onSQLException(exceptions, exceptionSorter, args);
 				}
 			}

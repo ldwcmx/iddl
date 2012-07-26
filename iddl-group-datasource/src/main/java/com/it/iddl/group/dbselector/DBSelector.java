@@ -47,7 +47,7 @@ public interface DBSelector {
 	 * 这个方法同时可以用来判断一个dsKey对应的库是否可读或可写：
 	 *   rselector.get(wBaseDsKey) != null 则可读
 	 *   wselector.get(rBaseDsKey) != null 则可写
-	 * TGroupConnection读写连接复用的旧实现会用到这个功能
+	 * GroupConnection读写连接复用的旧实现会用到这个功能
 	 * 
 	 * @param dsKey 内部和每一个物理DataSource对应的key, 在初始化dbSelector时指定
 	 * @return 返回dsKey对应的数据源
@@ -56,6 +56,7 @@ public interface DBSelector {
 
 	/**
 	 * 设置数据库类型：目前只用来选择exceptionSorter 
+	 * @param dbType
 	 */
 	void setDbType(DBType dbType);
 
@@ -105,14 +106,16 @@ public interface DBSelector {
 	 * 在DBSelector管理的数据源上重试执行操作的回调接口
 	 */
 	public static interface DataSourceTryer<T> {
+		
 		/**
-		 * @param dsKey 内部和每一个物理DataSource对应的key, 在初始化dbSelector时指定
-		 * @param ds
-		 * @param args 用户调用tryExecute时传入的参数列表
+		 * 在指定的数据源上执行
+		 * @param dsw
+		 * @param args
 		 * @return
 		 * @throws SQLException
 		 */
-		//T tryOnDataSource(String dsKey, DataSource ds, Object... args) throws SQLException;
+		T tryOnDataSource(GroupDataSourceWrapper dsw, Object... args) throws SQLException;
+		
 		/**
 		 * tryExecute中重试调用tryOnDataSource遇到非数据库不可用异常，或用完重试次数时，会调用该方法
 		 * @param exceptions 历次重试失败抛出的异常。
@@ -125,8 +128,6 @@ public interface DBSelector {
 		 */
 		T onSQLException(List<SQLException> exceptions, ExceptionSorter exceptionSorter, Object... args)
 				throws SQLException;
-
-		T tryOnDataSource(GroupDataSourceWrapper dsw, Object... args) throws SQLException;
 	}
 
 	/**
