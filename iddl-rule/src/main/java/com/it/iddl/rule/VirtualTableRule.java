@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.it.iddl.common.DBType;
+
 /**
  * <p>
  * IDataSource持有所有虚拟表名到该对象的引用
@@ -53,13 +55,13 @@ public interface VirtualTableRule<D, T> {
 	 * 
 	 * @return
 	 */
-	public TableSlotMap getTableSlotMap();
+	//public TableSlotMap getTableSlotMap();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public DBTableMap getDbTableMap();
+	//public DBTableMap getDbTableMap();
 
 	//=========================================================================
 	// 规则和其他属性的分割线

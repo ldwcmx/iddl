@@ -61,9 +61,6 @@ public class DynamicGroupDataSource extends AbstractGroupDataSource {
 	private Map<String/* Atom dbIndex */, GroupDataSourceWrapper/* Wrapper过的Atom DS */> dataSourceWrapperMap = new HashMap<String, GroupDataSourceWrapper>();
 	private ReentrantLock _gds_lock_;						// 数据源操作锁
 	
-	//当运行期间主备发生切换时是否需要查找第一个可写的库
-	private boolean autoSelectWriteDataSource = false;
-		
 	/**
 	 * 不能在DynamicGroupDataSource或GroupConnection或其他地方把DBSelector做为一个字段保存下来，
 	 * 否则db权重配置变了之后无法使用最新的权重配置
@@ -97,7 +94,7 @@ public class DynamicGroupDataSource extends AbstractGroupDataSource {
 	}
 	
 	@Override
-	public DBSelector getDBSelector(boolean isRead) {
+	public DBSelector getDBSelector(boolean isRead, boolean autoSelectWriteDataSource) {
 		DBSelector dbSelector = isRead ? readDBSelectorWrapper : writeDBSelectorWrapper;
 		if (!isRead && autoSelectWriteDataSource) {
 			// 因为所有dbSelector内部的TAtomDataSource都是指向同一个实例，如果某一个TAtomDataSource的状态改了，
@@ -165,9 +162,9 @@ public class DynamicGroupDataSource extends AbstractGroupDataSource {
 
 			this.readDBSelectorWrapper = r_DBSelector;
 			this.writeDBSelectorWrapper = w_DBSelector;
-
-			if (autoSelectWriteDataSource)
-				runtimeWritableAtomDBSelectorWrapper = new RuntimeWritableAtomDBSelector(dataSourceWrapperMap);
+			
+			// 
+			runtimeWritableAtomDBSelectorWrapper = new RuntimeWritableAtomDBSelector(dataSourceWrapperMap);
 
 		} catch (AtomDataSourceException e) {
 			logger.error(String.format("Group datasource reflush failed, errorMsg:%s", e.getMessage()), e);

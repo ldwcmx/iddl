@@ -43,12 +43,12 @@ import com.it.iddl.group.util.ExceptionUtil;
 import com.it.iddl.util.GroupHintParser;
 
 /**
- *相关的JDBC规范：
+ * 相关的JDBC规范：
  * 
  * 1. Connection关闭，在其上打开的statement自动关闭。这就要求Connection持有其上打开的所有statement的引用
  * 2. 
  * 
- *重试的场景1：在第一个statement上执行查询，路由到db1成功。再创建一个statement查询在db1上失败：
+ * 重试的场景1：在第一个statement上执行查询，路由到db1成功。再创建一个statement查询在db1上失败：
  * stmt1 = GroupConnection.createStatement
  * rs1 = stmt1.executeQuery --create connection on db1 and execute success
  * stmt2 = conn..createStatement
@@ -76,9 +76,14 @@ public class GroupConnection implements Connection {
 	private AbstractGroupDataSource groupDataSource;
 
 	// 虽然DataSource.getConnection(String username, String password)不常用，
-	// 但为了尽量遵循jdbc规范，还是保留好。
+	// 但为了尽量遵循jdbc规范，还是保留的好。
 	private String username;
 	private String password;
+	
+	/* ========================================================================
+	 * JDBC事务相关的autoCommit设置、commit/rollback、TransactionIsolation等
+	 * ======================================================================*/
+	private boolean isAutoCommit = true; // jdbc规范，新连接为true
 
 	public GroupConnection(AbstractGroupDataSource AbstractGroupDataSource) {
 		this(AbstractGroupDataSource, null, null);
@@ -160,24 +165,24 @@ public class GroupConnection implements Connection {
 
 	/**
 	 * 从实际的DataSource获得一个下层（有可能不是真实的）Connection
-	 * 包权限：此方法只在TGroupStatement、GroupPreparedStatement中使用
+	 * 包权限：此方法只在GroupStatement、GroupPreparedStatement中使用
 	 */
-	Connection createNewConnection(GroupDataSourceWrapper dsw, boolean isRead) throws SQLException {
+	Connection createNewConnection(GroupDataSourceWrapper gdsw, boolean isRead) throws SQLException {
 		//这个方法只发生在第一次建立读/写连接的时候，以后都是复用了
-		Connection conn;
+		Connection connection;
 		if (username != null)
-			conn = dsw.getConnection(username, password);
+			connection = gdsw.getConnection(username, password);
 		else
-			conn = dsw.getConnection();
+			connection = gdsw.getConnection();
 
 		//为了保证事务正确关闭，在事务状态下只设置写连接
-		setBaseConnection(conn, dsw, isRead && isAutoCommit);
+		setBaseConnection(connection, gdsw, isRead && isAutoCommit);
 
 		//只在写连接上调用  setAutoCommit, 与  GroupConnection#setAutoCommit 的代码保持一致
 		if (!isRead || !isAutoCommit)
-		        conn.setAutoCommit(isAutoCommit); //新建连接的AutoCommit要与当前isAutoCommit的状态同步
+		        connection.setAutoCommit(isAutoCommit); //新建连接的AutoCommit要与当前isAutoCommit的状态同步
 
-		return conn;
+		return connection;
 	}
 
 	private void setBaseConnection(Connection baseConnection, GroupDataSourceWrapper dsw, boolean isRead) {
@@ -374,19 +379,19 @@ public class GroupConnection implements Connection {
 			int resultSetType = (Integer) args[1];
 			int resultSetConcurrency = (Integer) args[2];
 			int resultSetHoldability = (Integer) args[3];
-			Connection conn = GroupConnection.this.createNewConnection(dsw, false);
-			return getCallableStatement(conn, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+			Connection connection = GroupConnection.this.createNewConnection(dsw, false);
+			return getCallableStatement(connection, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 		}
 	};
 
-	private CallableStatement getCallableStatement(Connection conn, String sql, int resultSetType,
+	private CallableStatement getCallableStatement(Connection connection, String sql, int resultSetType,
 			int resultSetConcurrency, int resultSetHoldability) throws SQLException {
 		if (resultSetType == Integer.MIN_VALUE) {
-			return conn.prepareCall(sql);
+			return connection.prepareCall(sql);
 		} else if (resultSetHoldability == Integer.MIN_VALUE) {
-			return conn.prepareCall(sql, resultSetType, resultSetConcurrency);
+			return connection.prepareCall(sql, resultSetType, resultSetConcurrency);
 		} else {
-			return conn.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+			return connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 		}
 	}
 
@@ -395,14 +400,14 @@ public class GroupConnection implements Connection {
 		checkClosed();
 		CallableStatement target;
 
-		Connection conn = this.getBaseConnection(sql,false); //存储过程默认走写库
-		if (conn != null) {
-			sql=GroupHintParser.removeTddlGroupHint(sql);
-			target = getCallableStatement(conn, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
+		Connection connection = this.getBaseConnection(sql,false); //存储过程默认走写库
+		if (connection != null) {
+			sql = GroupHintParser.removeTddlGroupHint(sql);
+			target = getCallableStatement(connection, sql, resultSetType, resultSetConcurrency, resultSetHoldability);
 		} else {
 			// hint优先
 			Integer dataSourceIndex = GroupHintParser.convertHint2Index(sql, DBSelector.NOT_EXIST_USER_SPECIFIED_INDEX);
-			sql=GroupHintParser.removeTddlGroupHint(sql);
+			sql = GroupHintParser.removeTddlGroupHint(sql);
 			if (dataSourceIndex < 0) {
 				dataSourceIndex = ThreadLocalDataSourceIndex.getIndex();
 			}
@@ -430,11 +435,6 @@ public class GroupConnection implements Connection {
 			throws SQLException {
 		return prepareCall(sql, resultSetType, resultSetConcurrency, Integer.MIN_VALUE);
 	}
-
-	/* ========================================================================
-	 * JDBC事务相关的autoCommit设置、commit/rollback、TransactionIsolation等
-	 * ======================================================================*/
-	private boolean isAutoCommit = true; // jdbc规范，新连接为true
 
 	public void setAutoCommit(boolean autoCommit0) throws SQLException {
 		checkClosed();

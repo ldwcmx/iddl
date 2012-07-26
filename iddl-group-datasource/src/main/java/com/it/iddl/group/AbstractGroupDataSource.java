@@ -23,7 +23,6 @@ import com.it.iddl.group.exception.GroupException;
 import com.it.iddl.group.jdbc.GroupConnection;
 import com.it.iddl.group.jdbc.GroupDataSourceWrapper;
 
-
 /**
  * <p>
  * 抽象的GroupDataSource
@@ -51,10 +50,10 @@ public abstract class AbstractGroupDataSource implements DataSource {
 	
 	public static final int DEFAULT_RETRY_TIMES = 3;
 	
-	protected String appName;						// 
-	protected String groupKey;						// 
-	protected String groupConf;						// 
-	private DBType dbType = DBType.MYSQL;			// 
+	protected String appName;						// 系统分配的应用标识
+	protected String groupKey;						// 系统分配的数据源组标识
+	protected String groupConf;						// 数据源组配置
+	private DBType dbType = DBType.MYSQL;			// 数据源组的数据库类型
 	
 	private int retryTimes = DEFAULT_RETRY_TIMES; 	// 默认读写失败时重试3次
 	
@@ -63,12 +62,25 @@ public abstract class AbstractGroupDataSource implements DataSource {
 	 * ======================================================================*/
 	private static ThreadLocal<GroupDataSourceWrapper> targetThreadLocal;
 	
+	private PrintWriter out = null;					// jdbc规范: DataSource刚建立时LogWriter为null
+	private int seconds = 0;						// jdbc规范: DataSource刚建立时LoginTimeout为0
+	
 	/**
 	 * 
 	 * @param isRead
 	 * @return
 	 */
-	public abstract DBSelector getDBSelector(boolean isRead);
+	public DBSelector getDBSelector(boolean isRead) {
+		return getDBSelector(isRead, false);
+	}
+	
+	/**
+	 * 请调用者莫要缓存DBSelector, 否则就会失去动态性
+	 * @param isRead
+	 * @param autoSelectWriteDataSource
+	 * @return
+	 */
+	public abstract DBSelector getDBSelector(boolean isRead, boolean autoSelectWriteDataSource);
 	
 	/**
 	 * 
@@ -149,23 +161,19 @@ public abstract class AbstractGroupDataSource implements DataSource {
 	
 	@Override
 	public PrintWriter getLogWriter() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return out;
 	}
 	@Override
 	public void setLogWriter(PrintWriter out) throws SQLException {
-		// TODO Auto-generated method stub
-		
+		this.out = out;
 	}
 	@Override
 	public void setLoginTimeout(int seconds) throws SQLException {
-		// TODO Auto-generated method stub
-		
+		this.seconds = seconds;
 	}
 	@Override
 	public int getLoginTimeout() throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		return seconds;
 	}
 	
 	////////////////////////////////////////////////////////////////

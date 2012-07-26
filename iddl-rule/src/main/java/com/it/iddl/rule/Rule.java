@@ -10,6 +10,8 @@ package com.it.iddl.rule;
 import java.util.Map;
 import java.util.Set;
 
+import com.it.iddl.rule.sql.Comparative;
+
 /**
  * 若分库有两条规则：
  * 规则一：columnA、columnB?，若columnB没有，则取columnB的所有值域（由描点信息获得）全表扫描
