@@ -13,6 +13,7 @@
 		<module>iddl-datasource</module>
 		<module>iddl-atom-datasource</module>
 		<module>iddl-group-datasource</module>
+		<module>iddl-matrix-datasource</module>
 		<module>iddl-client</module>
 		<module>iddl-common</module>
 		<module>iddl-util</module>

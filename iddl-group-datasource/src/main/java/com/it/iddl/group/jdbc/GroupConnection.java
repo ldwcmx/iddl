@@ -197,7 +197,7 @@ public class GroupConnection implements Connection {
 	}
 	
 	/**
-	 * 
+	 * 设置底层的connection
 	 * @param baseConnection
 	 * @param dsw
 	 * @param isRead
@@ -227,7 +227,9 @@ public class GroupConnection implements Connection {
 	}
 
 	// 如果rBaseConnection = wBaseConnection 会不会这个链接就关不了  ???   close方法会关闭的
-	
+	/**
+	 * 关闭底层的read connection
+	 */
 	private void closeReadConnection() {
 		//r|wBaseConnection可能指向同一个对象，如果另一个引用在用，就不去关闭
 		if (rBaseConnection != null && rBaseConnection != wBaseConnection) {
@@ -240,7 +242,10 @@ public class GroupConnection implements Connection {
 			rBaseConnection = null;
 		}
 	}
-
+	
+	/**
+	 * 关闭底层的write connection
+	 */
 	private void closeWriteConnection() {
 		//r|wBaseConnection可能指向同一个对象，如果另一个引用在用，就不去关闭
 		if (wBaseConnection != null && rBaseConnection != wBaseConnection) {
@@ -255,7 +260,7 @@ public class GroupConnection implements Connection {
 	}
 	
 	/**
-	 * 
+	 * 移除指定的statement
 	 * @param statement
 	 */
 	void removeOpenedStatements(Statement statement) {

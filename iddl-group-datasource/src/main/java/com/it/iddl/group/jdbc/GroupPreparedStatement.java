@@ -50,7 +50,7 @@ import com.it.iddl.group.dbselector.DBSelector.DataSourceTryer;
 import com.it.iddl.util.GroupHintParser;
 
 /**
- * 
+ * GroupPreparedStatement
  * @author sihai
  *
  */
