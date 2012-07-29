@@ -36,7 +36,7 @@ public class GroupHintParser {
 	}
 
 	private static String extractIDDLGroupHintString(String sql) {
-		return StringUtils.getBetween(sql.toLowerCase(), "/*+iddl_group({", "})*/");
+		return StringUtil.getBetween(sql.toLowerCase(), "/*+iddl_group({", "})*/");
 	}
 
 	public static String removeIDDLGroupHint(String sql) {
@@ -45,7 +45,7 @@ public class GroupHintParser {
 			return  sql;
 		}
 		
-	    sql = StringUtils.removeBetweenWithSplitor(sql.toLowerCase(), "/*+iddl_group({", "})*/");
+	    sql = StringUtil.removeBetweenWithSplitor(sql.toLowerCase(), "/*+iddl_group({", "})*/");
 	    return sql;
 	}
 

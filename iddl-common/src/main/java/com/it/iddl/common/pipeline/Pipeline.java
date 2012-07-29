@@ -158,4 +158,9 @@ public interface Pipeline {
 	 * @throws SQLException
 	 */
 	void startFlow(DataBus dataBus) throws SQLException;
+	
+	/**
+	 * 重置管线
+	 */
+	void reset();
 }

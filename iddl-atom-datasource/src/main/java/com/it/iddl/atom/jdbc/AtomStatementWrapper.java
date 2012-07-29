@@ -19,7 +19,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.it.iddl.common.DBStatus;
 import com.it.iddl.common.sql.SQLType;
-import com.it.iddl.util.StringUtils;
+import com.it.iddl.util.StringUtil;
 
 /**
  * 
@@ -387,33 +387,33 @@ public class AtomStatementWrapper implements Statement {
 
 	protected static SQLType getSQLType(String sql) throws SQLException {
 		SQLType sqlType = null;
-		String noCommentsSql = StringUtils.stripComments(sql, "'\"", "'\"", true, false, true, true).trim();
+		String noCommentsSql = StringUtil.stripComments(sql, "'\"", "'\"", true, false, true, true).trim();
 
-		if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "select")) {
+		if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "select")) {
 			if (SELECT_FOR_UPDATE_PATTERN.matcher(noCommentsSql).matches()) {
 				sqlType = SQLType.SELECT_FOR_UPDATE;
 			} else {
 				sqlType = SQLType.SELECT;
 			}
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "show")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "show")) {
 			sqlType = SQLType.SHOW;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "insert")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "insert")) {
 			sqlType = SQLType.INSERT;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "update")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "update")) {
 			sqlType = SQLType.UPDATE;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "delete")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "delete")) {
 			sqlType = SQLType.DELETE;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "replace")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "replace")) {
 			sqlType = SQLType.REPLACE;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "truncate")){
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "truncate")){
 		    sqlType = SQLType.TRUNCATE;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "create")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "create")) {
 			sqlType = SQLType.CREATE;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "drop")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "drop")) {
 			sqlType = SQLType.DROP;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "load")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "load")) {
 			sqlType = SQLType.LOAD;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "merge")){
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "merge")){
 		    sqlType = SQLType.MERGE;
 		} else {
 			throw new SQLException("only select, insert, update, delete,replace,truncate sql is supported");

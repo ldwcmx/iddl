@@ -21,7 +21,7 @@ public interface HandlerContext<T> {
 	 * 
 	 * @return
 	 */
-    Pipeline getPipeLine();
+    Pipeline getPipeline();
     
     /**
      * 取得当前执行器上下文

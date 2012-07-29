@@ -29,8 +29,9 @@ public class DefaultPipeline implements Pipeline {
 
 	private Log logger = LogFactory.getLog(DefaultPipeline.class);
 	
-	private volatile DefaultHandlerContext head;
-	private volatile DefaultHandlerContext tail;
+	private volatile DefaultHandlerContext head;	// 链表头
+	private volatile DefaultHandlerContext tail;	// 链表尾
+	
 	private final Map<String, DefaultHandlerContext> name2ctx = new HashMap<String, DefaultHandlerContext>(4);
 	private final Object _name2ctx_lock_ = new Object();
 	
@@ -81,6 +82,8 @@ public class DefaultPipeline implements Pipeline {
 			DefaultHandlerContext ctx = new DefaultHandlerContext(null == head ? null : head.prev, head, name, handler);
 			if(null != head) {
 				head.prev = ctx;
+			} else {
+				tail = ctx;
 			}
 			name2ctx.put(name, ctx);
 			head = ctx;
@@ -94,6 +97,8 @@ public class DefaultPipeline implements Pipeline {
 			DefaultHandlerContext ctx = new DefaultHandlerContext(tail, null, name, handler);
 			if(null != tail) {
 				tail.next = ctx;
+			} else {
+				head = ctx;
 			}
 			name2ctx.put(name, ctx);
 			tail = ctx;
@@ -289,6 +294,15 @@ public class DefaultPipeline implements Pipeline {
 		}
 	}
 	
+	@Override
+	public void reset() {
+		synchronized(_name2ctx_lock_) {
+			head = null;
+			tail = null;
+			name2ctx.clear();
+		}
+	}
+	
 	/**
 	 * 校验handler的name,请持有_name2ctx_lock_锁
 	 * @param name
@@ -369,7 +383,7 @@ public class DefaultPipeline implements Pipeline {
 		}
 
 		@Override
-		public Pipeline getPipeLine() {
+		public Pipeline getPipeline() {
 			return DefaultPipeline.this;
 		}
 	}

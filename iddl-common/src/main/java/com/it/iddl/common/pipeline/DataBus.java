@@ -20,7 +20,7 @@ public interface DataBus {
     * @param name
     * @param context
     */
-   public void registerPluginContext(String name,Object context);
+   public void registerPluginContext(String name, Object context);
    
    /**
     * 从总线中移除指定名字的Context

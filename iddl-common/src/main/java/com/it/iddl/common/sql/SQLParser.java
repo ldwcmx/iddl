@@ -10,7 +10,7 @@ package com.it.iddl.common.sql;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
 
-import com.it.iddl.util.StringUtils;
+import com.it.iddl.util.StringUtil;
 
 /**
  * 
@@ -41,10 +41,10 @@ public class SQLParser {
 		//sql have no comment,so first simple look for there whether have the comment
 		String noCommentsSql = sql;
 		if(sql.contains("/*")){
-			noCommentsSql = StringUtils.stripComments(sql, "'\"", "'\"", true, false, true, true).trim();
+			noCommentsSql = StringUtil.stripComments(sql, "'\"", "'\"", true, false, true, true).trim();
 		}
 		
-		if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "select")) {
+		if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "select")) {
 			//#bug 2011-12-9,this select-for-update regex has low performance,so
 			//first judge this sql whether have ' for ' string.
 			if (noCommentsSql.toLowerCase().contains(" for ")&&SELECT_FOR_UPDATE_PATTERN.matcher(noCommentsSql).matches()) {
@@ -52,30 +52,30 @@ public class SQLParser {
 			} else {
 				sqlType = SQLType.SELECT;
 			}
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "show")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "show")) {
 			sqlType = SQLType.SHOW;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "insert")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "insert")) {
 			sqlType = SQLType.INSERT;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "update")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "update")) {
 			sqlType = SQLType.UPDATE;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "delete")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "delete")) {
 			sqlType = SQLType.DELETE;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "replace")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "replace")) {
 			sqlType = SQLType.REPLACE;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql,
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql,
 				"truncate")) {
 			sqlType = SQLType.TRUNCATE;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "create")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "create")) {
 			sqlType = SQLType.CREATE;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql, "drop")) {
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql, "drop")) {
 			sqlType = SQLType.DROP;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql,
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql,
 				"load")) {
 			sqlType = SQLType.LOAD;
-		} else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql,
+		} else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql,
 				"merge")) {
 			sqlType = SQLType.MERGE;
-		}else if (StringUtils.startsWithIgnoreCaseAndWs(noCommentsSql,
+		}else if (StringUtil.startsWithIgnoreCaseAndWs(noCommentsSql,
 				"alter")) {
 			sqlType = SQLType.ALTER;
 		} else {
