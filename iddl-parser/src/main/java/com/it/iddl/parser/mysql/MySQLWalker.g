@@ -16,8 +16,8 @@ import com.it.iddl.parser.sql.function.*;
 import com.it.iddl.parser.sql.objecttree.mysql.*;
 
 import com.it.iddl.parser.sql.objecttree.mysql.function.*;
-import static com.it.iddl.parser.Utils.*;
-import com.it.iddl.parser.sql.objecttree.mysql.function.datefunction.*;
+import static com.it.iddl.parser.util.Utils.*;
+import com.it.iddl.parser.sql.objecttree.mysql.function.date.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -117,9 +117,9 @@ whereClause[WhereCondition where]
 	;
 	
 groupByClause[WhereCondition where]
-	:^(GROUPBY columnNamesAfterWhere)
+	:^(GROUPBY groupAfterWhere)
 	{
-		$where.setGroupByColumns($columnNamesAfterWhere.ret);
+		$where.setGroupByColumnList($groupAfterWhere.ret);
 	}
 	;
 	
@@ -130,24 +130,42 @@ havingClause[HavingCondition having]
 orderByClause[WhereCondition where]
 	:^(ORDERBY columnNamesAfterWhere)
 	{
-		$where.setOrderByColumns($columnNamesAfterWhere.ret);
+		$where.setOrderByColumnList($columnNamesAfterWhere.ret);
 	}
 	;
 	
-columnNamesAfterWhere returns[List<OrderByEle> ret]
+columnNamesAfterWhere returns[List<OrderByElement> ret]
 @init{
-	$ret = new ArrayList<OrderByEle>();
+	$ret = new ArrayList<OrderByElement>();
 }
 	:(columnNameAfterWhere[$ret])+
 	;
-columnNameAfterWhere[List<OrderByEle> orderByEles]
+columnNameAfterWhere[List<OrderByElement> orderByElementList]
 	:^(ASC  identifier table_alias?)
 	{
-		$orderByEles.add(new OrderByEle($table_alias.aText,$identifier.text,true));
+		$orderByElementList.add(new OrderByElement($table_alias.aText,$identifier.text,true));
 	}
 	|^(DESC  identifier table_alias?)
 	{
-		$orderByEles.add(new OrderByEle($table_alias.aText,$identifier.text,false));
+		$orderByElementList.add(new OrderByElement($table_alias.aText,$identifier.text,false));
+	}
+	;
+	
+	
+groupAfterWhere returns[List<GroupByElement> ret]
+@init{
+	$ret = new ArrayList<GroupByElement>();
+}
+	:(afterWhere[$ret])+
+	;
+afterWhere[List<GroupByElement> groupByElementList]
+	:^(ASC  identifier table_alias?)
+	{
+		$groupByElementList.add(new GroupByElement($table_alias.aText,$identifier.text,true));
+	}
+	|^(DESC  identifier table_alias?)
+	{
+		$groupByElementList.add(new GroupByElement($table_alias.aText,$identifier.text,false));
 	}
 	;
 
@@ -163,7 +181,7 @@ sqlCondition[WhereCondition where]
 condition[BindIndexHolder where,ExpressionGroup eg,boolean isPriority]	
 	:
 	{
-		OrExpressionGroup orExp=new OrExpressionGroup();
+		ORExpressionGroup orExp=new ORExpressionGroup();
 		$eg.addExpressionGroup(orExp);
 	}^('OR' s1=condition[where,orExp,$isPriority]+)
 	| 
@@ -433,12 +451,12 @@ List<Object> list=new ArrayList<Object>();
 	}
 	|^(COLUMN identifier table_name?)
 	{
-	  Column col=new ColumnImp($table_name.text,$identifier.text,null);
+	  Column col=new ColumnImpl($table_name.text,$identifier.text,null);
 	  $valueObjExpr=col;
 	}
 	|^(COLUMNAST ASTERISK)
 	{
-	  Column col=new ColumnImp(null,$ASTERISK.text,null);
+	  Column col=new ColumnImpl(null,$ASTERISK.text,null);
 	  $valueObjExpr=col;
 	}
 	//|^(TIME_FUC interObj=interval_clause[$where])
@@ -488,7 +506,7 @@ List<Object> list=new ArrayList<Object>();
 //           $timeObj=$quoted_string.aText;
 //       }
 //        |^(TIME columnAnt){
-//           Column col=new ColumnImp(null,$columnAnt.aText,null);
+//           Column col=new ColumnImpl(null,$columnAnt.aText,null);
 //           $timeObj=(Object)col;
 //        }
 //	;
@@ -551,7 +569,7 @@ dis_col[Select select]
 	  $select.setDistinct($distinct_col.dis);
           //the real version to use
 	  FunctionColumn funcolumn=new FunctionColumn();
-	  funcolumn.setFunctionRegistertion($distinct_col.dis);
+	  funcolumn.setFunction($distinct_col.dis);
 	  $select.addColumn(funcolumn);
 	}
 	;
@@ -564,7 +582,7 @@ join_clause[DMLCommon common] returns [JoinClause joinClause]
         :^(JOIN table_name alias? temp1=join_column temp2=join_column join_type?)
         {
           $joinClause = new JoinClause();
-          TableNameImp tableName = new TableNameImp();
+          TableNameImpl tableName = new TableNameImpl();
           tableName.setTablename($table_name.text);
           tableName.setAlias($alias.aliText);
           $joinClause.setTableName(tableName);
@@ -577,50 +595,50 @@ join_clause[DMLCommon common] returns [JoinClause joinClause]
 join_column returns[Column col]
         :^(COLUMN identifier table_name?)
         {
-           $col=new ColumnImp($table_name.text,$identifier.text,null);
+           $col=new ColumnImpl($table_name.text,$identifier.text,null);
            
         }
         ;
         
-join_type returns [JOIN_TYPE joinType]
+join_type returns [JoinType joinType]
 	:INNER
 	{
-		$joinType = JOIN_TYPE.INNER;
+		$joinType = JoinType.INNER;
 	} 
 	|LEFT outer?
 	{
 		boolean outter = $outer.outter;
 		if(outter){
-			$joinType = JOIN_TYPE.LEFT_OUTER;
+			$joinType = JoinType.LEFT_OUTER;
 		}else{
-			$joinType = JOIN_TYPE.LEFT;
+			$joinType = JoinType.LEFT;
 		}
 	}
 	|RIGHT outer?
 	{
 		boolean outter = $outer.outter;
 		if(outter){
-			$joinType = JOIN_TYPE.RIGHT_OUTER;
+			$joinType = JoinType.RIGHT_OUTER;
 		}else{
-			$joinType = JOIN_TYPE.RIGHT;
+			$joinType = JoinType.RIGHT;
 		}
 	}
 	|FULL outer?
 		{
 		boolean outter = $outer.outter;
 		if(outter){
-			$joinType = JOIN_TYPE.FULL_OUTER;
+			$joinType = JoinType.FULL_OUTER;
 		}else{
-			$joinType = JOIN_TYPE.FULL;
+			$joinType = JoinType.FULL;
 		}
 	}
 	|UNION
 	{
-		$joinType = JOIN_TYPE.UNION;
+		$joinType = JoinType.UNION;
 	} 
 	|CROSS
 	{
-		$joinType = JOIN_TYPE.CROSS;
+		$joinType = JoinType.CROSS;
 	} 
 	;
 	
@@ -692,7 +710,7 @@ List<Object> list=new ArrayList<Object>();
 	  Function func=functionRegister.get(($ID.text).toUpperCase());
 	  func.setValue(list);
 	  FunctionColumn funcolumn=new FunctionColumn();
-	  funcolumn.setFunctionRegistertion(func);
+	  funcolumn.setFunction(func);
 	  funcolumn.setAlias($alias.aliText);
 	  //$select.addColumn(funcolumn);
 	  $column=funcolumn;
@@ -700,20 +718,20 @@ List<Object> list=new ArrayList<Object>();
 	|^(CONSIST ID alias?){
 	  Function func=consistStringRegister.get(($ID.text).toUpperCase());
 	  FunctionColumn funcolumn=new FunctionColumn();
-	  funcolumn.setFunctionRegistertion(func);
+	  funcolumn.setFunction(func);
 	  funcolumn.setAlias($alias.aliText);
 	  //$select.addColumn(funcolumn);
 	  $column=funcolumn;
 	}
 	|^(COLUMN table_alias? columnAnt alias?)
 	{
-	  Column columnImp=new ColumnImp($table_alias.aText,$columnAnt.text,$alias.aliText);
+	  Column columnImp=new ColumnImpl($table_alias.aText,$columnAnt.text,$alias.aliText);
 	  //$select.addColumn(column)
 	  $column=columnImp;
 	}
 	//|^(COLUMN fuc=time_fuc[select.getIndexHolder()] alias?){
 	//FunctionColumn funcolumn=new FunctionColumn();
-	//funcolumn.setFunctionRegistertion(fuc.func);
+	//funcolumn.setFunction(fuc.func);
 	//funcolumn.setAlias($alias.aliText);
 	//$select.addColumn(funcolumn);
 	//$column=funcolumn;

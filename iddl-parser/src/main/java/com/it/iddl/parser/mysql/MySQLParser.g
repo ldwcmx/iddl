@@ -83,7 +83,7 @@ package  com.it.iddl.parser.mysql;
 
 import java.util.Map;
 import java.util.HashMap;
-import com.it.iddl.parser.sql.objecttree.Function;
+import com.it.iddl.parser.sql.function.Function;
 import com.it.iddl.parser.sql.objecttree.mysql.function.*;
 }
 @members{
@@ -95,7 +95,7 @@ import com.it.iddl.parser.sql.objecttree.mysql.function.*;
 			return consistStringRegister;
 		}
 		
-		public void setConsist(MySQLConsistStringRegister consistStringRegister){
+		public void setConsistStringRegister(MySQLConsistStringRegister consistStringRegister){
 			this.consistStringRegister=consistStringRegister;
 		}
 		

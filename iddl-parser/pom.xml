@@ -33,8 +33,8 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>com.iacrqq</groupId>
-			<artifactId>util</artifactId>
+			<groupId>com.it.iddl</groupId>
+			<artifactId>iddl-util</artifactId>
 		</dependency>
 		
 		<dependency>

@@ -28,15 +28,14 @@ import java.util.Map;
 
 }
 @members{
-
-
 		public boolean mismatchIsMissingToken(IntStream arg0, BitSet follow) {
-		if ( follow==null ) {
-		throw new IllegalArgumentException("can't know what's wrong...");
+			if ( follow==null ) {
+				throw new IllegalArgumentException("can't know what's wrong...");
+			}
+			throw new IllegalArgumentException("LT(1)=="+((TokenStream)input).LT(1)+" is consistent with what follows; inserting...viable tokens="+follow.toString(getTokenNames())+"LT(1)="+((TokenStream)input).LT(1));
 		}
-		throw new IllegalArgumentException("LT(1)=="+((TokenStream)input).LT(1)+" is consistent with what follows; inserting...viable tokens="+follow.toString(getTokenNames())+"LT(1)="+((TokenStream)input).LT(1));
-	}
-	public boolean mismatchIsUnwantedToken(IntStream input, int ttype) {
+		
+		public boolean mismatchIsUnwantedToken(IntStream input, int ttype) {
     		throw new IllegalArgumentException(""+ttype);
     	}
 }

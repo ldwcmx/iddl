@@ -7,8 +7,7 @@
  */
 package com.it.iddl.parser.sql.objecttree;
 
-import org.apache.zookeeper.Op.Delete;
-
+import com.it.iddl.parser.sql.objecttree.impl.Delete;
 import com.it.iddl.parser.sql.objecttree.impl.TableNameSubQueryImpl;
 
 /**

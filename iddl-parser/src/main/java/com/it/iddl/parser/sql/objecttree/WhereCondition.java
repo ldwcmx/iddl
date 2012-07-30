@@ -205,7 +205,7 @@ public class WhereCondition implements SQLFragment {
 		return groupByColumnList;
 	}
 
-	public void setGroupByColumns(List<GroupByElement> groupByColumnList) {
+	public void setGroupByColumnList(List<GroupByElement> groupByColumnList) {
 		this.groupByColumnList = groupByColumnList;
 	}
 }

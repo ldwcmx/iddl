@@ -7,6 +7,10 @@
  */
 package com.it.iddl.parser;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
@@ -17,21 +21,24 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.it.iddl.parser.mysql.MySQLParserLexer;
+import com.it.iddl.parser.mysql.MySQLParserParser;
+import com.it.iddl.parser.mysql.MySQLWalker;
+import com.it.iddl.parser.oracle.OracleParserLexer;
+import com.it.iddl.parser.oracle.OracleParserParser;
+import com.it.iddl.parser.oracle.OracleWalker;
+import com.it.iddl.parser.sql.objecttree.Comparative;
 import com.it.iddl.parser.sql.objecttree.DMLCommon;
-import com.taobao.tddl.common.util.NagiosUtils;
-import com.taobao.tddl.parser.AntlrStringStream;
-import com.taobao.tddl.parser.ParserCache;
-import com.taobao.tddl.parser.mysql.MySQLParserLexer;
-import com.taobao.tddl.parser.mysql.MySQLParserParser;
-import com.taobao.tddl.parser.mysql.MySQLWalker;
-import com.taobao.tddl.parser.oracle.OracleParserLexer;
-import com.taobao.tddl.parser.oracle.OracleParserParser;
-import com.taobao.tddl.parser.oracle.OracleWalker;
-import com.taobao.tddl.sqlobjecttree.mysql.function.MySQLConsistStringRegister;
-import com.taobao.tddl.sqlobjecttree.mysql.function.MySQLFunctionRegister;
-import com.taobao.tddl.sqlobjecttree.oracle.function.OracleConsistStringRegister;
-import com.taobao.tddl.sqlobjecttree.oracle.function.OracleFunctionRegister;
-import com.taobao.tddl.sqlobjecttree.oracle.function.OracleHintRegister;
+import com.it.iddl.parser.sql.objecttree.OrderByElement;
+import com.it.iddl.parser.sql.objecttree.SQLAndTableAtParser;
+import com.it.iddl.parser.sql.objecttree.Statement;
+import com.it.iddl.parser.sql.objecttree.mysql.function.MySQLConsistStringRegister;
+import com.it.iddl.parser.sql.objecttree.mysql.function.MySQLFunctionRegister;
+import com.it.iddl.parser.sql.objecttree.oracle.function.OracleConsistStringRegister;
+import com.it.iddl.parser.sql.objecttree.oracle.function.OracleFunctionRegister;
+import com.it.iddl.parser.sql.objecttree.oracle.function.OracleHintRegister;
+import com.it.iddl.parser.sql.objecttree.output.handler.impl.HandlerContainer;
+import com.it.iddl.util.NagiosUtil;
 
 
 /**
@@ -72,11 +79,11 @@ public class SQLParserImpl {
 				public DMLCommon call() throws Exception {
 					final DMLCommon com = getDMLCommonObject(sql, isMysql);
 					com.init();
-					log.info("successfully parse a sql");
-					log.info("original sql:"+sql);
+					logger.info("successfully parse a sql");
+					logger.info("original sql:"+sql);
 					StringBuilder sb = new StringBuilder();
 					com.appendSQL(sb);
-					log.info("parsed sql:"+sb.toString());
+					logger.info("parsed sql:"+sb.toString());
 					return com;
 				}
 
@@ -110,67 +117,207 @@ public class SQLParserImpl {
 			AntlrStringStream st = new AntlrStringStream(sql);
 			if (isMysql) {
 				MySQLWalker.beg_return ret = null;
-				MySQLParserLexer pl = new MySQLParserLexer(
-						st);
-				TokenRewriteStream tokens = new TokenRewriteStream(
-						pl);
-				MySQLParserParser pa = new MySQLParserParser(
-						tokens);
+				MySQLParserLexer pl = new MySQLParserLexer(st);
+				TokenRewriteStream tokens = new TokenRewriteStream(pl);
+				MySQLParserParser pa = new MySQLParserParser(tokens);
 
-				pa.setFunc(MySQLFunctionRegister.reg);
-				pa
-						.setConsist(MySQLConsistStringRegister.reg);
+				pa.setFunctionRegister(MySQLFunctionRegister.register);
+				pa.setConsistStringRegister(MySQLConsistStringRegister.register);
 				MySQLParserParser.beg_return beg = null;
 				beg = pa.beg();
-				CommonTree tree = (CommonTree) beg
-						.getTree();
-				log.debug(tree.toStringTree());
-				CommonTreeNodeStream nodes = new CommonTreeNodeStream(
-						tree);
+				CommonTree tree = (CommonTree) beg.getTree();
+				logger.debug(tree.toStringTree());
+				CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
 				nodes.setTokenStream(tokens);
 				MySQLWalker walker = new MySQLWalker(nodes);
-				walker.setFunc(MySQLFunctionRegister.reg);
-				walker
-						.setConsist(MySQLConsistStringRegister.reg);
+				walker.setFunctionRegister(MySQLFunctionRegister.register);
+				walker.setConsistStringRegister(MySQLConsistStringRegister.register);
 				ret = walker.beg();
 				com = ret.obj;
 			} else {
 				OracleWalker.beg_return ret = null;
-				OracleParserLexer pl = new OracleParserLexer(
-						st);
-				TokenRewriteStream tokens = new TokenRewriteStream(
-						pl);
-				OracleParserParser pa = new OracleParserParser(
-						tokens);
+				OracleParserLexer pl = new OracleParserLexer(st);
+				TokenRewriteStream tokens = new TokenRewriteStream(pl);
+				OracleParserParser pa = new OracleParserParser(tokens);
 
-				pa.setFunc(OracleFunctionRegister.reg);
-				pa.setOracleHint(OracleHintRegister.reg);
-				pa
-						.setConsist(OracleConsistStringRegister.reg);
+				pa.setFunctionRegister(OracleFunctionRegister.register);
+				pa.setOracleHintRegister(OracleHintRegister.register);
+				pa.setConsistStringRegister(OracleConsistStringRegister.register);
 
 				OracleParserParser.beg_return beg = null;
 				beg = pa.beg();
-				CommonTree tree = (CommonTree) beg
-						.getTree();
-				log.debug(tree.toStringTree());
-				CommonTreeNodeStream nodes = new CommonTreeNodeStream(
-						tree);
+				CommonTree tree = (CommonTree) beg.getTree();
+				logger.debug(tree.toStringTree());
+				CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
 				nodes.setTokenStream(tokens);
-				OracleWalker walker = new OracleWalker(
-						nodes);
-				walker.setFunc(OracleFunctionRegister.reg);
-				walker
-						.setConsist(OracleConsistStringRegister.reg);
-				walker
-						.setOracleHint(OracleHintRegister.reg);
+				OracleWalker walker = new OracleWalker(nodes);
+				walker.setFunctionRegister(OracleFunctionRegister.register);
+				walker.setConsistStringRegister(OracleConsistStringRegister.register);
+				walker.setOracleHint(OracleHintRegister.register);
 				ret = walker.beg();
 				com = ret.obj;
 			}
 		} catch (RecognitionException e) {
-			NagiosUtils.addNagiosLog(NagiosUtils.KEY_SQL_PARSE_FAIL, 1);
-			throw new RuntimeException("分析sql错误，错误的sql是:"
-					+ sql, e);
+			NagiosUtil.warn(NagiosUtil.KEY_SQL_PARSE_FAIL, "1");
+			throw new RuntimeException("分析sql错误，错误的sql是:" + sql, e);
 		}
 		return com;
+	}
+	
+	/**
+	 * 根据SQL获取对应的javaSQL对象
+	 * @param sql
+	 * @return java SQL 对象。 如果cache中没有则返回空
+	 */
+	public Statement getStatement(String sql) {
+		try {
+			FutureTask<DMLCommon> future = globalCache.getFutureTask(sql);
+			if(future == null){
+				return null;
+			}
+			else{
+				return future.get();
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * 根据partinationSet里面的String去SQL中查找在where条件中是否有对应的列。如果有则全部找出，放入到Comparativemap里
+	 * 
+	 * 如果SQL对象中有的话则将需要被绑定的变量绑定到comparativeMap里面的Comparative中。
+	 * 
+	 * 赋值完成后返回。
+	 * 
+	 * @param sql
+	 * @param argument
+	 * @param partnation
+	 * @return
+	 */
+	public Map<String, Comparative> eval(String sql,List<Object> argument,Set<String> partnation){
+		try {
+			DMLCommon dmlc = ((DMLCommon)getStatement(sql));
+			if(dmlc == null){
+				return Collections.emptyMap();
+			}else{
+				return dmlc.getColumnsMap(argument,partnation);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public Set<String> getTableName(String sql){
+		try {
+			DMLCommon dmlc = ((DMLCommon)getStatement(sql));
+			if(dmlc == null){
+				return null;
+			}else{
+				return dmlc.getTableName();
+			}
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public long getLimitFrom(String sql,List<Object> param){
+		try {
+			DMLCommon dmlc = ((DMLCommon)getStatement(sql));
+			if(dmlc == null){
+				return DMLCommon.DEFAULT_SKIP_MAX;
+			}else{
+				return dmlc.getSkip(param);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public long getLimitTo(String sql,List<Object> param){
+		try {
+			DMLCommon dmlc = ((DMLCommon)getStatement(sql));
+			if(dmlc == null){
+				return DMLCommon.DEFAULT_SKIP_MAX;
+			}else{
+				return dmlc.getMax(param);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public List<OrderByElement> getOrderByList(String sql) {
+		try {
+			DMLCommon dmlc = ((DMLCommon)getStatement(sql));
+			if(dmlc == null){
+				return Collections.emptyList();
+			}else{
+				return dmlc.getOrderByElementList();
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * @param sql 目标sql
+	 * @param tables 表名Map,需要传入需要替换的表名->目标表名Set
+	 * @param args sql对应的参数
+	 * @param limitFrom 从哪儿开始
+	 * @param limitTo 到哪儿结束
+	 * @param handlerContainer 策略选择器
+	 * @param map 传入需要修改的
+	 * @return
+	 */
+	public List<SQLAndTableAtParser> getSQLReadyToRun(String sql,Set<Map/*tables*/<String/*ori table*/,
+			String/*target table*/>> tables, List<Object> args,
+			HandlerContainer handlerContainer) 
+	{
+		if(sql==null)
+		{
+			throw new IllegalArgumentException("目标sql为空");
+		}
+		try {
+			DMLCommon dmlc = ((DMLCommon)getStatement(sql));
+			if(dmlc == null){
+				return Collections.emptyList();
+			}else{
+				return dmlc.getSQLReadyToRun(tables, args,handlerContainer);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public SQLParserResult parse(String sql, boolean isMySQL) {
+		DMLCommon com =this.parseSQL(sql, isMySQL);
+		Set<String> table = null;
+		try {
+			if (com == null) {
+				/*
+				 * bugfix : http://jira.taobao.ali.com/browse/TDDL-78
+				 */
+				// 如果没取到，尝试分析sql并初始化
+				com = parseSQL(sql, isMySQL);
+				table = ((DMLCommon) com).getTableName();
+				
+				//add(buildTableKey1(table.toString()), buildExecuteSqlKey2(sql), KEY3_PARSE_SQL, 0, 1);
+
+			} else {
+				table = ((DMLCommon) com).getTableName();
+				//add(buildTableKey1(table.toString()), buildExecuteSqlKey2(sql), KEY3_PARSE_SQL, 1, 1);
+			}
+		} catch (ClassCastException e) {
+			throw new UnsupportedOperationException(e.getMessage() + ".not support yet");
+		}
+		return com;
+	}
+	
+	public static void main(String[] args) {
+		SQLParserImpl sqlParser = new SQLParserImpl();
+		DMLCommon c = sqlParser.parseSQL("SELECT * FROM top_tadgets");
+		System.out.println(c.toString());
 	}
 }
