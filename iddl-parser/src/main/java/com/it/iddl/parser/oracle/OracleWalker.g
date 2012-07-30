@@ -45,8 +45,8 @@ import java.util.Map;
 			this.functionRegister = functionRegister;
 		}
 		
-		public void setOracleHint(OracleHintRegister hintreg){
-			this.hintRegister=hintreg;
+		public void setOracleHintRegister(OracleHintRegister hintRegister){
+			this.hintRegister=hintRegister;
 		}
 		
 		public boolean mismatchIsMissingToken(IntStream arg0, BitSet follow) {

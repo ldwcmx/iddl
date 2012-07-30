@@ -316,8 +316,11 @@ public class SQLParserImpl {
 	}
 	
 	public static void main(String[] args) {
+		String sql = "SELECT * FROM top_tadgets";
 		SQLParserImpl sqlParser = new SQLParserImpl();
-		DMLCommon c = sqlParser.parseSQL("SELECT * FROM top_tadgets");
+		DMLCommon c = sqlParser.parseSQL(sql);
+		Statement s = sqlParser.getStatement(sql);
 		System.out.println(c.toString());
+		System.out.println(s.toString());
 	}
 }
