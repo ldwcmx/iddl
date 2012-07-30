@@ -5,13 +5,14 @@
  * 
  * iddl-rule
  */
-package com.it.iddl.rule.sql;
+package com.it.iddl.rule;
 
 /**
  * 
  * @author sihai
  *
  */
-public interface SQLFragment extends Cloneable {
+public enum TableRuleType {
 
+	SUFFIX,PREFIX;
 }

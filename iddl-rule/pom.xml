@@ -48,6 +48,11 @@
 		</dependency>
 		
 		<dependency>
+			<groupId>com.it.iddl</groupId>
+			<artifactId>iddl-parser</artifactId>
+		</dependency>
+		
+		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 		</dependency>

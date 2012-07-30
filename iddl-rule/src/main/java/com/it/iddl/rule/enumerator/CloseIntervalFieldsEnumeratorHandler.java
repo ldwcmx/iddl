@@ -9,7 +9,7 @@ package com.it.iddl.rule.enumerator;
 
 import java.util.Set;
 
-import com.it.iddl.rule.sql.Comparative;
+import com.it.iddl.parser.sql.objecttree.Comparative;
 
 /**
  * 

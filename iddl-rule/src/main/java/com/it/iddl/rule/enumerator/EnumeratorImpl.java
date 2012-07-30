@@ -1,5 +1,7 @@
 package com.it.iddl.rule.enumerator;
 
+import static com.it.iddl.rule.enumerator.EnumeratorUtil.*;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,9 +11,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.it.iddl.rule.sql.Comparative;
-import com.it.iddl.rule.sql.ComparativeBaseList;
-import com.it.iddl.rule.sql.ComparativeOR;
+import com.it.iddl.parser.sql.objecttree.Comparative;
+import com.it.iddl.parser.sql.objecttree.ComparativeAND;
+import com.it.iddl.parser.sql.objecttree.ComparativeBaseList;
+import com.it.iddl.parser.sql.objecttree.ComparativeOR;
 
 public class EnumeratorImpl implements Enumerator {
 
@@ -81,6 +84,7 @@ public class EnumeratorImpl implements Enumerator {
 		}
 		return retValue;
 	}
+	
 	private void process(Comparable<?> condition, Set<Object> retValue,Integer cumulativeTimes,Comparable<?> atomIncrValue
 			,boolean needMergeValueInCloseInterval) {
 
@@ -104,9 +108,9 @@ public class EnumeratorImpl implements Enumerator {
 	private boolean containsEquvilentRelation(Comparative comp) {
 		int comparasion = comp.getComparison();
 
-		if (comparasion == Comparative.Equivalent
-				|| comparasion == Comparative.GreaterThanOrEqual
-				|| comparasion == Comparative.LessThanOrEqual) {
+		if (comparasion == Comparative.EQUIVALENT
+				|| comparasion == Comparative.GREATER_THAN_OR_EQUAL
+				|| comparasion == Comparative.LESS_THAN_OR_EQUAL) {
 			return true;
 		}
 		return false;
@@ -185,22 +189,22 @@ public class EnumeratorImpl implements Enumerator {
 			}else{
 				//闭区间已经处理过，x >= ? and x = ? 或者 x <= ? and x = ?有交的也处理过，纯粹的> 和 <已经被转化为 >= 以及<=
 				//这里主要处理三类情况 x <= 3 and x>=5  这类，
-				if(from.getComparison() == Comparative.LessThanOrEqual||
-						from.getComparison() == Comparative.LessThan){
-					if(to.getComparison() == Comparative.LessThanOrEqual
-						||to.getComparison() == Comparative.LessThan){
+				if(from.getComparison() == Comparative.LESS_THAN_OR_EQUAL||
+						from.getComparison() == Comparative.LESS_THAN){
+					if(to.getComparison() == Comparative.LESS_THAN_OR_EQUAL
+						||to.getComparison() == Comparative.LESS_THAN){
 						processAllPassableFields(from, retValue, cumulativeTimes, atomIncrValue,needMergeValueInCloseInterval);
 					}else{
-						//to为GreaterThanOrEqual,活着为Equals 那么是个开区间。do nothing.
+						//to为GREATER_THANOrEqual,活着为Equals 那么是个开区间。do nothing.
 						
 					}
-				}else if(to.getComparison() == Comparative.GreaterThanOrEqual||
-						to.getComparison() == Comparative.GreaterThan){
-					if(from.getComparison() == Comparative.GreaterThanOrEqual||
-							from.getComparison() == Comparative.GreaterThan	){
+				}else if(to.getComparison() == Comparative.GREATER_THAN_OR_EQUAL||
+						to.getComparison() == Comparative.GREATER_THAN){
+					if(from.getComparison() == Comparative.GREATER_THAN_OR_EQUAL||
+							from.getComparison() == Comparative.GREATER_THAN	){
 						processAllPassableFields(to, retValue, cumulativeTimes, atomIncrValue,needMergeValueInCloseInterval);
 					}else{
-						//from为LessThanOrEqual，或者为Equals,为开区间
+						//from为LESS_THANOrEqual，或者为Equals,为开区间
 					}
 				}else{
 					throw new IllegalArgumentException("should not be here");
@@ -225,16 +229,16 @@ public class EnumeratorImpl implements Enumerator {
 	protected static Comparable compareAndGetIntersactionOneValue(
 			Comparative from, Comparative to) {
 		// x = from and x <= to
-		if (from.getComparison() == Comparative.Equivalent) {
-			if (to.getComparison() == Comparative.LessThan
-					|| to.getComparison() == Comparative.LessThanOrEqual) {
+		if (from.getComparison() == Comparative.EQUIVALENT) {
+			if (to.getComparison() == Comparative.LESS_THAN
+					|| to.getComparison() == Comparative.LESS_THAN_OR_EQUAL) {
 				return from.getValue();
 			}
 		}
 		// x <= from and x = to
-		if (to.getComparison() == Comparative.Equivalent) {
-			if (from.getComparison() == Comparative.GreaterThan
-					|| from.getComparison() == Comparative.GreaterThanOrEqual) {
+		if (to.getComparison() == Comparative.EQUIVALENT) {
+			if (from.getComparison() == Comparative.GREATER_THAN
+					|| from.getComparison() == Comparative.GREATER_THAN_OR_EQUAL) {
 				return to.getValue();
 			}
 		}
@@ -247,8 +251,8 @@ public class EnumeratorImpl implements Enumerator {
 		int toComparasion = to.getComparison();
 
 		// 本来想简单通过数值比大小，但发现里面还有not in,like这类的标记，还是保守点写清楚
-		if ((fromComparasion == Comparative.GreaterThan || fromComparasion == Comparative.GreaterThanOrEqual)
-				&& (toComparasion == Comparative.LessThan || toComparasion == Comparative.LessThanOrEqual)) {
+		if ((fromComparasion == Comparative.GREATER_THAN || fromComparasion == Comparative.GREATER_THAN_OR_EQUAL)
+				&& (toComparasion == Comparative.LESS_THAN || toComparasion == Comparative.LESS_THAN_OR_EQUAL)) {
 			return true;
 		} else {
 			return false;
@@ -280,7 +284,7 @@ public class EnumeratorImpl implements Enumerator {
 		} else {
 			// 否则就是基本对象，应该用等于包装
 			throw new IllegalArgumentException("input value is not a comparative: "+arg);
-			// return new Comparative(Comparative.Equivalent,arg);
+			// return new Comparative(Comparative.EQUIVALENT,arg);
 		}
 
 	}
@@ -295,19 +299,19 @@ public class EnumeratorImpl implements Enumerator {
 			// 为0 的时候表示纯粹的包装对象。
 			process(comp.getValue(), retValue,cumulativeTimes,atomIncrValue,needMergeValueInCloseInterval);
 			break;
-		case Comparative.Equivalent:
+		case Comparative.EQUIVALENT:
 
 			// 等于关系，直接放在collection
 			retValue.add(toPrimaryValue(comp.getValue()));
 			break;
-		case Comparative.GreaterThan:
-		case Comparative.GreaterThanOrEqual:
-		case Comparative.LessThan:
-		case Comparative.LessThanOrEqual:
+		case Comparative.GREATER_THAN:
+		case Comparative.GREATER_THAN_OR_EQUAL:
+		case Comparative.LESS_THAN:
+		case Comparative.LESS_THAN_OR_EQUAL:
 			//各种需要全取的情况
 			throw new EnumerationInterruptException(comp);
 		default:
-			throw new NotSupportException("not support yet");
+			throw new UnsupportedOperationException("not support yet");
 		}
 	}
 
@@ -371,6 +375,4 @@ public class EnumeratorImpl implements Enumerator {
 	public void setDebug(boolean isDebug) {
 		this.isDebug = isDebug;
 	}
-
-
 }

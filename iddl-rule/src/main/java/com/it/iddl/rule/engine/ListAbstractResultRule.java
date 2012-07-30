@@ -10,10 +10,10 @@ package com.it.iddl.rule.engine;
 import java.util.Map;
 import java.util.Set;
 
+import com.it.iddl.parser.sql.objecttree.Comparative;
 import com.it.iddl.rule.ExtralParameterContext;
 import com.it.iddl.rule.Field;
 import com.it.iddl.rule.SamplingField;
-import com.it.iddl.rule.sql.Comparative;
 
 /**
  * 
