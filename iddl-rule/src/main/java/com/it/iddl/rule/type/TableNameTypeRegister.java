@@ -10,7 +10,7 @@ package com.it.iddl.rule.type;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.it.iddl.common.exception.runtime.CantFindTargetTabRuleTypeHandlerException;
+import com.it.iddl.common.exception.runtime.CantFindTargetTableRuleTypeHandlerException;
 import com.it.iddl.rule.TableRuleType;
 
 /**
@@ -33,7 +33,7 @@ public class TableNameTypeRegister {
 		}
 		TableNameTypeHandler tHandler=handler.get(type);
 		if(tHandler==null){
-			throw new CantFindTargetTabRuleTypeHandlerException(type.toString());
+			throw new CantFindTargetTableRuleTypeHandlerException(type.toString());
 		}
 		return tHandler;
 	}

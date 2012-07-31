@@ -10,6 +10,14 @@ package com.it.iddl.rule.engine;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.it.iddl.rule.engine.impl.DayOfMonthCalTableProvider;
+import com.it.iddl.rule.engine.impl.DayOfWeekCalTableProvider;
+import com.it.iddl.rule.engine.impl.DayOfWeekSunIs7CalTableProvider;
+import com.it.iddl.rule.engine.impl.DayOfYearCalTableProvider;
+import com.it.iddl.rule.engine.impl.ModTableProvider;
+import com.it.iddl.rule.engine.impl.MonthCalTableProvider;
+import com.it.iddl.rule.engine.impl.NoneTableProvider;
+
 /**
  * 
  * @author sihai

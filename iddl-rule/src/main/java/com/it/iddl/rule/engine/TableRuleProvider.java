@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.it.iddl.common.Config;
-import com.it.iddl.common.exception.IDDLCheckedExcption;
+import com.it.iddl.common.exception.checked.IDDLCheckedException;
 import com.it.iddl.parser.sql.objecttree.Comparative;
 import com.it.iddl.rule.engine.entry.TableRule;
 
@@ -46,5 +46,5 @@ public interface TableRuleProvider {
 	 * @return
 	 * @throws TDLCheckedExcption
 	 */
-	Set<String> getTables(Map<String, Comparative> map, TableRule tableRule, String vTabName, Config config) throws IDDLCheckedExcption;
+	Set<String> getTables(Map<String, Comparative> map, TableRule tableRule, String vTabName, Config config) throws IDDLCheckedException;
 }
