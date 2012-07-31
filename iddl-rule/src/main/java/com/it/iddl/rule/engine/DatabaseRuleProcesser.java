@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.it.iddl.parser.sql.objecttree.Comparative;
 import com.it.iddl.rule.TargetDB;
+import com.it.iddl.rule.engine.entry.LogicTableMatrix;
 
 /**
  * 
@@ -27,5 +28,5 @@ public interface DatabaseRuleProcesser {
 	 * @param logTabs
 	 * @return
 	 */
-	public List<TargetDB> process(String virtualTableName, Map<String, Comparative> columnMap, LogicTabMatrix logTabs);
+	public List<TargetDB> process(String virtualTableName, Map<String, Comparative> columnMap, LogicTableMatrix logTabs);
 }
