@@ -10,8 +10,7 @@ package com.it.iddl.rule.engine;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.xmlbeans.impl.xb.xmlconfig.ConfigDocument.Config;
-
+import com.it.iddl.common.Config;
 import com.it.iddl.common.exception.IDDLCheckedExcption;
 import com.it.iddl.parser.sql.objecttree.Comparative;
 import com.it.iddl.rule.engine.entry.TableRule;
@@ -47,6 +46,5 @@ public interface TableRuleProvider {
 	 * @return
 	 * @throws TDLCheckedExcption
 	 */
-	public Set<String> getTables(Map<String, Comparative> map, TableRule tableRule, String vTabName, Config config)
-			throws IDDLCheckedExcption;
+	Set<String> getTables(Map<String, Comparative> map, TableRule tableRule, String vTabName, Config config) throws IDDLCheckedExcption;
 }
